@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{b0a83d34-06ba-413e-bf34-c4fca0be871b}">
+		<property name="assetPath">
+			<value>grab.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>14.684172335600907</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{68679a19-cbd0-48f3-a08b-4857c3c5652c}</destination>
+		</relationship>
+	</object>
+</objects>

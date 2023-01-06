@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{4160a762-81cf-46c2-bf35-4bdbeb37cd17}">
+		<property name="assetPath">
+			<value>Atterissage coussin.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>1.6438548752834468</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{68679a19-cbd0-48f3-a08b-4857c3c5652c}</destination>
+		</relationship>
+	</object>
+</objects>

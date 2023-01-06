@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{0715d12a-c946-4e4e-981b-a1a5030c2413}">
+		<property name="assetPath">
+			<value>champ de force.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>14.684172335600907</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{68679a19-cbd0-48f3-a08b-4857c3c5652c}</destination>
+		</relationship>
+	</object>
+</objects>
