@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 7283577712404757892}
   - component: {fileID: 7283577712404757891}
   m_Layer: 0
-  m_Name: TrigCam (1)
+  m_Name: TrigCam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
