@@ -460,6 +460,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 557658891590447622, guid: a7d148708d58ffa4ab023200b3eaeb4d, type: 3}
+      propertyPath: colorJ2.b
+      value: 0.764151
+      objectReference: {fileID: 0}
+    - target: {fileID: 557658891590447622, guid: a7d148708d58ffa4ab023200b3eaeb4d, type: 3}
+      propertyPath: colorJ2.g
+      value: 0.42489544
+      objectReference: {fileID: 0}
+    - target: {fileID: 557658891590447622, guid: a7d148708d58ffa4ab023200b3eaeb4d, type: 3}
+      propertyPath: colorJ2.r
+      value: 0.42172483
+      objectReference: {fileID: 0}
+    - target: {fileID: 557658891590447622, guid: a7d148708d58ffa4ab023200b3eaeb4d, type: 3}
+      propertyPath: canFastFall
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 557658891590447641, guid: a7d148708d58ffa4ab023200b3eaeb4d, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -5385,11 +5401,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1775201043333655794, guid: 68e705da722cadc4facc4552e86f197c, type: 3}
       propertyPath: canDash
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1775201043333655794, guid: 68e705da722cadc4facc4552e86f197c, type: 3}
       propertyPath: canJump
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775201043333655794, guid: 68e705da722cadc4facc4552e86f197c, type: 3}
+      propertyPath: colorJ1.b
+      value: 0.31394625
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775201043333655794, guid: 68e705da722cadc4facc4552e86f197c, type: 3}
+      propertyPath: colorJ1.g
+      value: 0.31394625
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775201043333655794, guid: 68e705da722cadc4facc4552e86f197c, type: 3}
+      propertyPath: colorJ1.r
+      value: 0.7830189
       objectReference: {fileID: 0}
     - target: {fileID: 1775201043333655794, guid: 68e705da722cadc4facc4552e86f197c, type: 3}
       propertyPath: moveSpeed

@@ -34,7 +34,7 @@ public class ReloadScene : MonoBehaviour
             case 1:
                 lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 lineSound.sound.release();
-                SceneManager.LoadScene("PlayGround");
+                SceneManager.LoadScene("PlayGroundV2");
                 break;
             case 2:
                 lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
@@ -45,6 +45,16 @@ public class ReloadScene : MonoBehaviour
                 lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 lineSound.sound.release();
                 SceneManager.LoadScene("LD_MainTest");
+                break;
+            case 4:
+                lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                lineSound.sound.release();
+                SceneManager.LoadScene("Interrupteur_LVL_Test 1");
+                break;
+            case 5:
+                lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                lineSound.sound.release();
+                SceneManager.LoadScene("ChampDeForce_LVL_Test");
                 break;
             default:
                 break;

@@ -20,16 +20,28 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/PlayGround.unity
     guid: 23fdd570a2d8402418f72640dcdb70db
+  - enabled: 1
+    path: Assets/Scenes/PlayGroundV2.unity
+    guid: ca4562060ee02714688ea3bf6cfaeb6b
   - enabled: 1
     path: Assets/Scenes/SceneTest.unity
     guid: c3fbfb1e251a88c4583aaadbae4669e5
   - enabled: 1
-    path: Assets/Scenes/Build/LD_MainTest.unity
-    guid: 1623d62243a7e6f46a8982d14266d086
-  - enabled: 1
     path: Assets/Scenes/Sound Test.unity
     guid: 0fee96c8b6d8c994486a714c5547907e
+  - enabled: 1
+    path: Assets/Scenes/Interrupteur_LVL_Test 1.unity
+    guid: e5ed4279817a91e43b606e72b719ad44
+  - enabled: 1
+    path: Assets/Scenes/ChampDeForce_LVL_Test.unity
+    guid: 8200432ea962ce140abccbb29425bfa9
+  - enabled: 1
+    path: Assets/Scenes/LD_MainTest.unity
+    guid: 45b70e1f5bd7a934ca13a253eaf215b4
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects: {}
