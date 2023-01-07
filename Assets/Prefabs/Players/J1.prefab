@@ -182,7 +182,7 @@ MonoBehaviour:
   holdingBall: 0
   yGroundCheck: 0.2
   yWallJump: 0.7
-  lineCollisionDetection: -0.1
+  lineCollisionDetection: 0
   bounce: 1.5
 --- !u!114 &6984929972057871670
 MonoBehaviour:

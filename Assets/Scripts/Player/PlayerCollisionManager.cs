@@ -29,6 +29,18 @@ public class PlayerCollisionManager : MonoBehaviour
         StartCoroutine(WaitForPhysics());
     }
 
+    private void Update()
+    {
+        if (charC.moveValue.y >= -1 && charC.moveValue.y < -.85f)
+        {
+            coll.layer = LayerMask.NameToLayer("PlayerOff");
+        }
+        else if (!inline)
+        {
+            coll.layer = LayerMask.NameToLayer("Player");
+        }
+    }
+
     bool enterAgain;
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -151,13 +163,14 @@ public class PlayerCollisionManager : MonoBehaviour
          other.transform.parent.Find("Highlight").gameObject.SetActive(true);
          holdableObjects.Add(other.transform.parent);
     }
-
+    bool inline;
     //Quand la ligne est dans la zone de trigger à l'intérieur du joueur, ce dernier n'a pas de collision avec elle.
     private void OnTriggerStay2D(Collider2D other)
     {
         if(other.tag == "LineCollider")
         {
             gameObject.layer = LayerMask.NameToLayer("PlayerOff");
+            inline = true;
         }
     }
 
@@ -182,6 +195,7 @@ public class PlayerCollisionManager : MonoBehaviour
         bool condition1 = other.tag == "LineCollider";
         if (condition1)
         {
+            inline = false;
             coll.layer = LayerMask.NameToLayer("Player");
             if (holdingBall)
             {
