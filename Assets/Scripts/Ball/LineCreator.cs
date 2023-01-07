@@ -44,6 +44,18 @@ public class LineCreator : MonoBehaviour
     public float updateAnimSpeed;
     #endregion
 
+    IEnumerator fixDeMerdeSpawnLigne()
+    {
+        yield return new WaitForEndOfFrame();
+        if (pointList.Count > 0) 
+        pointList.Clear();
+        var a = transform.position.x - Mathf.FloorToInt(transform.position.x);
+        var b = a - (a % lineResolution);
+        var posX = Mathf.FloorToInt(transform.position.x) + b + lineResolution;
+        pointList.Add(new Vector2(posX, transform.position.y)) ;
+        lineR.positionCount = 0;
+    }
+
     private void Start()
     {
         lineFolder = GameObject.FindGameObjectWithTag("LineFolder").transform;
@@ -59,6 +71,7 @@ public class LineCreator : MonoBehaviour
         var firstPoint = new Vector2(Utils_Points.closestPoint(pointArray, transform.position.x), transform.position.y);
         pointList.Add(firstPoint);
         InstantiateLine();
+        StartCoroutine(fixDeMerdeSpawnLigne());
     }
 
     //Au start cré la ligne et prend des références du lineRenderer, du edgeCollider et du transform. Change aussi la couleur de la ligne son nom et son layer.
@@ -84,7 +97,7 @@ public class LineCreator : MonoBehaviour
         // var list = pointList;
         // list = pointList.OrderBy(v => v.x).ToList();
         // pointList = list;
-
+        if (pointList.Count == 0) return;
         if (!UpdatePointList()) return;
 
         var list = pointList.OrderBy(v => v.x).ToList();

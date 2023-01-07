@@ -32,6 +32,7 @@ public class LineBallSpawner : MonoBehaviour
             Destroy(currentBall);
         }
         currentBall = Instantiate(lineBallPrefab, spawnPoint.position, transform.rotation);
+        currentBall.GetComponent<LineCreator>().pointList.Clear();
         currentBall.GetComponent<Rigidbody2D>().AddForce(-transform.up * throwStrength, ForceMode2D.Impulse);
     }
 }
