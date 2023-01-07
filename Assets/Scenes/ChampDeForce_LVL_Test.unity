@@ -5328,6 +5328,10 @@ PrefabInstance:
       value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1074573358669061575, guid: 68e705da722cadc4facc4552e86f197c, type: 3}
+      propertyPath: yGroundCheck
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1074573358669061575, guid: 68e705da722cadc4facc4552e86f197c, type: 3}
       propertyPath: yNormalLineCollision
       value: -0.4
       objectReference: {fileID: 0}

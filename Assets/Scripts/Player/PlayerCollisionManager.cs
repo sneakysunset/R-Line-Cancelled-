@@ -13,7 +13,8 @@ public class PlayerCollisionManager : MonoBehaviour
     [HideInInspector] public bool holdingBall = false;
 
     [Range(-1f, 1f)] public float yGroundCheck = -.15f;
-    [Range(-1f, 1f)] public float yWallJump = .7f;
+    [Range(0f, 1f)] public float yWallJump = .7f;
+    [Range(-1f, 1f)] public float lineCollisionDetection = .1f;
     public float bounce = 1.5f;
 
     private void Start()
@@ -51,9 +52,9 @@ public class PlayerCollisionManager : MonoBehaviour
     private void LineCollisionEnter(Collision2D collision)
     {
         bool condition1 = collision.gameObject.tag == "LineCollider";
-        bool condition2 = collision.contacts[0].normal.y < yGroundCheck;
+        bool condition2 = collision.contacts[0].normal.y > lineCollisionDetection;
 
-        if (condition1 && condition2)
+        if (condition1 && !condition2)
         {
             coll.layer = LayerMask.NameToLayer("PlayerOff");
             rb.velocity = prevVelocity;
@@ -120,7 +121,7 @@ public class PlayerCollisionManager : MonoBehaviour
     {
         if (collision.contacts[0].normal.y > -yWallJump && collision.contacts[0].normal.y < yWallJump && collision.gameObject.CompareTag("Jumpable") /*|| collision.gameObject.CompareTag("LineCollider")*/)
         {
-            rb.velocity = new Vector3(rb.velocity.x, 0);
+            //rb.velocity = new Vector3(rb.velocity.x, 0);
             charC.wallJumpable = collision.contacts[0].normal.x;
         }
     }
