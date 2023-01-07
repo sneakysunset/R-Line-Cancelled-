@@ -67,6 +67,7 @@ public class LineCreator : MonoBehaviour
         lineT = Instantiate(linePrefab, lineFolder).transform;
         lineR = lineT.GetComponentInChildren<LineRenderer>();
         edgeC = lineT.GetComponentInChildren<EdgeCollider2D>();
+        lineR.positionCount = 0;
         lineR.material.color = col;
         lineT.name = "Mesh " + pType.ToString() + " Off";
         edgeC.gameObject.layer = 6;
