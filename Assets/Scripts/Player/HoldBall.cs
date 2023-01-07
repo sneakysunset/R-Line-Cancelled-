@@ -26,8 +26,11 @@ public class HoldBall : MonoBehaviour
         bB = null;
     }
 
+    //Méthode lancé quand le joueur appuie sur la gachette d'interaction(X sur manette de Xbox).
+    //Quand le joueur tient un objet il le lache, si il n'en tient pas et qu'il y en a un à proximité il le porte. Sinon rien ne se passe.
     public void OnInteraction(InputAction.CallbackContext context)
     {
+        //Le joueur tient un objet et va donc le lacher. Ce déclenche quand le joueur presse l'input.
         if(bB != null && context.started /*&& playerCollisionM.holdableObjects.Count == 0*/)
         {
             bRb.isKinematic = false;
@@ -37,11 +40,9 @@ public class HoldBall : MonoBehaviour
 
             isHolding = true;   
 
-            if (bB != null)
-            {
-                bB.tag = "Ball";
-                bB.GetComponentInChildren<Collider2D>().tag = "Ball";
-            }
+            bB.tag = "Ball";
+            bB.GetComponentInChildren<Collider2D>().tag = "Ball";
+
             playerCollisionM.holdableObjects.Add(bB);
             lineC.lineT.name = "Mesh Ball Free";
             bB = null;
@@ -55,8 +56,10 @@ public class HoldBall : MonoBehaviour
 
             playerCollisionM.coll.layer = LayerMask.NameToLayer("PlayerOff");
         }
+        //Le joueur ne tient pas d'objet et des objets sont à proximité il va donc attraper le plus proche. Se Déclenche lorsque le joueur appuie sur l'input.
         else if (playerCollisionM.holdableObjects.Count > 0 && context.started)
         {
+            //Trouve la balle la plus proche du joueur parmi toutes celles à proximité.
             bB = closestItemFinder(playerCollisionM.holdableObjects);
             bCol = bB.GetComponentInChildren<Collider2D>();
             lineC = bB.GetComponent<LineCreator>();
@@ -75,6 +78,7 @@ public class HoldBall : MonoBehaviour
         }
     }
 
+    //Retourne le Transform de la balle la plus proche du joueur parmi toutes celles à proximité.
     private Transform closestItemFinder(List<Transform> items)
     {
         Transform closestItem = items[0];
@@ -91,6 +95,7 @@ public class HoldBall : MonoBehaviour
 
     private void Update()
     {
+        //Actualise la position de la balle tenue par le joueur si il en tient une et change le layer du joueur.
         if(bB != null && bRb?.isKinematic == true)
         {
             bB.transform.position = holdPoint.position;
@@ -102,16 +107,22 @@ public class HoldBall : MonoBehaviour
             playerCollisionM.holdingBall = false;
 
         }
+
+        //Lance la méthode de simulation de la trajectoire de la balle.
+        if (sim) bBT.Sim(ThrowStrength * charC.moveValue);
     }
 
     bool sim;
+    //Méthode lancé quand le joueur appuie, maintient ou relache l'input de lancé de la balle. 
     public void OnThrow(InputAction.CallbackContext context)
     {
+        //Se déclenche quand le joueur presse sur l'input, lance la simulation de la trajectoire de la balle.
         if (bB != null && context.started)
         {
             sim = true;
             charC.canMove = false;
         }
+        //Se déclenche quand le joueur relache l'input ou quand l'input est annulé. Arrête la simulation de la trajectoire de la balle et lance la balle dans cette même trajectoire.
         else if(bB != null && (context.performed || context.canceled))
         {
             bRb.isKinematic = false;
@@ -129,28 +140,6 @@ public class HoldBall : MonoBehaviour
             sim = false;
             bRb = null;
             charC.canMove = true;
-            isHolding = false;
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        if (sim) bBT.Sim(ThrowStrength * charC.moveValue) ;
-        //print(sim + name);
-    }
-
-    public void OnDrop(InputAction.CallbackContext context)
-    {
-        if (bB != null)
-        {
-            bCol.gameObject.layer = 7;
-            FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Grab");
-
-            bRb.isKinematic = false;
-           // bCol.isTrigger = false;
-            bB.tag = "Ball";
-            bB = null;
-            bRb = null;
             isHolding = false;
         }
     }

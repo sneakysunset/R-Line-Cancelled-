@@ -53,6 +53,8 @@ public class CharacterController2D : MonoBehaviour
     [HideInInspector] public float ghostInputTimer;
     [HideInInspector] public float movementScaler;
     #endregion
+    //Pas de commentaires pcque flemme + y a des trucs dans l'inspector débrouille toi :-(.
+
 
     private void Start()
     {
@@ -238,6 +240,7 @@ public class CharacterController2D : MonoBehaviour
     }
 }
 
+//Script d'éditeur d'inspector qui permet d'avoir un inspector personnalisé.
 #region editor
 #if UNITY_EDITOR
 
@@ -278,7 +281,7 @@ public class OnGUIEditorHide : Editor
         bool condition = script.playerType == CharacterController2D.Team.J1;
         GUILayout.Label("The Color of this player material", parameter);
         if (condition) script.colorJ1 = EditorGUILayout.ColorField("Color of Player", script.colorJ1);
-        else script.colorJ1 = EditorGUILayout.ColorField("Color of Player", script.colorJ2);
+        else script.colorJ2 = EditorGUILayout.ColorField("Color of Player", script.colorJ2);
         EditorGUILayout.Space(spaceBetweenParameters);
 
         EditorGUILayout.Space(spaceBetweenTitles);

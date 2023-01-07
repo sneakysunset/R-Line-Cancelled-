@@ -103,8 +103,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  open: {r: 0.83137256, g: 0.5647059, b: 0.22352941, a: 0.50980395}
-  close: {r: 0.83137256, g: 0.5647059, b: 0.22352941, a: 1}
+  open: {r: 0.509434, g: 0.14013138, b: 0, a: 0.50980395}
+  close: {r: 0.24859214, g: 0.23073156, b: 0.8018868, a: 1}
 --- !u!212 &6780280350817831965
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -280,8 +280,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.8301887, g: 0.5657522, b: 0.2232111, a: 0.48235294}
-      key1: {r: 0.83137256, g: 0.5647059, b: 0.22352941, a: 0.48235294}
+      key0: {r: 0.1254902, g: 0.22745098, b: 0.6039216, a: 0.48235294}
+      key1: {r: 0.12246352, g: 0.22664502, b: 0.6037736, a: 0.48235294}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}

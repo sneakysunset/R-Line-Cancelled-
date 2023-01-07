@@ -12,16 +12,19 @@ public class LineBallSpawner : MonoBehaviour
     public float throwStrength;
     public bool spawnOnStart;
 
+    //Input provisoire d'activation du respawn de la balle associée.
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.P)) Spawn();
     }
 
+    //Si le bool "spawnOnStart" est true fais spawner une balle au start.
     private void Start()
     {
         if (spawnOnStart) Spawn();
     }
 
+    //Détruit la balle actuelle associée puis en spawn une autre et lui donne une vélocité vers le bas.
     public void Spawn()
     {
         if (currentBall)

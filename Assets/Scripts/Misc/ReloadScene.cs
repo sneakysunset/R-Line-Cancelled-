@@ -12,7 +12,7 @@ public class ReloadScene : MonoBehaviour
         lineSound = FindObjectOfType<LineSound>();
     }
 
-
+    //Relance la scène et arrête le son de la mécanique principale en cours.
     public void SceneReloader()
     {
         lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
@@ -20,21 +20,7 @@ public class ReloadScene : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void TestScene()
-    {
-        SceneManager.LoadScene("SceneTest");
-    }
-
-    public void PlayGround()
-    {
-        SceneManager.LoadScene("PlayGround");   
-    }
-
-    public void SoundScene()
-    {
-        SceneManager.LoadScene("LD_MainTest");
-    }
-
+    //En fonction du chiffre rentré dans l'input Field (de 0 à 3), lance la scène associée et arrête le son de la mécanique principale en cours.
     public void LoadScene(string input)
     {
         int intput = int.Parse(input);

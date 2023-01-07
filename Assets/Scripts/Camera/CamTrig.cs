@@ -13,6 +13,8 @@ public class CamTrig : MonoBehaviour
     public AnimationCurve animCurveCam, animCurveCamSize;
     public IEnumerator camTransEnum;
     Camera cam;
+
+
     private void Start()
     {
         if (speed == 0) Debug.LogError("Speed cannot be equal to zero" + "   " + this.name);
@@ -26,19 +28,22 @@ public class CamTrig : MonoBehaviour
         //if (useOldCamSize) camSizeDestination = cam.orthographicSize;
     }
 
+    //Quand la balle rentre dans un nouvel écran lance la coroutine de lerp vers le prochain écran.
     void OnTriggerEnter2D (Collider2D other)
     {
         if (other.tag == "Player" && Time.time > 1)
         {
             if (camTransEnum != null)
             {
-                //StopCoroutine(camTransEnum);
+                StopCoroutine(camTransEnum);
             }
             camTransEnum = cameraLerp(camC.position, cam.orthographicSize);
             StartCoroutine(camTransEnum);
         }
     }
-        
+    
+    //Lerp la position de la caméra de startPos vers la position du prochain écran.
+    //Actuellement désactivé mais lerp aussi la taille de l'écran.
     IEnumerator cameraLerp(Vector3 startPos, float startCamSize)
     {
         float i = 0;

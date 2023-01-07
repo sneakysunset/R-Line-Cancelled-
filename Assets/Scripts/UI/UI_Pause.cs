@@ -5,6 +5,9 @@ using UnityEngine.InputSystem;
 public class UI_Pause : MonoBehaviour
 {
     bool paused;
+
+    //Ne fonctionne pas pour l'instant.
+    //Mais pause au jeu.
     public void OnPause(InputAction.CallbackContext context)
     {
         print(0);

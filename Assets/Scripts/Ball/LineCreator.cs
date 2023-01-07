@@ -240,5 +240,4 @@ public class LineCreator : MonoBehaviour
         if (lineT)
             Destroy(lineT.gameObject);
     }
-
 }

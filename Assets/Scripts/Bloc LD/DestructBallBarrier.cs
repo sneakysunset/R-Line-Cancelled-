@@ -9,6 +9,8 @@ public class DestructBallBarrier : MonoBehaviour
     [Tooltip("Le prefab du spawner")]
     public LineBallSpawner spawner;
 
+    //Lors de la collision avec la balle lance la méthode du script spawner (à référencer dans l'inspecteur).
+    //Le script spawner détruit la balle puis la réinstancie à sa position.
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Ball")||collision.CompareTag("Held"))
