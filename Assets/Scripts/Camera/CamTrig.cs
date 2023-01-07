@@ -50,7 +50,6 @@ public class CamTrig : MonoBehaviour
         while (i < 1)
         {
             i += Time.deltaTime * (1 / speed);
-            print(i);
 
             camC.position = Vector3.Lerp(startPos, endPos, animCurveCam.Evaluate(i));
             //cam.orthographicSize = Mathf.Lerp(startCamSize, camSizeDestination, animCurveCamSize.Evaluate(i));
