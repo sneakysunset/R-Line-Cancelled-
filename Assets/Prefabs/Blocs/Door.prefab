@@ -103,8 +103,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  open: {r: 0.509434, g: 0.14013138, b: 0, a: 0.50980395}
-  close: {r: 0.24859214, g: 0.23073156, b: 0.8018868, a: 1}
+  open: {r: 0.24705882, g: 0.23137255, b: 0.8, a: 0.50980395}
+  close: {r: 0.8, g: 0.23137255, b: 0.27328905, a: 0.50980395}
 --- !u!212 &6780280350817831965
 SpriteRenderer:
   m_ObjectHideFlags: 0
