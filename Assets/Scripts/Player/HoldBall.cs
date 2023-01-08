@@ -120,11 +120,18 @@ public class HoldBall : MonoBehaviour
         if (bB != null && context.started)
         {
             sim = true;
+            var rb = GetComponent<Rigidbody2D>();
+            rb.velocity = new Vector2(0, rb.velocity.y);
+            bBT.ballHolder.gameObject.SetActive(true);
             charC.canMove = false;
         }
         //Se déclenche quand le joueur relache l'input ou quand l'input est annulé. Arrête la simulation de la trajectoire de la balle et lance la balle dans cette même trajectoire.
         else if(bB != null && (context.performed || context.canceled))
         {
+            sim = false;
+            charC.canMove = true;   
+            bBT.ballHolder.gameObject.SetActive(false);
+            if (charC.moveValue == Vector2.zero) return;
             bRb.isKinematic = false;
             // bCol.isTrigger = false;
             bCol.gameObject.layer = 7;
@@ -134,10 +141,10 @@ public class HoldBall : MonoBehaviour
             bBT._line.positionCount = 1;
             bB = null;
             bBT = null;
+
             bRb.velocity = GetComponent<CharacterController2D>().moveValue * ThrowStrength;
             FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Throw");
             // bRb.AddForce(GetComponent<CharacterController2D>().moveValue * ThrowStrength, ForceMode2D.Impulse);
-            sim = false;
             bRb = null;
             charC.canMove = true;
             isHolding = false;

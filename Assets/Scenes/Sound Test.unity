@@ -358,6 +358,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 557658891590447622, guid: a7d148708d58ffa4ab023200b3eaeb4d, type: 3}
+      propertyPath: fallMultiplier
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 557658891590447622, guid: a7d148708d58ffa4ab023200b3eaeb4d, type: 3}
+      propertyPath: lowJumpMultiplier
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 557658891590447641, guid: a7d148708d58ffa4ab023200b3eaeb4d, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -405,6 +413,10 @@ PrefabInstance:
     - target: {fileID: 557658891590447645, guid: a7d148708d58ffa4ab023200b3eaeb4d, type: 3}
       propertyPath: m_Name
       value: J2 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242779690993324647, guid: a7d148708d58ffa4ab023200b3eaeb4d, type: 3}
+      propertyPath: ThrowStrength
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7d148708d58ffa4ab023200b3eaeb4d, type: 3}
@@ -1453,12 +1465,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42f30d2e2001dd94694d09cc89f6c750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  smoother: 0
-  cameraExpandSpeed: 1
-  maximumDezoom: 0
-  minimumDezoom: -6.5
-  distanceX: 0
-  distanceY: 0
 --- !u!4 &1980473204
 Transform:
   m_ObjectHideFlags: 0

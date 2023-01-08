@@ -11,7 +11,6 @@ public class PlayerCollisionManager : MonoBehaviour
     [HideInInspector] public IEnumerator groundCheckEnum;
     [HideInInspector] public List<Transform> holdableObjects;
     [HideInInspector] public bool holdingBall = false;
-
     [Range(-1f, 1f)] public float yGroundCheck = -.15f;
     [Range(0f, 1f)] public float yWallJump = .7f;
     [Range(-1f, 1f)] public float lineCollisionDetection = .1f;
@@ -23,7 +22,7 @@ public class PlayerCollisionManager : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         coll = transform.Find("Collider").gameObject;
     }
-
+    public bool yo;
     private void FixedUpdate()
     {
         StartCoroutine(WaitForPhysics());
@@ -31,7 +30,11 @@ public class PlayerCollisionManager : MonoBehaviour
 
     private void Update()
     {
-        if (charC.moveValue.y >= -1 && charC.moveValue.y < -.85f)
+        if (Physics2D.Raycast(transform.position, Vector2.up, 100, LayerMask.NameToLayer("LineCollider"))) yo = true;
+        else yo = false;
+
+
+        if ((charC.moveValue.y >= -1 && charC.moveValue.y < -.85f) || holdingBall || yo)
         {
             coll.layer = LayerMask.NameToLayer("PlayerOff");
         }
@@ -66,10 +69,11 @@ public class PlayerCollisionManager : MonoBehaviour
         bool condition1 = collision.gameObject.tag == "LineCollider";
         bool condition2 = collision.contacts[0].normal.y > lineCollisionDetection;
 
+        if(collision.gameObject.tag == "LineCollider") print(collision.contacts[0].normal.y);
         if (condition1 && !condition2)
         {
             coll.layer = LayerMask.NameToLayer("PlayerOff");
-            rb.velocity = prevVelocity;
+            rb.velocity = -collision.relativeVelocity;
         }
         else if (condition1 && !condition2 && enterAgain)
         {
@@ -99,7 +103,7 @@ public class PlayerCollisionManager : MonoBehaviour
     //Si le y de la normale de la collision avec un autre joueur est supérieur à 0.65f fait rebondir le joueur et lance le son de rebond du joueur.
     private void CollisionWithPlayer(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Player") && collision.contacts[0].normal.y > .65f)
+        if(collision.gameObject.CompareTag("Player")  && collision.contacts[0].normal.y > .65f)
         {
             rb.AddForce(Vector2.up * bounce, ForceMode2D.Impulse);
             FMODUnity.RuntimeManager.PlayOneShot("event:/Ball/Bounce");
@@ -135,6 +139,7 @@ public class PlayerCollisionManager : MonoBehaviour
         {
             //rb.velocity = new Vector3(rb.velocity.x, 0);
             charC.wallJumpable = collision.contacts[0].normal.x;
+            rb.velocity = new Vector2(rb.velocity.x, 0);
         }
     }
 
@@ -218,10 +223,15 @@ public class PlayerCollisionManager : MonoBehaviour
         charC.groundCheck = false;
     }
 
+    Vector3 prevprevVelo;
+
     public IEnumerator WaitForPhysics()
     {
         yield return new WaitForFixedUpdate();
-        prevVelocity = rb.velocity;
+       // prevprevVelo = prevVelocity;
+       // prevVelocity = rb.velocity;
     }
+
+
 
 }
