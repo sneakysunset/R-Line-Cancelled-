@@ -15,6 +15,7 @@ public class ReloadScene : MonoBehaviour
     //Relance la scène et arrête le son de la mécanique principale en cours.
     public void SceneReloader()
     {
+        print("reloaded");
         lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         lineSound.sound.release();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -44,7 +45,7 @@ public class ReloadScene : MonoBehaviour
             case 3:
                 lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 lineSound.sound.release();
-                SceneManager.LoadScene("PlayGroundV2");
+                SceneManager.LoadScene("PlayGround");
                 break;
             case 4:
                 lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);

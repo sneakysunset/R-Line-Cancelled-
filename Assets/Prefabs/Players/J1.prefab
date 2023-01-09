@@ -153,7 +153,7 @@ MonoBehaviour:
   meshObj: {fileID: 0}
   playerType: 0
   jumpStrength: 14
-  wallJumpStrength: 7
+  wallJumpStrength: 11
   colorJ1: {r: 0.6509434, g: 0.18729973, b: 0.18729973, a: 1}
   colorJ2: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
   moveSpeed: 350
@@ -183,6 +183,7 @@ MonoBehaviour:
   yWallJump: 0.7
   lineCollisionDetection: 0
   bounce: 1.5
+  yo: 0
 --- !u!114 &6984929972057871670
 MonoBehaviour:
   m_ObjectHideFlags: 0

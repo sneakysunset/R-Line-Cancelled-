@@ -30,7 +30,7 @@ public class PlayerCollisionManager : MonoBehaviour
 
     private void Update()
     {
-        if (Physics2D.Raycast(transform.position, Vector2.up, 100, LayerMask.NameToLayer("LineCollider"))) yo = true;
+        if (Physics2D.Raycast((Vector2)transform.position, Vector2.up, 100, LayerMask.NameToLayer("LineCollider"))) yo = true;
         else yo = false;
 
 
@@ -69,7 +69,6 @@ public class PlayerCollisionManager : MonoBehaviour
         bool condition1 = collision.gameObject.tag == "LineCollider";
         bool condition2 = collision.contacts[0].normal.y > lineCollisionDetection;
 
-        if(collision.gameObject.tag == "LineCollider") print(collision.contacts[0].normal.y);
         if (condition1 && !condition2)
         {
             coll.layer = LayerMask.NameToLayer("PlayerOff");
@@ -139,7 +138,7 @@ public class PlayerCollisionManager : MonoBehaviour
         {
             //rb.velocity = new Vector3(rb.velocity.x, 0);
             charC.wallJumpable = collision.contacts[0].normal.x;
-            rb.velocity = new Vector2(rb.velocity.x, 0);
+            rb.velocity = new Vector2(0, 0);
         }
     }
 

@@ -39,7 +39,6 @@ public class LineSound : MonoBehaviour
         else
         {
             currentVisual = Instantiate(visualPrefab, lineC.pointList[0], Quaternion.identity).transform;
-
         }
 
         soundEnum = SoundControl();

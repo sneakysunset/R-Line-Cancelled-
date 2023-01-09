@@ -172,14 +172,17 @@ public class CharacterController2D : MonoBehaviour
 
     private void Dash()
     {
-        FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Jump");
+        if (canDash)
+        {
+            FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Jump");
 
-        rb.mass = ogGravity;
+            rb.mass = ogGravity;
         
-        rb.AddForce(Vector2.right * moveValue.x * dashStrength * ax/ 5, ForceMode2D.Impulse);
-        dashing = false;
-        dashCDOver = false;
-        StartCoroutine(dashCD());
+            rb.AddForce(Vector2.right * moveValue.x * dashStrength * ax/ 5, ForceMode2D.Impulse);
+            dashing = false;
+            dashCDOver = false;
+            StartCoroutine(dashCD());
+        }
     }
 
     private void Move()
