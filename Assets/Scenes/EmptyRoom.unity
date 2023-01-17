@@ -654,7 +654,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7208546231461539624, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
       propertyPath: brushWidth
-      value: 0.03
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 7208546231461539624, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
       propertyPath: paintRange
