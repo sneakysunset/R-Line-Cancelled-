@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Mat_Paint
-  m_Shader: {fileID: -6465566751694194690, guid: 496cb8e0a58300d49a58e7028dca33fd, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: dbd69f8a04a84d6439ba0f431a3e1c56, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -54,7 +54,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 45b793b458070f5438c544b2f0428846, type: 3}
+        m_Texture: {fileID: 10307, guid: 0000000000000000f000000000000000, type: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -66,7 +66,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PaintTex:
-        m_Texture: {fileID: 2800000, guid: 31f01a2315fb4b345adf2df220778df0, type: 3}
+        m_Texture: {fileID: 2800000, guid: e9fbac3253d898e4895f944a06de37f1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
@@ -110,5 +110,5 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _PaintColor: {r: 0.75471693, g: 0.11747948, b: 0.11747948, a: 1}
+    - _PaintColor: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

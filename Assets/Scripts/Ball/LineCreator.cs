@@ -98,24 +98,24 @@ public class LineCreator : MonoBehaviour
     //Lance la Coroutine "afterPhysics" qui actualise le edgeCollider après la simulation physique.
     public void LineUpdater()
     {
-        // var list = pointList;
-        // list = pointList.OrderBy(v => v.x).ToList();
-        // pointList = list;
+         var list = pointList;
+         list = pointList.OrderBy(v => v.x).ToList();
+         pointList = list;
         if (pointList.Count == 0) return;
         if (!UpdatePointList()) return;
 
-        var list = pointList.OrderBy(v => v.x).ToList();
+         list = pointList.OrderBy(v => v.x).ToList();
         pointList = list;
 
         if (list.Count < 4 || edgeC.gameObject.layer == 10) return;
 
-        lineR.positionCount = pointList.Count;
+        /*lineR.positionCount = pointList.Count;
         Vector3[] vector3s = new Vector3[pointList.Count];
         for (int i = 0; i < vector3s.Length; i++)
         {
             vector3s[i] = pointList[i];
         }
-        lineR.SetPositions(vector3s);
+        lineR.SetPositions(vector3s);*/
         StartCoroutine(afterPhysics());
     }
 
@@ -128,7 +128,9 @@ public class LineCreator : MonoBehaviour
         Vector2 pPos = new Vector2(transform.position.x, transform.position.y);
         bool condition1 = pointList[0].x - pPos.x > lineResolution || pPos.x - pointList[pointList.Count - 1].x > lineResolution;
         bool condition2 = pointList[0].x - pPos.x < lineResolution && pPos.x - pointList[pointList.Count - 1].x < lineResolution;
-        bool condition3 = transform.position.x != prevUpdatedIndex;
+        bool condition3 = true;
+        if(prevUpdatedIndex > -1)
+            condition3 = Vector2.Distance(transform.position, pointList[prevUpdatedIndex]) > lineResolution/2;
         if (condition1)
         {
             AddPoint();
@@ -145,11 +147,12 @@ public class LineCreator : MonoBehaviour
     //Méthode qui sert à rajouter un/des point(s).
     void AddPoint()
     {
+
         Vector2 pPos = new Vector2(transform.position.x, transform.position.y);
         prevUpdatedIndex = -1;
         float posX = 0;
         int numOfAdded = 0;
-
+        print(1);
         //Ce calcule sert à trouver le point appartenant à la liste le plus proche de la balle sur l'axe x.
         //'a' contient les chiffres après la virgule de la position de la balle sur x. 
         //'b' contient le coefficient de "lineResolution" qui permet d'avoir la valeur de 'a' arrondie à défaut à un multiple de lineResolution.
@@ -211,42 +214,38 @@ public class LineCreator : MonoBehaviour
             }
         }
 
-
+        paintBrush.UpdatePaint(true, pointList[closestIndex]);
         Vector2 newPos = new Vector2(pointList[closestIndex].x, pPos.y);
         pointList[closestIndex] = newPos;
+        paintBrush.UpdatePaint(false, pointList[closestIndex]);
 
         //Nous suivons ici un procédé similaire à celui de la méthode AddPoint sauf que l'itération se fait entre la position /n
         //la plus proche de la balle et la position la plus proche de la balle à la frame physique précédente.
         //L'incrémentation ne se fait aussi pas avec "lineResolution" mais avec les index séparant les 2 points évoqués au-dessus.
         //Si la position précédente est à droite de la position actuelle on effectue un décrémentation vers la position actuelle.
+
         if (prevUpdatedIndex != -1)
         {
             if (closestIndex - prevUpdatedIndex < 0)
             {
-                for (int i = closestIndex; i < prevUpdatedIndex; i++)
+                for (int i = closestIndex + 1; i < prevUpdatedIndex - 1; i++)
                 {
-                    float posY = Mathf.Lerp(pointList[closestIndex].y, pointList[prevUpdatedIndex].y, (Mathf.Abs(i) - Mathf.Abs(closestIndex)) / (Mathf.Abs(prevUpdatedIndex - closestIndex)));
                     paintBrush.UpdatePaint(true, pointList[i]);
+                    float posY = Mathf.Lerp(pointList[closestIndex].y, pointList[prevUpdatedIndex].y, (Mathf.Abs(i) - Mathf.Abs(closestIndex)) / (Mathf.Abs(prevUpdatedIndex - closestIndex)));
                     pointList[i] = new Vector2(pointList[i].x, posY);
                     paintBrush.UpdatePaint(false, new Vector2(pointList[i].x, posY));
                 }
             }
             else
             {
-                for (int i = closestIndex; i > prevUpdatedIndex; i--)
+                for (int i = closestIndex - 1; i > prevUpdatedIndex + 1; i--)
                 {
-                    float posY = Mathf.Lerp(pointList[prevUpdatedIndex].y, pointList[closestIndex].y, (Mathf.Abs(i) - Mathf.Abs(prevUpdatedIndex)) / (Mathf.Abs(closestIndex - prevUpdatedIndex)));
                     paintBrush.UpdatePaint(true, pointList[i]);
+                    float posY = Mathf.Lerp(pointList[prevUpdatedIndex].y, pointList[closestIndex].y, (Mathf.Abs(i) - Mathf.Abs(prevUpdatedIndex)) / (Mathf.Abs(closestIndex - prevUpdatedIndex)));
                     pointList[i] = new Vector2(pointList[i].x, posY);
                     paintBrush.UpdatePaint(false, new Vector2(pointList[i].x, posY));
                 }
             }
-        }
-        else
-        {
-            paintBrush.UpdatePaint(true, pointList[closestIndex]);
-            pointList[closestIndex] = newPos;
-            paintBrush.UpdatePaint(false, newPos);
         }
 
         prevUpdatedIndex = closestIndex;
