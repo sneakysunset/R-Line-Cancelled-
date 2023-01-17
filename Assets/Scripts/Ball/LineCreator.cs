@@ -23,7 +23,7 @@ public class LineCreator : MonoBehaviour
     Vector2 ogPos;
     int prevUpdatedIndex;
     public GameObject ballPrefab;
-
+    PaintBrush paintBrush;
 
 
     [Space(10)]
@@ -52,12 +52,15 @@ public class LineCreator : MonoBehaviour
         var a = transform.position.x - Mathf.FloorToInt(transform.position.x);
         var b = a - (a % lineResolution);
         var posX = Mathf.FloorToInt(transform.position.x) + b + lineResolution;
-        pointList.Add(new Vector2(posX, transform.position.y)) ;
+        Vector2 vec = new Vector2(posX, transform.position.y);
+        pointList.Add(vec) ;
+        paintBrush.UpdatePaint(false, vec);
         lineR.positionCount = 0;
     }
 
     private void Start()
     {
+        paintBrush = GetComponent<PaintBrush>();
         lineFolder = GameObject.FindGameObjectWithTag("LineFolder").transform;
         pointArray = Utils_Points.GeneratePointArray(pointArray, lineBeginningX, lineEndX, lineResolution);
         if (GetComponent<CharacterController2D>())
@@ -70,6 +73,7 @@ public class LineCreator : MonoBehaviour
         ogPos = transform.position;
         var firstPoint = new Vector2(Utils_Points.closestPoint(pointArray, transform.position.x), transform.position.y);
         pointList.Add(firstPoint);
+        paintBrush.UpdatePaint(false, firstPoint);
         InstantiateLine();
         StartCoroutine(fixDeMerdeSpawnLigne());
     }
@@ -169,6 +173,7 @@ public class LineCreator : MonoBehaviour
                 //entre la position sur y de la balle et la position sur y du point de la liste le plus proche de la balle sur l'axe x.
                 float posY = Mathf.Lerp(pPos.y, pointList[0].y, numOfAdded / ((pointList[0].x - pPos.x) / lineResolution));
                 pointList.Add(new Vector2(i, posY));
+                paintBrush.UpdatePaint(false, new Vector2(i, posY));
                 numOfAdded++;
             }
 
@@ -181,6 +186,7 @@ public class LineCreator : MonoBehaviour
             {
                 float posY = Mathf.Lerp(pPos.y, pointList[0].y, numOfAdded / ((pPos.x - pointList[pointList.Count - 1].x) / lineResolution));
                 pointList.Add(new Vector2(i, posY));
+                paintBrush.UpdatePaint(false, new Vector2(i, posY));
                 numOfAdded++;
             }
         }
@@ -220,7 +226,9 @@ public class LineCreator : MonoBehaviour
                 for (int i = closestIndex; i < prevUpdatedIndex; i++)
                 {
                     float posY = Mathf.Lerp(pointList[closestIndex].y, pointList[prevUpdatedIndex].y, (Mathf.Abs(i) - Mathf.Abs(closestIndex)) / (Mathf.Abs(prevUpdatedIndex - closestIndex)));
+                    paintBrush.UpdatePaint(true, pointList[i]);
                     pointList[i] = new Vector2(pointList[i].x, posY);
+                    paintBrush.UpdatePaint(false, new Vector2(pointList[i].x, posY));
                 }
             }
             else
@@ -228,13 +236,17 @@ public class LineCreator : MonoBehaviour
                 for (int i = closestIndex; i > prevUpdatedIndex; i--)
                 {
                     float posY = Mathf.Lerp(pointList[prevUpdatedIndex].y, pointList[closestIndex].y, (Mathf.Abs(i) - Mathf.Abs(prevUpdatedIndex)) / (Mathf.Abs(closestIndex - prevUpdatedIndex)));
+                    paintBrush.UpdatePaint(true, pointList[i]);
                     pointList[i] = new Vector2(pointList[i].x, posY);
+                    paintBrush.UpdatePaint(false, new Vector2(pointList[i].x, posY));
                 }
             }
         }
         else
         {
+            paintBrush.UpdatePaint(true, pointList[closestIndex]);
             pointList[closestIndex] = newPos;
+            paintBrush.UpdatePaint(false, newPos);
         }
 
         prevUpdatedIndex = closestIndex;
