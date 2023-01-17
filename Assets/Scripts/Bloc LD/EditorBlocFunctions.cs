@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Script ne s'excutant qu'en editor et pas en playmode.
 [ExecuteInEditMode]
 public class EditorBlocFunctions : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class EditorBlocFunctions : MonoBehaviour
     public bool freeScale;
     private Vector3 previousPos;
     private Vector3 previousScale;
+
+    //Méthode permettant d'empêcher le déplacement et le scaling libre de l'objet quand le booléen associé est désactivé.
     private void LateUpdate()
     {
         if (!freeMove && previousPos != transform.position)

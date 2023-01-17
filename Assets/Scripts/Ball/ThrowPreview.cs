@@ -9,25 +9,39 @@ public class ThrowPreview : MonoBehaviour
     private PhysicsScene2D _physicsScene;
     public GameObject BallPrefab;
     public LineRenderer _line;
+    public GameObject ptnPrefab;
+    public Transform ballHolder;
+    public int _maxPhysicsFrameIterations = 100;
+    List<Transform> balls;
+    public int res;
+    private void Start()
+    {
+        for (int i = 0; i < _maxPhysicsFrameIterations; i++)
+        {
+            Transform point = Instantiate(ptnPrefab, ballHolder).transform;
+        }
+    }
 
-
+    //Lance la simulation de la trajectoire de la balle.
     public void Sim(Vector2 velocity)
     {
+        //ballHolder.gameObject.SetActive(true);
         Vector2[] vector2s = trajArray(GetComponent<Rigidbody2D>(), transform.position, velocity, _maxPhysicsFrameIterations);
         _line.positionCount = _maxPhysicsFrameIterations;
         Vector3[] vec = new Vector3[_maxPhysicsFrameIterations];
-        for (int i = 0; i < _maxPhysicsFrameIterations; i++)
+        for (int i = 0; i < ballHolder.childCount; i++)
         {
             vec[i] = vector2s[i];
+            ballHolder.GetChild(i).position = vec[i];
         }
-        _line.SetPositions(vec);
     }
 
+    //Calcule les points traversables par la balle en faisant des itérations sur le moteur physique 2D et en rajoutant à la simulation la vitesse de base, la gravité et le drag.
     Vector2[] trajArray(Rigidbody2D rb, Vector2 pos, Vector2 velocity, int steps)
     {
         Vector2[] results =  new Vector2[steps];
 
-        float timestep = Time.fixedDeltaTime / Physics2D.velocityIterations;
+        float timestep = Time.fixedDeltaTime / Physics2D.velocityIterations * res;
         Vector2 gravityAccel = Physics2D.gravity * rb.gravityScale * timestep * timestep;
 
         float drag = 1 - timestep * rb.drag;
@@ -56,7 +70,6 @@ public class ThrowPreview : MonoBehaviour
             SceneManager.MoveGameObjectToScene(ghostObj, _simulatedScene);  
         }
     }
-    public int _maxPhysicsFrameIterations = 100;
     public void SimulateTrajectory(float throwStrength, Vector2 direction)
     {
         print(1);
