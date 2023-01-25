@@ -178,6 +178,7 @@ public class Utils_Points
 
     public static Vector3 GetParallelePoint(Vector3 p, Vector3 p1, Vector3 p2, float distance)
     {
+        //var u = Vector3.Cross()
         var targetPos = p + ((p - p1).normalized + (p - p2).normalized).normalized * distance;
         if (targetPos.y < p.y)
         {
