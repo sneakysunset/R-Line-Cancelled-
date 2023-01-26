@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35f6678c9e82258488d4ef343d7eeb22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bumperStrength: 20
+  bumperStrength: 5
   bumperType: 0
   bumperBounceType: 0
 --- !u!114 &7095772526290966824

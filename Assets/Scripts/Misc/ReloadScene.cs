@@ -12,29 +12,16 @@ public class ReloadScene : MonoBehaviour
         lineSound = FindObjectOfType<LineSound>();
     }
 
-
+    //Relance la scène et arrête le son de la mécanique principale en cours.
     public void SceneReloader()
     {
+        print("reloaded");
         lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         lineSound.sound.release();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void TestScene()
-    {
-        SceneManager.LoadScene("SceneTest");
-    }
-
-    public void PlayGround()
-    {
-        SceneManager.LoadScene("PlayGround");   
-    }
-
-    public void SoundScene()
-    {
-        SceneManager.LoadScene("LD_MainTest");
-    }
-
+    //En fonction du chiffre rentré dans l'input Field (de 0 à 3), lance la scène associée et arrête le son de la mécanique principale en cours.
     public void LoadScene(string input)
     {
         int intput = int.Parse(input);
@@ -43,22 +30,27 @@ public class ReloadScene : MonoBehaviour
             case 0:
                 lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 lineSound.sound.release();
-                SceneManager.LoadScene("SceneTest");
+                SceneManager.LoadScene("EmptyRoom");
                 break;
             case 1:
                 lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 lineSound.sound.release();
-                SceneManager.LoadScene("PlayGround");
+                SceneManager.LoadScene("Interrupteur_LVL_Test 1");
                 break;
             case 2:
                 lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 lineSound.sound.release();
-                SceneManager.LoadScene("Sound Test");
+                SceneManager.LoadScene("ChampDeForce_LVL_Test");
                 break;
             case 3:
                 lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 lineSound.sound.release();
-                SceneManager.LoadScene("LD_MainTest");
+                SceneManager.LoadScene("PlayGround");
+                break;
+            case 4:
+                lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                lineSound.sound.release();
+                SceneManager.LoadScene("Sound Test");
                 break;
             default:
                 break;

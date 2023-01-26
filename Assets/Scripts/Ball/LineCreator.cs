@@ -11,7 +11,7 @@ public class LineCreator : MonoBehaviour
     private Color col;
     private CharacterController2D charC;
     Transform lineFolder;
-    [HideInInspector] public LineRenderer lineR;
+    //[HideInInspector] public LineRenderer lineR;
     [HideInInspector] public EdgeCollider2D edgeC;
     [HideInInspector] public Transform lineT;
 
@@ -23,7 +23,7 @@ public class LineCreator : MonoBehaviour
     Vector2 ogPos;
     int prevUpdatedIndex;
     public GameObject ballPrefab;
-
+    private MeshFilter meshF;
 
 
     [Space(10)]
@@ -44,6 +44,18 @@ public class LineCreator : MonoBehaviour
     public float updateAnimSpeed;
     #endregion
 
+    IEnumerator fixDeMerdeSpawnLigne()
+    {
+        yield return new WaitForEndOfFrame();
+        if (pointList.Count > 0) 
+        pointList.Clear();
+        var a = transform.position.x - Mathf.FloorToInt(transform.position.x);
+        var b = a - (a % lineResolution);
+        var posX = Mathf.FloorToInt(transform.position.x) + b + lineResolution;
+        pointList.Add(new Vector2(posX, transform.position.y)) ;
+        //lineR.positionCount = 0;
+    }
+
     private void Start()
     {
         lineFolder = GameObject.FindGameObjectWithTag("LineFolder").transform;
@@ -59,43 +71,69 @@ public class LineCreator : MonoBehaviour
         var firstPoint = new Vector2(Utils_Points.closestPoint(pointArray, transform.position.x), transform.position.y);
         pointList.Add(firstPoint);
         InstantiateLine();
+        StartCoroutine(fixDeMerdeSpawnLigne());
     }
 
+    //Au start cré la ligne et prend des références du lineRenderer, du edgeCollider et du transform. Change aussi la couleur de la ligne son nom et son layer.
     private void InstantiateLine()
     {
         lineT = Instantiate(linePrefab, lineFolder).transform;
-        lineR = lineT.GetComponentInChildren<LineRenderer>();
+        //lineR = lineT.GetComponentInChildren<LineRenderer>();
         edgeC = lineT.GetComponentInChildren<EdgeCollider2D>();
-        lineR.material.color = col;
-        lineT.name = "Mesh " + pType.ToString() + " Off";
+        meshF = lineT.GetComponentInChildren<MeshFilter>();
+        //lineR.positionCount = 0;
+        //lineR.material.color = col;
+        //lineT.name = "Mesh " + pType.ToString() + " Off";
         edgeC.gameObject.layer = 6;
         if (pType != CharacterController2D.Team.Ball)
             charC.meshObj = lineT.gameObject;
     }
 
+    //Ordonne la liste de point puis invoque la fonction qui ajoute et actualise des points.
+    //Réordonne la liste de points pour que les nouveaux points potentiels soient rangé dans le bon ordre.
+    //Remplace la liste de points actuel du lineRenderer par la liste de point pointLine.
+    //Lance la Coroutine "afterPhysics" qui actualise le edgeCollider après la simulation physique.
     public void LineUpdater()
     {
-        var list = pointList;
-        list = pointList.OrderBy(v => v.x).ToList();
-        pointList = list;
-
+        // var list = pointList;
+        // list = pointList.OrderBy(v => v.x).ToList();
+        // pointList = list;
+        if (pointList.Count == 0) return;
         if (!UpdatePointList()) return;
 
-        list = pointList.OrderBy(v => v.x).ToList();
+        var list = pointList.OrderBy(v => v.x).ToList();
         pointList = list;
 
         if (list.Count < 4 || edgeC.gameObject.layer == 10) return;
 
-        lineR.positionCount = pointList.Count;
+        //lineR.positionCount = pointList.Count;
         Vector3[] vector3s = new Vector3[pointList.Count];
         for (int i = 0; i < vector3s.Length; i++)
         {
             vector3s[i] = pointList[i];
         }
-        lineR.SetPositions(vector3s);
+
+        Mesh m = new Mesh();
+        m.name = "trailMesh";
+
+        Utils_Mesh.UpdateMeshVertices(pointList, width, m);
+        Utils_Mesh.UpdateMeshTriangles(pointList.Count, m);
+        m.MarkDynamic();
+        m.Optimize();
+        m.OptimizeReorderVertexBuffer();
+        m.RecalculateBounds();
+        m.RecalculateNormals();
+        m.RecalculateTangents();
+        meshF.mesh = m;
+
+        //lineR.SetPositions(vector3s);
         StartCoroutine(afterPhysics());
     }
 
+    //Etape intermédiaire dans laquel on décide si on ajoute un/des point(s) ou actualise un/des point(s) de la liste lors de cette frame physique.
+    //Si la balle est en dehors de la liste de points avec une distance d'au moins lineResolution (variable d'espacement des points) alors on ajoute un/des point(s) (condition1).
+    //Si la balle est entre le premier et dernier point de la liste (condition2) et n'a pas la même position que la frame précédente on actualise un/des point(s) (condition3).
+    //Si la balle n'a pas changé de position depuis la dernière frame alors la méthode retourne False et le lineRenderer et le edgeCollider ne sont pas actualisé cette frame physique (!condition1 && !condition3).
     public bool UpdatePointList()
     {
         Vector2 pPos = new Vector2(transform.position.x, transform.position.y);
@@ -115,20 +153,35 @@ public class LineCreator : MonoBehaviour
         else return false;
     }
 
+    //Méthode qui sert à rajouter un/des point(s).
     void AddPoint()
     {
         Vector2 pPos = new Vector2(transform.position.x, transform.position.y);
         prevUpdatedIndex = -1;
         float posX = 0;
         int numOfAdded = 0;
+
+        //Ce calcule sert à trouver le point appartenant à la liste le plus proche de la balle sur l'axe x.
+        //'a' contient les chiffres après la virgule de la position de la balle sur x. 
+        //'b' contient le coefficient de "lineResolution" qui permet d'avoir la valeur de 'a' arrondie à défaut à un multiple de lineResolution.
         var a = pPos.x - Mathf.FloorToInt(pPos.x);
         var b = a - (a % lineResolution);
+
+        //Quand la balle est à gauche de la liste posX la position de la balle sur x arrondi à l'excès au multiple de "lineResolution".
+        //Quand la balle est à gauche de la liste posX la position de la balle sur x arrondi au défaut au multiple de "lineResolution".
         if (pointList[0].x - pPos.x > lineResolution)
         {
             posX = Mathf.FloorToInt(pPos.x) + b + lineResolution;
 
+            //Afin que tous les points de la lignes aient le même écartement et que la résolution de la ligne soit uniforme /n
+            //il faut rajouter à la liste de point non pas seulement le point le plus proche de la balle /n
+            //mais aussi tous les points multiples de "lineResolution" séparant la balle du point actuel de la liste le plus proche.
+            //Pour ce faire on ajoute des points de manière itérative de la position la plus proche de la balle arondie, à la position /n
+            //la plus proche de la balle sur l'axe x appartenant à la liste avec une incrémentation de "lineResolution".
             for (float i = posX; i < pointList[0].x; i += lineResolution)
             {
+                //Afin que la courbe de la ligne soit réaliste et smooth on interpole la position sur l'axe y de chaque point rajouté /n
+                //entre la position sur y de la balle et la position sur y du point de la liste le plus proche de la balle sur l'axe x.
                 float posY = Mathf.Lerp(pPos.y, pointList[0].y, numOfAdded / ((pointList[0].x - pPos.x) / lineResolution));
                 pointList.Add(new Vector2(i, posY));
                 numOfAdded++;
@@ -148,6 +201,7 @@ public class LineCreator : MonoBehaviour
         }
     }
 
+    //Méthode qui sert à actualiser la position de points sur l'axe y.
     void UpdatePoint()
     {
         Vector2 pPos = new Vector2(transform.position.x, transform.position.y);
@@ -156,6 +210,7 @@ public class LineCreator : MonoBehaviour
 
         float curDistance = 100000;
         int closestIndex = 10000;
+        //Cette itération sert à trouver le point le plus proche de la balle appartenant à la liste.
         for (int i = 0; i < pointList.Count; i++)
         {
             if (Mathf.Abs(pointList[i].x - pPos.x) < curDistance)
@@ -169,6 +224,10 @@ public class LineCreator : MonoBehaviour
         Vector2 newPos = new Vector2(pointList[closestIndex].x, pPos.y);
         pointList[closestIndex] = newPos;
 
+        //Nous suivons ici un procédé similaire à celui de la méthode AddPoint sauf que l'itération se fait entre la position /n
+        //la plus proche de la balle et la position la plus proche de la balle à la frame physique précédente.
+        //L'incrémentation ne se fait aussi pas avec "lineResolution" mais avec les index séparant les 2 points évoqués au-dessus.
+        //Si la position précédente est à droite de la position actuelle on effectue un décrémentation vers la position actuelle.
         if (prevUpdatedIndex != -1)
         {
             if (closestIndex - prevUpdatedIndex < 0)
@@ -196,18 +255,18 @@ public class LineCreator : MonoBehaviour
         prevUpdatedIndex = closestIndex;
     }
 
+    //A cause de l'ordre d'execution des events physiques de Unity on doit actualiser le collider après le yuekd WaitForFixedUpdate.
+    //https://docs.unity3d.com/Manual/ExecutionOrder.html
     IEnumerator afterPhysics()
     {
         yield return new WaitForFixedUpdate();
         edgeC.SetPoints(pointList);
     }
 
+    //Lorsque la balle est détruite la ligne associée est aussi détruite.
     private void OnDestroy()
     {
         if (lineT)
             Destroy(lineT.gameObject);
-
-        // Instantiate(ballPrefab, ogPos, Quaternion.identity);
     }
-
 }

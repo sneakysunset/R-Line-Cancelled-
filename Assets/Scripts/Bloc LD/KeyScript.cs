@@ -10,9 +10,10 @@ public class KeyScript : MonoBehaviour
 
     private void Start()
     {
-        ogCol = GetComponent<SpriteRenderer>().color;
+        ogCol = GetComponentInChildren<SpriteRenderer>().color;
     }
 
+    //Quand la ligne rentre dans la zone de l'interrupteur active le son d'activation et change la couleur de l'interrupteur.
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("LineCollider"))
@@ -20,10 +21,11 @@ public class KeyScript : MonoBehaviour
             activated = true;
             FMODUnity.RuntimeManager.PlayOneShot("event:/BlockLd/SwitchOn");
             door.KeyTriggered();
-            GetComponent<SpriteRenderer>().color = Color.blue;
+            GetComponentInChildren<SpriteRenderer>().color = Color.blue;
         }
     }
 
+    //Tant que la ligne reste dans la zone de l'interrupteur la clé reste activée.
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("LineCollider"))
@@ -31,7 +33,8 @@ public class KeyScript : MonoBehaviour
             activated = true;
         }
     }
-
+    
+    //Quand la ligne quitte la zone de l'interrupteur active le son de désactivation, change la couleur de l'interrupteur et désactive la clé.
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("LineCollider"))
@@ -40,7 +43,7 @@ public class KeyScript : MonoBehaviour
             FMODUnity.RuntimeManager.PlayOneShot("event:/BlockLd/SwitchOff");
 
             door.KeyTriggered();
-            GetComponent<SpriteRenderer>().color = ogCol;
+            GetComponentInChildren<SpriteRenderer>().color = ogCol;
         }
     }
 }

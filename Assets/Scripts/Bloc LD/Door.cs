@@ -8,8 +8,8 @@ public class Door : MonoBehaviour
     public KeyScript[] keys;
     private FMOD.Studio.EventInstance slidingSound;
     public Vector2 doorDestination;
-    public float doorOpenSpeed = 1;
-    public float doorCloseSpeed = 1;
+    [Range(.01f, 100f)] public float doorOpenSpeed = 1;
+    [Range(.01f, 100f)] public float doorCloseSpeed = 1;
     public AnimationCurve openCurve;
     public AnimationCurve closeCurve;
     int nOpen;
@@ -18,9 +18,12 @@ public class Door : MonoBehaviour
     LineRenderer line;
     public Color open, close;
     bool isOpen;
+
     private void Start()
     {
         line = gameObject.GetComponent<LineRenderer>();
+
+        //Génère une ligne reliant les clés et la porte.
         line.positionCount = keys.Length + 1;
         for (int i = 0; i < keys.Length; i++)
         {
@@ -28,19 +31,20 @@ public class Door : MonoBehaviour
         }
         line.SetPosition(keys.Length, transform.position);
         
+        //Donne une référence à ce script aux interrupteurs associés.
         foreach(KeyScript key in keys)
         {
             key.door = this;
         }
         ogPos = transform.position;
-        doorOpenSpeed = Mathf.Clamp(doorOpenSpeed, 0.01f, 100);
-        doorCloseSpeed = Mathf.Clamp(doorCloseSpeed, 0.01f, 100);
+
         line.startColor = open;
         line.endColor = open;
     }
 
     private void Update()
     {
+        //Actualise la position des points de la ligne reliant les clés et la porte.
         line.SetPosition(keys.Length, transform.position);
         if (isOpen)
         {
@@ -53,9 +57,11 @@ public class Door : MonoBehaviour
             line.endColor = close;
         }
     }
+
+    //A chaque fois qu'une clé est activée ou désactivée, si la porte est fermé check si toutes les clés sont activés dans le cas ou elles le sont toutes lance l'ouverture de la porte.
+    //Sinon lance la fermeture de la porte.
     public void KeyTriggered()
     {
-
         nOpen = 0;
         foreach (KeyScript key in keys)
         {
@@ -89,6 +95,7 @@ public class Door : MonoBehaviour
         }
     }
 
+    //Méthode cervant à vérifier si une instance Fmod donné est entrain de jouer.
     bool IsPlaying(FMOD.Studio.EventInstance instance)
     {
         FMOD.Studio.PLAYBACK_STATE state;
@@ -96,6 +103,7 @@ public class Door : MonoBehaviour
         return state != FMOD.Studio.PLAYBACK_STATE.STOPPED;
     }
 
+    //Animation d'ouverture de la porte avec les sons d'ouverture de fermeture et de coulissement joués.
     IEnumerator DoorOpen(Vector2 startPos)
     {
         float i = Vector2.Distance(ogPos, transform.position) / Vector2.Distance(ogPos, doorDestination) ;
@@ -120,7 +128,7 @@ public class Door : MonoBehaviour
         FMODUnity.RuntimeManager.PlayOneShot("event:/BlockLd/DoorClose");
         yield return null;
     }
-
+    //Animation de fermeture de la porte avec les sons d'ouverture de fermeture et de coulissement joués.
     IEnumerator DoorClose(Vector2 startPos)
     {
         float i = Vector2.Distance(doorDestination, transform.position) / Vector2.Distance(ogPos, doorDestination);

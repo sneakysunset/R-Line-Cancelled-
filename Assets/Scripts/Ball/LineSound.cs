@@ -21,9 +21,13 @@ public class LineSound : MonoBehaviour
         waiter = new WaitForSeconds(soundUpdateTimer);
     }
 
+    //Event pour l'instant activé manuellement avec un bouton.
+    //Il lance la mécanique principale sonore (synthétiseur sonore avec pitch dépendant de la courbe créée par la ligne).
     public void PlaySound()
     {
         lineC = FindObjectOfType<LineCreator>();
+
+        //Si la mécanique est déja activé on arrête l'instance de son actuelle. Sinon on instancie la visualisation du lecteur de la courbe.
         if (IsPlaying())
         {
             sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
@@ -35,17 +39,20 @@ public class LineSound : MonoBehaviour
         else
         {
             currentVisual = Instantiate(visualPrefab, lineC.pointList[0], Quaternion.identity).transform;
-
         }
 
         soundEnum = SoundControl();
         
+        //Création de l'instance du son.
         sound = FMODUnity.RuntimeManager.CreateInstance("event:/MouvementCorde/LineSound");
         sound.start();
+        //Méthode actuellement non dynamique. Elle devrait permettre de repérer la hauteur du mur au dessus et en dessous du joueur. Pour l'instant elle récupère des valeurs constantes.
         GetMaxHeight();
+        //Coroutine qui fait fonctionner le son.
         StartCoroutine(soundEnum);
     }
 
+    //Méthode qui retourne si le son de la mécanique sonore est entrain de jouer.
     bool IsPlaying()
     {
         FMOD.Studio.PLAYBACK_STATE state;
@@ -53,6 +60,7 @@ public class LineSound : MonoBehaviour
         return state != FMOD.Studio.PLAYBACK_STATE.STOPPED;
     }
 
+    //Méthode actuellement non dynamique. Elle devrait permettre de repérer la hauteur du mur au dessus et en dessous du joueur. Pour l'instant elle récupère des valeurs constantes.
     void GetMaxHeight()
     {
         RaycastHit2D hitTop = Physics2D.Raycast((Vector2)lineC.transform.position, Vector2.up, 1000, 15); 
@@ -68,8 +76,11 @@ public class LineSound : MonoBehaviour
 
     IEnumerator SoundControl()
     {
+        //Timer servant à attendre la fin du fade in de la piste sonore jouée.
         yield return new WaitForSeconds(startTimer);
         int i = 0;
+        
+        //De manière itérative on parcours les points de la ligne de gauche à droite. A chaque itération le paramètre locale de FMOD "Pitch" récupère la valeure de la position sur l'axe y du point actuel.
         while(i < lineC.pointList.Count - 1)
         {
             i++;
@@ -78,6 +89,7 @@ public class LineSound : MonoBehaviour
 
             yield return waiter;
         }
+        //Même procédé dans le sens contraire.
         while (i > 0)
         {
             i--;
@@ -86,6 +98,8 @@ public class LineSound : MonoBehaviour
 
             yield return waiter;
         }
+
+        //Si le booléen est activé cette coroutine se répète à l'infini jusqu'à ce que la scène soit changé.
         if (!pingpong)
         {
             sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
@@ -97,10 +111,10 @@ public class LineSound : MonoBehaviour
         else
         {
             PingPongSoundControl();
-
         }
     }
 
+    //Méthode permettant de répéter la mécanique sonore à l'infini.
     void PingPongSoundControl()
     {
         startTimer = 0;
