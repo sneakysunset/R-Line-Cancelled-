@@ -159,6 +159,13 @@ public class PlayerCollisionManager : MonoBehaviour
         {
             GetBallOnTriggerEnter(other);
         }
+            
+        LaserHit(other);
+    }
+
+    void LaserHit(Collider2D other)
+    {
+        if (other.tag == "Laser") Destroy(this.gameObject);
     }
 
     //Si le joueur rentre dans la zone de trigger autour d'une balle elle rejoint la liste des objets attrapables à proximité.

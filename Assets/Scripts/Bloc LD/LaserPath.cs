@@ -8,42 +8,107 @@ public class LaserPath : MonoBehaviour
     public LayerMask bounceMask;
     public LayerMask hitLayer;
     LineRenderer lineR;
-    Collider2D tempHit;
+    List<Vector2> vector2s;
+    Vector3 origin;
+    Collider2D col;
+    public EdgeCollider2D edgeC;
+
+    public float timerOff, timerOn;
+    private float timer;
+    bool isOn;
     private void Start()
     {
+        vector2s = new List<Vector2>();
         lineR = GetComponentInChildren<LineRenderer>();
-        lineR.positionCount = maxBounceNum;        
+        timer = timerOff;
     }
 
     private void Update()
     {
-        Vector3 origin = transform.position;
-        Vector3 direction = transform.right;
+        timer -= Time.deltaTime;
+        if (timer <= 0 && isOn)
+        {
+            isOn = false;
+            timer = timerOff;
+            lineR.positionCount = 0;
+            edgeC.enabled = false;
+        }
+        else if(timer <= 0 && !isOn)
+        {
+            isOn = true;
+            timer = timerOn;
+        }
+    }
 
-        
+    private void FixedUpdate()
+    {
+        if(isOn) Raycast();
+    }
+
+    void Raycast()
+    {
+        origin = transform.position;
+        Vector3 direction = transform.right;
+        vector2s.Clear();
+        vector2s.Add(origin);
+
 
         for (int i = 0; i < maxBounceNum; i++)
         {
-            print(i + " " + direction);
             Physics2D.queriesHitTriggers = false;
             RaycastHit2D hit = Physics2D.Raycast(origin, direction, Mathf.Infinity, hitLayer);
             Physics2D.queriesHitTriggers = true;
-            Debug.DrawLine(origin, hit.point, Color.red);
-            if (hit.collider != null)
+
+            if (hit.collider != null && hit.transform.gameObject.tag == "LineCollider")
             {
-                var angle = Vector2.Angle(origin, hit.normal);
-                direction = Quaternion.AngleAxis(angle, Vector3.forward) * direction;
-                origin = (Vector2)origin - hit.point * .9f;
-                lineR.SetPosition(i, hit.point);
-                Debug.DrawRay(origin, direction, Color.blue);
+                direction = Bouncing(direction, hit);
             }
-            else break;
+            else  if(hit.collider == null)
+            {
+                vector2s.Add(origin + direction * 100);
+                break;
+            }
+            else
+            {
+                vector2s.Add(hit.point);
+                break;
+            }
         }
 
+        if (col != null) col.isTrigger = false;
+        col = null;
+        Vector3[] vec = new Vector3[vector2s.Count];
+        Vector2[] vec2d = new Vector2[vector2s.Count];
+
+        for (int i = 0; i < vec.Length; i++)
+        {
+            vec[i] = vector2s[i];
+            vec2d[i] = vector2s[i];
+        }
+        lineR.positionCount = vec.Length;
+        lineR.SetPositions(vec);
+        edgeC.points = new Vector2[vec2d.Length];
+        edgeC.SetPoints(vector2s);
     }
 
-    private void OnDrawGizmos()
+    Vector3 Bouncing(Vector3 direction, RaycastHit2D hit)
     {
-        
+        direction = Vector2.Reflect(direction, hit.normal);
+        origin = hit.point;
+        if (col == null) col = hit.collider;
+        col.isTrigger = false;
+        col = hit.collider;
+        col.isTrigger = true;
+        vector2s.Add(hit.point);
+
+        return direction;
     }
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player")) Destroy(collision.gameObject);
+    }
+
+    
 }
