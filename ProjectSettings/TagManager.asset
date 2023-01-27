@@ -10,6 +10,7 @@ TagManager:
   - Held
   - Jumpable
   - LineFolder
+  - Particule
   layers:
   - Default
   - TransparentFX
