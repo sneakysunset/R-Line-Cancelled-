@@ -11,7 +11,7 @@ public class LineCreator : MonoBehaviour
     private Color col;
     private CharacterController2D charC;
     Transform lineFolder;
-    [HideInInspector] public LineRenderer lineR;
+    //[HideInInspector] public LineRenderer lineR;
     [HideInInspector] public EdgeCollider2D edgeC;
     [HideInInspector] public Transform lineT;
 
@@ -23,7 +23,7 @@ public class LineCreator : MonoBehaviour
     Vector2 ogPos;
     int prevUpdatedIndex;
     public GameObject ballPrefab;
-
+    private MeshFilter meshF;
 
 
     [Space(10)]
@@ -53,7 +53,7 @@ public class LineCreator : MonoBehaviour
         var b = a - (a % lineResolution);
         var posX = Mathf.FloorToInt(transform.position.x) + b + lineResolution;
         pointList.Add(new Vector2(posX, transform.position.y)) ;
-        lineR.positionCount = 0;
+        //lineR.positionCount = 0;
     }
 
     private void Start()
@@ -78,11 +78,12 @@ public class LineCreator : MonoBehaviour
     private void InstantiateLine()
     {
         lineT = Instantiate(linePrefab, lineFolder).transform;
-        lineR = lineT.GetComponentInChildren<LineRenderer>();
+        //lineR = lineT.GetComponentInChildren<LineRenderer>();
         edgeC = lineT.GetComponentInChildren<EdgeCollider2D>();
-        lineR.positionCount = 0;
-        lineR.material.color = col;
-        lineT.name = "Mesh " + pType.ToString() + " Off";
+        meshF = lineT.GetComponentInChildren<MeshFilter>();
+        //lineR.positionCount = 0;
+        //lineR.material.color = col;
+        //lineT.name = "Mesh " + pType.ToString() + " Off";
         edgeC.gameObject.layer = 6;
         if (pType != CharacterController2D.Team.Ball)
             charC.meshObj = lineT.gameObject;
@@ -105,13 +106,27 @@ public class LineCreator : MonoBehaviour
 
         if (list.Count < 4 || edgeC.gameObject.layer == 10) return;
 
-        lineR.positionCount = pointList.Count;
+        //lineR.positionCount = pointList.Count;
         Vector3[] vector3s = new Vector3[pointList.Count];
         for (int i = 0; i < vector3s.Length; i++)
         {
             vector3s[i] = pointList[i];
         }
-        lineR.SetPositions(vector3s);
+
+        Mesh m = new Mesh();
+        m.name = "trailMesh";
+
+        Utils_Mesh.UpdateMeshVertices(pointList, width, m);
+        Utils_Mesh.UpdateMeshTriangles(pointList.Count, m);
+        m.MarkDynamic();
+        m.Optimize();
+        m.OptimizeReorderVertexBuffer();
+        m.RecalculateBounds();
+        m.RecalculateNormals();
+        m.RecalculateTangents();
+        meshF.mesh = m;
+
+        //lineR.SetPositions(vector3s);
         StartCoroutine(afterPhysics());
     }
 
