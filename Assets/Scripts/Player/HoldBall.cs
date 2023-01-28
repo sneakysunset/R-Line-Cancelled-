@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class HoldBall : MonoBehaviour
 {
-    [HideInInspector] public Transform bB;
+ /*   [HideInInspector] public Transform bB;
     private Rigidbody2D bRb;
     private Collider2D bCol;
     private LineCreator lineC;
@@ -31,7 +31,7 @@ public class HoldBall : MonoBehaviour
     public void OnInteraction(InputAction.CallbackContext context)
     {
         //Le joueur tient un objet et va donc le lacher. Ce déclenche quand le joueur presse l'input.
-        if(bB != null && context.started /*&& playerCollisionM.holdableObjects.Count == 0*/)
+        if(bB != null && context.started *//*&& playerCollisionM.holdableObjects.Count == 0*//*)
         {
             bRb.isKinematic = false;
             bRb.velocity = Vector2.zero;
@@ -149,5 +149,5 @@ public class HoldBall : MonoBehaviour
             charC.canMove = true;
             isHolding = false;
         }
-    }
+    }*/
 }

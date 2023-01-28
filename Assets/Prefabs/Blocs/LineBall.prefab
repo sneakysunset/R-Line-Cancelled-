@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 1339753458846042102}
   - component: {fileID: 1339753458846042091}
   - component: {fileID: -5115322315258834901}
+  - component: {fileID: 3579948625913584848}
   m_Layer: 0
   m_Name: LineBall
   m_TagString: Ball
@@ -137,7 +138,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointList: []
-  lineR: {fileID: 0}
   edgeC: {fileID: 0}
   lineT: {fileID: 0}
   linePrefab: {fileID: 8470138877869589839, guid: ff770ce5c4b76214ab8f01110640449d, type: 3}
@@ -202,7 +202,7 @@ MonoBehaviour:
   BallPrefab: {fileID: 99438573390550179}
   _line: {fileID: 1339753458846042102}
   ptnPrefab: {fileID: 1172140396761346378, guid: 3a52d1ec47f070744b671a80019ffa24, type: 3}
-  ballHolder: {fileID: 7190875357817938291}
+  pointFolder: {fileID: 7190875357817938291}
   _maxPhysicsFrameIterations: 1500
   res: 20
 --- !u!120 &1339753458846042102
@@ -338,6 +338,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   freeMove: 1
   freeScale: 1
+--- !u!114 &3579948625913584848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99438573390550179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65db9b97c2555d048ba978eab6b94a1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemType: 0
+  generateLine: 1
+  throwPreview: 1
+  Highlight: {fileID: 0}
 --- !u!1 &4045773664216329104
 GameObject:
   m_ObjectHideFlags: 0

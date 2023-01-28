@@ -10,7 +10,7 @@ public class ThrowPreview : MonoBehaviour
     public GameObject BallPrefab;
     public LineRenderer _line;
     public GameObject ptnPrefab;
-    public Transform ballHolder;
+    public Transform pointFolder;
     public int _maxPhysicsFrameIterations = 100;
     List<Transform> balls;
     public int res;
@@ -18,7 +18,7 @@ public class ThrowPreview : MonoBehaviour
     {
         for (int i = 0; i < _maxPhysicsFrameIterations; i++)
         {
-            Transform point = Instantiate(ptnPrefab, ballHolder).transform;
+            Transform point = Instantiate(ptnPrefab, pointFolder).transform;
         }
     }
 
@@ -29,10 +29,10 @@ public class ThrowPreview : MonoBehaviour
         Vector2[] vector2s = trajArray(GetComponent<Rigidbody2D>(), transform.position, velocity, _maxPhysicsFrameIterations);
         _line.positionCount = _maxPhysicsFrameIterations;
         Vector3[] vec = new Vector3[_maxPhysicsFrameIterations];
-        for (int i = 0; i < ballHolder.childCount; i++)
+        for (int i = 0; i < pointFolder.childCount; i++)
         {
             vec[i] = vector2s[i];
-            ballHolder.GetChild(i).position = vec[i];
+            pointFolder.GetChild(i).position = vec[i];
         }
     }
 
@@ -41,18 +41,28 @@ public class ThrowPreview : MonoBehaviour
     {
         Vector2[] results =  new Vector2[steps];
 
-        float timestep = Time.fixedDeltaTime / Physics2D.velocityIterations * res;
-        Vector2 gravityAccel = Physics2D.gravity * rb.gravityScale * timestep * timestep;
-
-        float drag = 1 - timestep * rb.drag;
-        Vector2 movestep = velocity* timestep;
-
-        for (int i = 0; i < steps; i++)
+        if(velocity != Vector2.zero)
         {
-            movestep += gravityAccel;
-            movestep *= drag;
-            pos += movestep;
-            results[i] = pos;
+            float timestep = Time.fixedDeltaTime / Physics2D.velocityIterations * res;
+            Vector2 gravityAccel = Physics2D.gravity * rb.gravityScale * timestep * timestep;
+
+            float drag = 1 - timestep * rb.drag;
+            Vector2 movestep = velocity* timestep;
+
+            for (int i = 0; i < steps; i++)
+            {
+                movestep += gravityAccel;
+                movestep *= drag;
+                pos += movestep;
+                results[i] = pos;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < steps; i++)
+            {
+                results[i] = transform.position;
+            }
         }
         return results;
     }

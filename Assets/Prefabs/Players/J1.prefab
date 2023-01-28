@@ -90,8 +90,9 @@ GameObject:
   - component: {fileID: 1775201043333655789}
   - component: {fileID: 1775201043333655794}
   - component: {fileID: 1074573358669061575}
+  - component: {fileID: 6999140409556955140}
+  - component: {fileID: 7041306080908357763}
   - component: {fileID: 6984929972057871670}
-  - component: {fileID: 616959123}
   - component: {fileID: 1363006960}
   m_Layer: 8
   m_Name: J1
@@ -177,13 +178,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   charC: {fileID: 0}
   coll: {fileID: 0}
-  holdableObjects: []
-  holdingBall: 0
   yGroundCheck: 0.1
   yWallJump: 0.7
   lineCollisionDetection: 0
   bounce: 1.5
   yo: 0
+--- !u!114 &6999140409556955140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775201043333655785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c4b58f93b754f4fa1b6beeb41d836e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heldItem: {fileID: 0}
+  holdPoint: {fileID: 666370479}
+  throwStrength: 15
+--- !u!114 &7041306080908357763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775201043333655785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23f3dccb38a2a6148bc77a05649abb1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holdableItems: []
+  closestItem: {fileID: 0}
 --- !u!114 &6984929972057871670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,9 +291,9 @@ MonoBehaviour:
     m_ActionName: LineControl/New action
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 616959123}
-        m_TargetAssemblyTypeName: HoldBall, Assembly-CSharp
-        m_MethodName: OnInteraction
+      - m_Target: {fileID: 6999140409556955140}
+        m_TargetAssemblyTypeName: ItemSystem, Assembly-CSharp
+        m_MethodName: OnItemInput1
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -279,9 +307,9 @@ MonoBehaviour:
     m_ActionName: Movement/Interaction[/DualSenseGamepadHID/buttonNorth,/Keyboard/r]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 616959123}
-        m_TargetAssemblyTypeName: HoldBall, Assembly-CSharp
-        m_MethodName: OnThrow
+      - m_Target: {fileID: 6999140409556955140}
+        m_TargetAssemblyTypeName: ItemSystem, Assembly-CSharp
+        m_MethodName: OnItemInput2
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -314,22 +342,6 @@ MonoBehaviour:
   m_DefaultActionMap: Movement
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &616959123
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1775201043333655785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4afcb513e1ccb144b405083d0983f89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bB: {fileID: 0}
-  holdPoint: {fileID: 666370479}
-  ThrowStrength: 15
-  isHolding: 0
 --- !u!50 &1363006960
 Rigidbody2D:
   serializedVersion: 4
