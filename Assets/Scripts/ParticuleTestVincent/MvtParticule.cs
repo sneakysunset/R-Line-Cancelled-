@@ -3,7 +3,7 @@ using UnityEngine;
 public class MvtParticule : MonoBehaviour
 {
     [Range(0.1f,10f)]public float distanceMaxTarget = 5f;
-    [Range(0.1f, 10f)] public float speed = 2f;
+    [Range(0f, 10f)] public float speed = 2f;
     public bool randomDistance;
     public bool randomSpeed;
     public Color idleColor;
