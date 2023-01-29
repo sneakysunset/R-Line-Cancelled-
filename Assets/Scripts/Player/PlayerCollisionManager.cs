@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerCollisionManager : MonoBehaviour
 {
     [HideInInspector] public CharacterController2D charC;
+    private Item myItem;
     private Rigidbody2D rb;
     [HideInInspector] public GameObject coll;
     Vector2 prevVelocity;
@@ -15,6 +16,9 @@ public class PlayerCollisionManager : MonoBehaviour
     [Range(-1f, 1f)] public float lineCollisionDetection = .1f;
     public float bounce = 1.5f;
     private ItemSystem itemS;
+    bool lineOverPlayer;
+    bool enterAgain;
+    bool inline;
 
     private void Start()
     {
@@ -22,36 +26,33 @@ public class PlayerCollisionManager : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         coll = transform.Find("Collider").gameObject;
         itemS = GetComponent<ItemSystem>();
-    }
-    public bool yo;
-    private void FixedUpdate()
-    {
-        StartCoroutine(WaitForPhysics());
+        myItem = GetComponent<Item>();
     }
 
     private void Update()
     {
-        if (Physics2D.Raycast((Vector2)transform.position, Vector2.up, 100, LayerMask.NameToLayer("LineCollider"))) yo = true;
-        else yo = false;
+        if (Physics2D.Raycast((Vector2)transform.position, Vector2.up, 100, LayerMask.NameToLayer("LineCollider"))) lineOverPlayer = true;
+        else lineOverPlayer = false;
 
 
-        if ((charC.moveValue.y >= -1 && charC.moveValue.y < -.85f) || (itemS.heldItem != null && itemS.heldItem.generateLine) || yo)
+        if (((charC.moveValue.y >= -1 && charC.moveValue.y < -.85f) || (itemS.heldItem != null && itemS.heldItem.generateLine) || lineOverPlayer) && !myItem.isHeld)
         {
             coll.layer = LayerMask.NameToLayer("PlayerOff");
         }
-        else if (!inline)
+        else if (!inline && !myItem.isHeld)
         {
             coll.layer = LayerMask.NameToLayer("Player");
         }
     }
 
-    bool enterAgain;
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        LineCollisionEnter(collision);
-        GroundCheckCollisionEnter(collision);
-        CollisionWithPlayer(collision);
+        if (!myItem.isHeld)
+        {
+            LineCollisionEnter(collision);
+            GroundCheckCollisionEnter(collision);
+            CollisionWithPlayer(collision);
+        }
 
         //Désactive la variable jumping lors de la collision avec un mur walljumpable.
         if (collision.contacts[0].normal.y > -yWallJump && collision.contacts[0].normal.y < yWallJump && collision.gameObject.CompareTag("Jumpable") /*|| collision.gameObject.CompareTag("LineCollider")*/)
@@ -154,14 +155,11 @@ public class PlayerCollisionManager : MonoBehaviour
         charC.wallJumpable = 0;
     }
 
-
-
     //Si le joueur rentre dans la zone de trigger autour d'une balle elle rejoint la liste des objets attrapables à proximité.
-    bool inline;
     //Quand la ligne est dans la zone de trigger à l'intérieur du joueur, ce dernier n'a pas de collision avec elle.
     private void OnTriggerStay2D(Collider2D other)
     {
-        if(other.tag == "LineCollider")
+        if(other.tag == "LineCollider" && !myItem.isHeld)
         {
             gameObject.layer = LayerMask.NameToLayer("PlayerOff");
             inline = true;
@@ -172,7 +170,6 @@ public class PlayerCollisionManager : MonoBehaviour
     {
         ExitLineTriggerExit(other);
     }
-
 
     //Quand la ligne sort de la zone de trigger à l'intérieur du joueur et que ce dernier ne tient pas de balle, le joueur recommence à rentrer en collision avec la ligne.
     void ExitLineTriggerExit(Collider2D other)
@@ -202,29 +199,4 @@ public class PlayerCollisionManager : MonoBehaviour
         yield return new WaitForSeconds(timer);
         charC.groundCheck = false;
     }
-
-    Vector3 prevprevVelo;
-
-    public IEnumerator WaitForPhysics()
-    {
-        yield return new WaitForFixedUpdate();
-       // prevprevVelo = prevVelocity;
-       // prevVelocity = rb.velocity;
-    }
-
-/*    void RemoveBallTriggerExit(Collider2D other)
-    {
-        if (other.transform.CompareTag("Ball"))
-        {
-            other.transform.parent.Find("Highlight").gameObject.SetActive(false);
-            holdableObjects.Remove(other.transform.parent);
-        }
-    }
-
-    void GetBallOnTriggerEnter(Collider2D other)
-    {
-         other.transform.parent.Find("Highlight").gameObject.SetActive(true);
-         holdableObjects.Add(other.transform.parent);
-    }*/
-
 }

@@ -68,7 +68,7 @@ public class ThrowPreview : MonoBehaviour
     }
 
     #region Not Used
-    void CreatePhysicsScene()
+    /*void CreatePhysicsScene()
     {
         _simulatedScene = SceneManager.CreateScene("Simulation", new CreateSceneParameters(LocalPhysicsMode.Physics2D));
         _physicsScene = _simulatedScene.GetPhysicsScene2D();
@@ -99,6 +99,6 @@ public class ThrowPreview : MonoBehaviour
         }
 
         Destroy(ghostObj);
-    }
+    }*/
     #endregion
 }

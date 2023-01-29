@@ -11,7 +11,7 @@ public class Item : MonoBehaviour
     protected ThrowPreview tP;
     protected Collider2D col;
     private Transform heldPoint;
-    protected bool isHeld;
+    [HideInInspector] public bool isHeld;
     public bool throwPreview;
     [HideInInspector] public GameObject Highlight;
 
@@ -30,6 +30,11 @@ public class Item : MonoBehaviour
     }
 
     public virtual void Update()
+    {
+
+    }
+
+    public virtual void FixedUpdate()
     {
         if (isHeld)
         {
@@ -51,6 +56,7 @@ public class Item : MonoBehaviour
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Catch");
         rb.isKinematic = true;
         heldPoint = holdPoint;
+        Highlight.SetActive(false);
     }
 
     public virtual void GrabRelease()

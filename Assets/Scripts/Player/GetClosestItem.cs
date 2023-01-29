@@ -6,6 +6,12 @@ public class GetClosestItem : MonoBehaviour
 {
    [HideInInspector] public List<Item> holdableItems;
    [HideInInspector] public Item closestItem;
+    ItemSystem itemS;
+
+    private void Start()
+    {
+        itemS = GetComponent<ItemSystem>();
+    }
 
     private void Update()
     {
@@ -15,9 +21,9 @@ public class GetClosestItem : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.transform.parent.TryGetComponent<Item>(out Item item))
+        if (other.transform.parent.TryGetComponent<Item>(out Item item) && item != itemS.heldItem)
         {
-            GetBallOnTriggerEnter(item);
+            GetItemOnTriggerEnter(item);
         }
     }
 
@@ -25,7 +31,7 @@ public class GetClosestItem : MonoBehaviour
     {
         if (other.transform.parent.TryGetComponent<Item>(out Item item) && holdableItems.Contains(item))
         {
-            RemoveBallTriggerExit(item);
+            RemoveItemTriggerExit(item);
             if (holdableItems.Count == 0)
             {
                 item.Highlight.SetActive(false);
@@ -34,9 +40,9 @@ public class GetClosestItem : MonoBehaviour
         }
     }
 
-    void GetBallOnTriggerEnter(Item item) => holdableItems.Add(item);
+    void GetItemOnTriggerEnter(Item item) => holdableItems.Add(item);
 
-    void RemoveBallTriggerExit(Item item) => holdableItems.Remove(item);
+    void RemoveItemTriggerExit(Item item) => holdableItems.Remove(item);
 
 
     Item ClosestItem()

@@ -10,6 +10,7 @@ public class ItemSystem : MonoBehaviour
     GetClosestItem closestItem;
     CharacterController2D charC;
     PlayerCollisionManager pCM;
+    Item myItem;
     public Transform holdPoint;
     public float throwStrength = 15;
 
@@ -18,6 +19,7 @@ public class ItemSystem : MonoBehaviour
         closestItem = GetComponent<GetClosestItem>();
         charC = GetComponent<CharacterController2D>();
         pCM = GetComponent<PlayerCollisionManager>();
+        myItem = GetComponent<Item>();
     }
 
     //normal grab/interaction action
@@ -36,8 +38,9 @@ public class ItemSystem : MonoBehaviour
         {
             heldItem = closestItem.closestItem;
             closestItem.holdableItems.Remove(heldItem);
-            heldItem.GrabStarted(holdPoint);
             pCM.coll.layer = LayerMask.NameToLayer("PlayerOff");
+            heldItem.GrabStarted(holdPoint);
+            if (heldItem is Item_Player) myItem.Highlight.SetActive(false);
         }
 
 
@@ -89,6 +92,11 @@ public class ItemSystem : MonoBehaviour
     private void Update()
     {
         if (heldItem != null && secondaryInputHold) heldItem.SecondaryInputHeld();
-        if (heldItem != null && throwing) heldItem.ThrowHeld(throwStrength, charC);
+        if (heldItem != null && throwing)
+        {
+            heldItem.ThrowHeld(throwStrength, charC);
+            charC.canJump = false;
+            charC.canMove = false;
+        }
     }
 }
