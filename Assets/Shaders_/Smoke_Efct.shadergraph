@@ -17,6 +17,9 @@
         },
         {
             "m_Id": "5f025ecef45a4b25a41de3f082779ea1"
+        },
+        {
+            "m_Id": "e6939cb10a3f4247a588b62a0434fc98"
         }
     ],
     "m_Keywords": [],
@@ -158,6 +161,9 @@
         },
         {
             "m_Id": "008c5b0f0f9a4da3a6b81c5182862aa5"
+        },
+        {
+            "m_Id": "6a95c4a40c88435684bff92260d97b5d"
         }
     ],
     "m_GroupDatas": [
@@ -423,6 +429,20 @@
                     "m_Id": "52155bf3ebdf4738a5c20d576426cd24"
                 },
                 "m_SlotId": 0
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "6a95c4a40c88435684bff92260d97b5d"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "296fdc2d05aa44468b3242891fd5409a"
+                },
+                "m_SlotId": 1
             }
         },
         {
@@ -923,8 +943,8 @@
     "m_ObjectId": "0d79564a87b44085a1288a47af473cc5",
     "m_Title": "Vertex Animation",
     "m_Position": {
-        "x": -139.1999969482422,
-        "y": -1499.199951171875
+        "x": -194.00003051757813,
+        "y": -1498.0
     }
 }
 
@@ -2074,6 +2094,21 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "4e4ec6714625406d91a3a680f577154e",
+    "m_Id": 0,
+    "m_DisplayName": "noise scale",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.UVMaterialSlot",
     "m_ObjectId": "4e7cbce3bb9f481dae41a33d5678846d",
     "m_Id": 2,
@@ -2634,6 +2669,41 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "6a95c4a40c88435684bff92260d97b5d",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -374.0000305175781,
+            "y": -1278.0,
+            "width": 205.00001525878907,
+            "height": 34.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "4e4ec6714625406d91a3a680f577154e"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "e6939cb10a3f4247a588b62a0434fc98"
+    }
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "6cd5144a561c40d3b83269dee0666e58",
     "m_Id": 2,
@@ -3041,6 +3111,9 @@
         },
         {
             "m_Id": "5f025ecef45a4b25a41de3f082779ea1"
+        },
+        {
+            "m_Id": "e6939cb10a3f4247a588b62a0434fc98"
         }
     ]
 }
@@ -3161,10 +3234,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1.5999809503555298,
-            "y": -1225.599853515625,
-            "width": 232.00010681152345,
-            "height": 147.1998291015625
+            "x": -28.0000057220459,
+            "y": -1080.0,
+            "width": 232.0000457763672,
+            "height": 146.0
         }
     },
     "m_Slots": [
@@ -3466,7 +3539,7 @@
         "m_SerializableColors": []
     },
     "m_Value": {
-        "x": 1.0700000524520875,
+        "x": 2.0,
         "y": 0.0,
         "z": 2.0
     }
@@ -4649,6 +4722,33 @@
         "e31": 0.0,
         "e32": 0.0,
         "e33": 1.0
+    }
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "e6939cb10a3f4247a588b62a0434fc98",
+    "m_Guid": {
+        "m_GuidSerialized": "9545e142-2196-47a4-9863-4aec529a84b0"
+    },
+    "m_Name": "noise scale",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "noise scale",
+    "m_DefaultReferenceName": "_noise_scale",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 0.0,
+    "m_FloatType": 0,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
     }
 }
 
