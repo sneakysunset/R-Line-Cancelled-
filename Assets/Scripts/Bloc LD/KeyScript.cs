@@ -5,7 +5,7 @@ using UnityEngine;
 public class KeyScript : MonoBehaviour
 {
     public bool activated;
-    [HideInInspector] public Door door;
+    [HideInInspector] public KeyChain keyChain;
     Color ogCol;
 
     private void Start()
@@ -20,7 +20,7 @@ public class KeyScript : MonoBehaviour
         {
             activated = true;
             FMODUnity.RuntimeManager.PlayOneShot("event:/BlockLd/SwitchOn");
-            door.KeyTriggered();
+            keyChain.KeyTriggered();
             GetComponentInChildren<SpriteRenderer>().color = Color.blue;
         }
     }
@@ -42,7 +42,7 @@ public class KeyScript : MonoBehaviour
             activated = false;
             FMODUnity.RuntimeManager.PlayOneShot("event:/BlockLd/SwitchOff");
 
-            door.KeyTriggered();
+            keyChain.KeyTriggered();
             GetComponentInChildren<SpriteRenderer>().color = ogCol;
         }
     }

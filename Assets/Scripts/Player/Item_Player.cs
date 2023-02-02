@@ -37,8 +37,8 @@ public class Item_Player : Item
         if(charC.moveValue != Vector2.zero)
             tP.Sim(throwStrength * new Vector2(charC.moveValue.x, -1).normalized);
         else tP.Sim(throwStrength * charC.moveValue);
-        myCharC.canJump = false;
-        myCharC.canMove = false;
+//        myCharC.canJump = false;
+//       myCharC.canMove = false;
     }
 
     public override void ThrowRelease(float throwStrength, CharacterController2D charC)

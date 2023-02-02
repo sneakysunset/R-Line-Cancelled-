@@ -5,9 +5,9 @@ using UnityEngine.InputSystem;
 public class ItemSystem : MonoBehaviour
 {
     [HideInInspector] public Item heldItem;
-    bool throwing;
+    [HideInInspector] public bool throwing;
     bool secondaryInputHold;
-    GetClosestItem closestItem;
+    [HideInInspector] public GetClosestItem closestItem;
     CharacterController2D charC;
     PlayerCollisionManager pCM;
     Item myItem;
@@ -31,6 +31,8 @@ public class ItemSystem : MonoBehaviour
             closestItem.holdableItems.Add(heldItem);
             if (closestItem.closestItem = null) closestItem.closestItem = heldItem;
             heldItem = null;
+            charC.canJump = true;
+            charC.canMove = true;
             return;
         }
 
@@ -44,7 +46,7 @@ public class ItemSystem : MonoBehaviour
         }
 
 
-        if (context.started && closestItem.closestItem != null &&  closestItem.closestItem.itemType == Item.ItemType.interactable && heldItem == null ) heldItem.InteractStarted();
+        if (context.started && closestItem.closestItem != null &&  closestItem.closestItem.itemType == Item.ItemType.interactable && heldItem == null ) closestItem.closestItem.InteractStarted();
     }
 
     //normal throw action
@@ -53,7 +55,7 @@ public class ItemSystem : MonoBehaviour
         if (context.started && heldItem != null)
         {
             throwing = true;
-            heldItem.ThrowStarted(throwStrength, charC);
+            heldItem.ThrowStarted(throwStrength, charC, this);
         }
 
         if ((context.canceled || context.performed) && heldItem != null)
@@ -63,11 +65,12 @@ public class ItemSystem : MonoBehaviour
             {
                 heldItem.CancelThrow();
                 charC.canMove = true;
+                charC.canJump = true;
             }
             else
             {
-                heldItem.ThrowRelease(throwStrength, charC);
                 closestItem.holdableItems.Add(heldItem);
+                heldItem.ThrowRelease(throwStrength, charC);
                 heldItem = null;
             }
         }
@@ -95,8 +98,6 @@ public class ItemSystem : MonoBehaviour
         if (heldItem != null && throwing)
         {
             heldItem.ThrowHeld(throwStrength, charC);
-            charC.canJump = false;
-            charC.canMove = false;
         }
     }
 }

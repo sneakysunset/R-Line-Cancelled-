@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GetClosestItem : MonoBehaviour
 {
-   [HideInInspector] public List<Item> holdableItems;
+   /*[HideInInspector]*/ public List<Item> holdableItems;
    [HideInInspector] public Item closestItem;
     ItemSystem itemS;
 
@@ -15,21 +15,24 @@ public class GetClosestItem : MonoBehaviour
 
     private void Update()
     {
+        foreach (Item item in holdableItems) if (item == null) Debug.LogError("NullItem");
+
         if (holdableItems.Count > 0) closestItem = ClosestItem();
         else closestItem = null;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.transform.parent.TryGetComponent<Item>(out Item item) && item != itemS.heldItem)
+        if (other.transform.parent && other.transform.parent.TryGetComponent(out Item item))
         {
-            GetItemOnTriggerEnter(item);
+            if (item != itemS.heldItem && !holdableItems.Contains(item))
+                GetItemOnTriggerEnter(item);
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.transform.parent.TryGetComponent<Item>(out Item item) && holdableItems.Contains(item))
+        if (other.transform.parent && other.transform.parent.TryGetComponent(out Item item) && holdableItems.Contains(item))
         {
             RemoveItemTriggerExit(item);
             if (holdableItems.Count == 0)
@@ -49,13 +52,14 @@ public class GetClosestItem : MonoBehaviour
     {
         Item cItem = null;
         float distance = Mathf.Infinity;
+
         foreach (Item item in holdableItems)
         {
-            float itemDistance = Vector2.Distance(item.transform.position, transform.position);
-            if (itemDistance < distance)
-            {
-                cItem = item;
-            }
+             float itemDistance = Vector2.Distance(item.transform.position, transform.position);
+             if (itemDistance < distance)
+             {
+                 cItem = item;
+             }
         }
 
         if (closestItem != null && cItem != closestItem)

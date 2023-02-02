@@ -20,7 +20,6 @@ public class Item : MonoBehaviour
         Highlight = transform.Find("Highlight").gameObject;
         if (TryGetComponent<Rigidbody2D>(out rb)) { }
         if (TryGetComponent<ThrowPreview>(out tP)) { }
-        if (generateLine) 
         col = GetComponentInChildren<Collider2D>();
     }
 
@@ -32,6 +31,13 @@ public class Item : MonoBehaviour
     public virtual void Update()
     {
 
+    }
+
+    public virtual void setTagsLayers(string colTag, string Tag, int colLayer)
+    {
+        col.tag = colTag;
+        tag = Tag;
+        col.gameObject.layer = colLayer;
     }
 
     public virtual void FixedUpdate()
@@ -50,9 +56,7 @@ public class Item : MonoBehaviour
     public virtual void GrabStarted(Transform holdPoint)
     {
         isHeld = true;
-        col.gameObject.layer = 14;
-        tag = "Held";
-        col.tag = "Held";
+        setTagsLayers("Held", "Held", 14);
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Catch");
         rb.isKinematic = true;
         heldPoint = holdPoint;
@@ -67,17 +71,16 @@ public class Item : MonoBehaviour
         rb.angularVelocity = 0;
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Grab");
 
-        tag = "NotHeld";
-        col.tag = "NotHeld";
-        col.gameObject.layer = 17;
+        setTagsLayers("NotHeld", "NotHeld", 17);
     }
 
-    public virtual void ThrowStarted(float throwStrength, CharacterController2D charC)
+    public virtual void ThrowStarted(float throwStrength, CharacterController2D charC, ItemSystem iS)
     {
         if(throwPreview)
         {
             tP.pointFolder.gameObject.SetActive(true);
             charC.canMove = false;
+            charC.canJump = false;
         }
     }
 
@@ -88,15 +91,16 @@ public class Item : MonoBehaviour
 
     public virtual void ThrowRelease(float throwStrength, CharacterController2D charC)
     {
-        charC.canMove = true;
+        setTagsLayers("NotHeld", "NotHeld", 17);
+
         tP.pointFolder.gameObject.SetActive(false);
-        tag = "NotHeld";
-        col.tag = "NotHeld";
-        col.gameObject.layer = 17;
-        rb.isKinematic = false;
         tP._line.positionCount = 1;
-        rb.velocity = charC.moveValue * throwStrength;
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Throw");
+        charC.canMove = true;
+        charC.canJump = true;
+        rb.isKinematic = false;
+        rb.velocity = charC.moveValue * throwStrength;
+
         isHeld = false;
     }
 
