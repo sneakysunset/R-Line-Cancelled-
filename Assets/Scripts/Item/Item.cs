@@ -7,15 +7,15 @@ public class Item : MonoBehaviour
     public enum ItemType { holdable, interactable};
     public ItemType itemType;
     public bool generateLine = false;
-    protected Rigidbody2D rb;
-    protected ThrowPreview tP;
-    protected Collider2D col;
-    private Transform heldPoint;
+    [HideInInspector] public Rigidbody2D rb;
+    [HideInInspector] public ThrowPreview tP;
+    [HideInInspector] public Collider2D col;
+    [HideInInspector] public Transform heldPoint;
     [HideInInspector] public bool isHeld;
     public bool throwPreview;
     [HideInInspector] public GameObject Highlight;
-
-    public virtual void Start()
+    public bool catchable = true;
+    public virtual void Awake()
     {
         Highlight = transform.Find("Highlight").gameObject;
         if (TryGetComponent<Rigidbody2D>(out rb)) { }

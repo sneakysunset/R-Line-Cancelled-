@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     public Color colorJ1, colorJ2;
     public bool canJump;
     public bool canMove;
-    
+    [HideInInspector] public Item myItem;
 
 
     #endregion
@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     public virtual void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        myItem = GetComponent<Item>();
         PlayerTypeChange(); 
         coll = transform.Find("Collider").GetComponent<Collider2D>();
     }

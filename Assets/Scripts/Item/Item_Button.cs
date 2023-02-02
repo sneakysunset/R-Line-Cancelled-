@@ -7,9 +7,9 @@ public class Item_Button : Item
     Trigger myTrigger;
     public float timerValue = 1;
     float timer = 0;
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
         myTrigger = GetComponent<Trigger>();
     }
 

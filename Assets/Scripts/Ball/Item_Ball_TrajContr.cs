@@ -8,16 +8,17 @@ public class Item_Ball_TrajContr : Item_Ball
     Player playera, otherPlayera;
     public bool flying;
     float ogGravity;
-    public float speed = 1;
-    public float deviationSpeed = 1;
+    public float speed = 5;
+    public float deviationSpeed = 4;
     Player playerC;
-    Vector2 direction;
-    public override void Start()
+    float direction;
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
         players = new Player[2];
         players = FindObjectsOfType<Player>();
         ogGravity = rb.gravityScale;
+        throwPreview = false;
     }
 
     public override void FixedUpdate()
@@ -30,7 +31,9 @@ public class Item_Ball_TrajContr : Item_Ball
     {
         playerC = player;
         player.holdableItems.Add(this);
-        direction = (transform.position - player.transform.position).normalized;
+        if ((transform.position - player.transform.position).normalized.x < 0)
+            direction = -1;
+        else direction = 1;
 
         stuckToWall = false;
         flying = true;
@@ -53,7 +56,7 @@ public class Item_Ball_TrajContr : Item_Ball
         }
     }
 
-    public override void ThrowHeld(float throwStrength, Player player) => rb.velocity = (new Vector2(direction.x * speed, player.moveValue.y * deviationSpeed)) * Time.deltaTime;
+    public override void ThrowHeld(float throwStrength, Player player) => rb.velocity = (new Vector2(direction * speed, player.moveValue.y * deviationSpeed));
 
     public override void CancelThrow() => stopFlying();
 
@@ -62,9 +65,8 @@ public class Item_Ball_TrajContr : Item_Ball
     public override void OnCollisionEnter2D(Collision2D collision)
     {
         base.OnCollisionEnter2D(collision);
-        bool c1 = flying && collision.collider.tag != "Ball" && collision.transform.tag != "Player";
-        bool c2 = collision.transform == otherPlayera?.transform;
-        if (c1 || c2) stopFlying();
+        if (flying) stopFlying();
+        
     }
 
     void stopFlying()
@@ -82,6 +84,15 @@ public class Item_Ball_TrajContr : Item_Ball
         rb.gravityScale = ogGravity;
         playerC = null;
         setTagsLayers("Ball", "Ball", 7);
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        if (flying)
+        {
+            stopFlying();
+        }
     }
 
 

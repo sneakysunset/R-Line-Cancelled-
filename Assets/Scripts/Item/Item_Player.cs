@@ -6,9 +6,9 @@ public class Item_Player : Item
 {
     Player myPlayer;
 
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
         myPlayer = GetComponent<Player>();
     }
 

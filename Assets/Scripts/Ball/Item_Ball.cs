@@ -4,29 +4,39 @@ using UnityEngine;
 
 public class Item_Ball : Item
 {
-    public LineCreator lC;
-    public bool stickToWall;
+    [HideInInspector] public LineCreator lC;
+     public BallType.BallCollisionType ballType;
     protected bool stuckToWall;
-    public bool collideWithPlayer = true;
-    public override void Start()
+     public bool collideWithPlayer = true;
+     public Player playerr;
+    public override void Awake()
     {
-        base.Start();
-        lC = GetComponent<LineCreator>();
+        
+        base.Awake();
+        throwPreview = true;
+
     }
 
     public override void GrabStarted(Transform holdPoint, Player player)
     {
-        base.GrabStarted(holdPoint, player);
-        if(collideWithPlayer)
+        playerr = player;
+        if (!catchable)
         {
-            Physics2D.IgnoreCollision(player.coll, lC.edgeC, true);
+            GrabRelease(player);
+            return;
         }
+        base.GrabStarted(holdPoint, player);
+
+        Physics2D.IgnoreCollision(player.coll, lC.edgeC, true);
+
     }
 
     public override void GrabRelease(Player player)
     {
         base.GrabRelease(player);
         setTagsLayers("Ball", "Ball", 7);
+
+        Physics2D.IgnoreCollision(player.coll, lC.edgeC, false);
     }
 
     public override void ThrowStarted(float throwStrength, Player player)
@@ -40,18 +50,20 @@ public class Item_Ball : Item
         base.ThrowRelease(throwStrength, player);
         setTagsLayers("Ball", "Ball", 7);
 
-    }
+        Physics2D.IgnoreCollision(player.coll, lC.edgeC, false);
 
+    }
     public override void FixedUpdate()
     {
         base.FixedUpdate();
         lC.LineUpdater();
 
-        if (stuckToWall && stickToWall)
+        if (stuckToWall && ballType == BallType.BallCollisionType.stickToWall)
         {
             rb.velocity = Vector2.zero;
             rb.gravityScale = 0;
         }
+
     }
 
     public virtual void OnCollisionEnter2D(Collision2D collision)
@@ -60,5 +72,14 @@ public class Item_Ball : Item
         FMODUnity.RuntimeManager.StudioSystem.setParameterByName("VolumeColBall", rb.velocity.magnitude);
         FMODUnity.RuntimeManager.PlayOneShot("event:/Ball/Collision");
         if (collision.collider.tag != "Ball" && collision.transform.tag != "Player") stuckToWall = true;
+        if (ballType == BallType.BallCollisionType.hardBounce)
+        {
+            rb.AddForce(new Vector2(0, 2), ForceMode2D.Impulse);
+        }
+    }
+
+    public virtual void OnDestroy()
+    {
+        if(isHeld) Physics2D.IgnoreCollision(playerr.coll, lC.edgeC, true);
     }
 }

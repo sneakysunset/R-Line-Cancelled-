@@ -12,7 +12,7 @@ public class TestCross : MonoBehaviour
     public Vector3 resultPoint, resultPoint2;
     public float angle, angle2;
     public float gizmoPointSize;
-    public float result2Lenght;
+    public float result2Length;
 
     void Update()
     {
@@ -27,7 +27,7 @@ public class TestCross : MonoBehaviour
         angle2 = Vector3.SignedAngle(pCL2, pCR2, Vector3.forward) / 2;
         
         resultPoint2 = ((Quaternion.AngleAxis(-Mathf.Abs(angle2), Vector3.forward) * pCL2)).normalized * Length;
-        result2Lenght = resultPoint2.magnitude;
+        result2Length = resultPoint2.magnitude;
     }
 
     private void OnDrawGizmos()

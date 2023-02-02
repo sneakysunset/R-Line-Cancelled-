@@ -7,15 +7,17 @@ public class Item_Ball_ToPlayer : Item_Ball
     Player[] players;
     public Transform target;
     public bool flying;
+    private Player pl;
     float ogGravity;
-    public float speed = 1;
+    public float speed = 50;
 
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
         players = new Player[2];
         players = FindObjectsOfType<Player>();
         ogGravity = rb.gravityScale;
+        throwPreview = false;
     }
 
     public override void FixedUpdate()
@@ -33,6 +35,7 @@ public class Item_Ball_ToPlayer : Item_Ball
         flying = false;
         target = null;
         rb.gravityScale = ogGravity;
+        pl = player;
     }
 
     public override void ThrowStarted(float throwStrength, Player player)
@@ -43,7 +46,7 @@ public class Item_Ball_ToPlayer : Item_Ball
         player.canMove = true;
         player.canJump = true;
         flying = true;
-        Physics2D.IgnoreCollision(player.coll, col, false);
+        Physics2D.IgnoreCollision(player.coll, col, true);
 
         tP.pointFolder.gameObject.SetActive(false);
         tP._line.positionCount = 1;
@@ -71,10 +74,21 @@ public class Item_Ball_ToPlayer : Item_Ball
     public override void OnCollisionEnter2D(Collision2D collision)
     {
         base.OnCollisionEnter2D(collision);
-        if ((flying && collision.collider.tag != "Ball" && collision.transform.tag != "Player") || collision.transform == target )
+        if (flying)
         {
             flying = false;
             target = null;
+            Physics2D.IgnoreCollision(pl.coll, lC.edgeC, false);
+            rb.gravityScale = ogGravity;
+        }
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        if (flying)
+        {
+            Physics2D.IgnoreCollision(pl.coll, lC.edgeC, false);
             rb.gravityScale = ogGravity;
         }
     }
