@@ -3155,10 +3155,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: J2 Variant
       objectReference: {fileID: 0}
-    - target: {fileID: 2242779692801575684, guid: a7d148708d58ffa4ab023200b3eaeb4d, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 6200000, guid: e75cd411417cd6c458442e821ec38992, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7d148708d58ffa4ab023200b3eaeb4d, type: 3}
 --- !u!4 &1502893684 stripped

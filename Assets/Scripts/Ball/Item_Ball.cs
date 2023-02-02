@@ -4,30 +4,40 @@ using UnityEngine;
 
 public class Item_Ball : Item
 {
-    protected LineCreator lC;
+    public LineCreator lC;
     public bool stickToWall;
     protected bool stuckToWall;
+    public bool collideWithPlayer = true;
     public override void Start()
     {
         base.Start();
         lC = GetComponent<LineCreator>();
     }
 
-    public override void GrabRelease()
+    public override void GrabStarted(Transform holdPoint, Player player)
     {
-        base.GrabRelease();
+        base.GrabStarted(holdPoint, player);
+        if(collideWithPlayer)
+        {
+            Physics2D.IgnoreCollision(player.coll, lC.edgeC, true);
+        }
+    }
+
+    public override void GrabRelease(Player player)
+    {
+        base.GrabRelease(player);
         setTagsLayers("Ball", "Ball", 7);
     }
 
-    public override void ThrowStarted(float throwStrength, CharacterController2D charC, ItemSystem iS)
+    public override void ThrowStarted(float throwStrength, Player player)
     {
-        base.ThrowStarted(throwStrength, charC, iS);
+        base.ThrowStarted(throwStrength, player);
         stuckToWall = false;
     }
 
-    public override void ThrowRelease(float throwStrength, CharacterController2D charC)
+    public override void ThrowRelease(float throwStrength, Player player)
     {
-        base.ThrowRelease(throwStrength, charC);
+        base.ThrowRelease(throwStrength, player);
         setTagsLayers("Ball", "Ball", 7);
 
     }
@@ -50,6 +60,5 @@ public class Item_Ball : Item
         FMODUnity.RuntimeManager.StudioSystem.setParameterByName("VolumeColBall", rb.velocity.magnitude);
         FMODUnity.RuntimeManager.PlayOneShot("event:/Ball/Collision");
         if (collision.collider.tag != "Ball" && collision.transform.tag != "Player") stuckToWall = true;
-
     }
 }

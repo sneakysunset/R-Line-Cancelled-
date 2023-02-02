@@ -105,14 +105,16 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1775201043333655789}
-  - component: {fileID: 1775201043333655794}
-  - component: {fileID: 1074573358669061575}
+  - component: {fileID: 1707737033990768578}
+  - component: {fileID: 7333970221887948285}
+  - component: {fileID: 680932333982312922}
+  - component: {fileID: 5432839236347850656}
   - component: {fileID: 6999140409556955140}
   - component: {fileID: 7041306080908357763}
-  - component: {fileID: 6984929972057871670}
   - component: {fileID: 903097503225447947}
-  - component: {fileID: 1363006960}
   - component: {fileID: 6278587723273450483}
+  - component: {fileID: 6984929972057871670}
+  - component: {fileID: 1363006960}
   - component: {fileID: 8810157283791512890}
   m_Layer: 8
   m_Name: J1
@@ -143,7 +145,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1775201043333655794
+--- !u!114 &1707737033990768578
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,41 +154,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 1775201043333655785}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b2084a6a5890b84a9f979525fd2046c, type: 3}
+  m_Script: {fileID: 11500000, guid: 2b0ad1c9bf96a0c4b89e702d9a824ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveValue: {x: 0, y: 0}
+  heldItem: {fileID: 0}
+  holdableItems: []
+  closestItem: {fileID: 0}
+  rb: {fileID: 0}
   col: {r: 0, g: 0, b: 0, a: 0}
   groundCheck: 0
-  jumping: 0
-  moveValue: {x: 0, y: 0}
-  wallJumpable: 0
-  canDash: 0
-  canWallJump: 1
-  canJump: 1
-  canAirControl: 1
-  canFastFall: 0
-  maxXVelocity: 50
-  maxYVelocity: 20
-  ax: 20
-  dx: 8
-  wJax: 1
-  wJdx: 5
-  dashStrength: 70
-  dashCoolDown: 1
-  meshObj: {fileID: 0}
+  jumpingInput: 0
+  moving: 0
+  throwing: 0
+  wallJumpCheck: 0
+  coll: {fileID: 0}
   playerType: 0
-  jumpStrength: 15
-  wallJumpStrength: 10
-  colorJ1: {r: 0.6509434, g: 0.18729973, b: 0.18729973, a: 1}
-  colorJ2: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
-  moveSpeed: 350
-  lowJumpMultiplier: 10
-  fallMultiplier: 7
-  fastFallStrength: 100
-  ghostInputTimer: 0.3
-  movementScaler: 0.3
+  colorJ1: {r: 0.6509804, g: 0.1882353, b: 0.1882353, a: 1}
+  colorJ2: {r: 0.49019608, g: 0.49019608, b: 0.49019608, a: 1}
+  canJump: 1
   canMove: 1
---- !u!114 &1074573358669061575
+--- !u!114 &7333970221887948285
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -195,15 +183,47 @@ MonoBehaviour:
   m_GameObject: {fileID: 1775201043333655785}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88e6d7172c3100e48af4cdd87325038f, type: 3}
+  m_Script: {fileID: 11500000, guid: 52d47bdf407d70c40b560f9031b83b35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charC: {fileID: 0}
-  coll: {fileID: 0}
+  moveSpeed: 350
+  ax: 20
+  dx: 8
+  airAx: 1
+  airDx: 5
+  maxXVelocity: 50
+  maxYVelocity: 20
+--- !u!114 &680932333982312922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775201043333655785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83d7a5ec45c6f0d468a8542e919a59c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fallMult: 7
+  lowJumpMult: 10
+  jumpStrength: 15
+  wallJumpDirection: {x: 1, y: 0.6}
+  wallJumpStrength: 2
   yGroundCheck: 0.1
-  yWallJump: 0.7
-  lineCollisionDetection: 0
-  bounce: 1.5
+--- !u!114 &5432839236347850656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775201043333655785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e50c095de8e5024bb15a99d586a35ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xWallJump: 0.7
 --- !u!114 &6999140409556955140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,7 +236,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6c4b58f93b754f4fa1b6beeb41d836e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heldItem: {fileID: 0}
   holdPoint: {fileID: 666370479}
   throwStrength: 15
 --- !u!114 &7041306080908357763
@@ -231,8 +250,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23f3dccb38a2a6148bc77a05649abb1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdableItems: []
-  closestItem: {fileID: 0}
+--- !u!114 &903097503225447947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775201043333655785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9aae7effbaca79438ad075acd870d27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemType: 0
+  generateLine: 0
+  isHeld: 0
+  throwPreview: 1
+  Highlight: {fileID: 0}
+--- !u!114 &6278587723273450483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775201043333655785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c474d0968fff0b42afde6aa22bc9086, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SolidesParent: {fileID: 0}
+  BallPrefab: {fileID: 0}
+  _line: {fileID: 8810157283791512890}
+  ptnPrefab: {fileID: 1172140396761346378, guid: 3a52d1ec47f070744b671a80019ffa24, type: 3}
+  pointFolder: {fileID: 6075364710367750342}
+  _maxPhysicsFrameIterations: 100
+  res: 0
 --- !u!114 &6984929972057871670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,8 +313,8 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1775201043333655794}
-        m_TargetAssemblyTypeName: CharacterController2D, Assembly-CSharp
+      - m_Target: {fileID: 1707737033990768578}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
         m_MethodName: OnJump
         m_Mode: 0
         m_Arguments:
@@ -276,8 +329,8 @@ MonoBehaviour:
     m_ActionName: Movement/Jump[/Keyboard/space,/DualSenseGamepadHID/buttonSouth]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1775201043333655794}
-        m_TargetAssemblyTypeName: CharacterController2D, Assembly-CSharp
+      - m_Target: {fileID: 1707737033990768578}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
         m_MethodName: OnMove
         m_Mode: 0
         m_Arguments:
@@ -290,26 +343,6 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: df05c61f-7725-419e-9123-aaa17cf89212
     m_ActionName: Movement/Move[/DualSenseGamepadHID/leftStick,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1775201043333655794}
-        m_TargetAssemblyTypeName: CharacterController2D, Assembly-CSharp
-        m_MethodName: OnDash
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 1296602d-2a12-4fda-8d05-80917587b966
-    m_ActionName: Movement/Dash[/DualSenseGamepadHID/buttonWest,/Keyboard/e]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 73a65cec-409c-4d79-a276-548c63a473a9
-    m_ActionName: LineControl/New action
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6999140409556955140}
@@ -363,23 +396,6 @@ MonoBehaviour:
   m_DefaultActionMap: Movement
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &903097503225447947
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1775201043333655785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9aae7effbaca79438ad075acd870d27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemType: 0
-  generateLine: 0
-  isHeld: 0
-  throwPreview: 1
-  Highlight: {fileID: 0}
 --- !u!50 &1363006960
 Rigidbody2D:
   serializedVersion: 4
@@ -401,25 +417,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &6278587723273450483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1775201043333655785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c474d0968fff0b42afde6aa22bc9086, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SolidesParent: {fileID: 0}
-  BallPrefab: {fileID: 0}
-  _line: {fileID: 8810157283791512890}
-  ptnPrefab: {fileID: 1172140396761346378, guid: 3a52d1ec47f070744b671a80019ffa24, type: 3}
-  pointFolder: {fileID: 6075364710367750342}
-  _maxPhysicsFrameIterations: 100
-  res: 0
 --- !u!120 &8810157283791512890
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -528,7 +525,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1775201044604555546}
   - component: {fileID: 2012075310}
-  - component: {fileID: 1363006963}
+  - component: {fileID: 461226242217906915}
   m_Layer: 9
   m_Name: Collider
   m_TagString: Player
@@ -567,22 +564,72 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!58 &1363006963
-CircleCollider2D:
+--- !u!114 &461226242217906915
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1775201044604555541}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dde60fc28f99c524095b5e2020598641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ColEnterEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5432839236347850656}
+        m_TargetAssemblyTypeName: Player_WallJump, Assembly-CSharp
+        m_MethodName: WJColEnter
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  ColStayEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 680932333982312922}
+        m_TargetAssemblyTypeName: Player_Jump, Assembly-CSharp
+        m_MethodName: GroundCheck
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5432839236347850656}
+        m_TargetAssemblyTypeName: Player_WallJump, Assembly-CSharp
+        m_MethodName: WJColStay
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  ColExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  TrigEnterEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  TrigStayEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  TrigExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &5770110380794305094
 GameObject:
   m_ObjectHideFlags: 0

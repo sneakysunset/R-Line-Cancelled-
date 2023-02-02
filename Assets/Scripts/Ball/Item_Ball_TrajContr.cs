@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class Item_Ball_TrajContr : Item_Ball
 {
-    CharacterController2D[] charCs;
-    CharacterController2D chara, oChara;
+    Player[] players;
+    Player playera, otherPlayera;
     public bool flying;
     float ogGravity;
     public float speed = 1;
     public float deviationSpeed = 1;
-    ItemSystem itemSystem;
+    Player playerC;
     Vector2 direction;
     public override void Start()
     {
         base.Start();
-        charCs = new CharacterController2D[2];
-        charCs = FindObjectsOfType<CharacterController2D>();
+        players = new Player[2];
+        players = FindObjectsOfType<Player>();
         ogGravity = rb.gravityScale;
     }
 
@@ -26,60 +26,61 @@ public class Item_Ball_TrajContr : Item_Ball
         else lC.LineUpdater();
     }
 
-    public override void ThrowStarted(float throwStrength, CharacterController2D charC, ItemSystem iS)
+    public override void ThrowStarted(float throwStrength, Player player)
     {
-        itemSystem = iS;
-        itemSystem.closestItem.holdableItems.Add(this);
-        direction = (transform.position - charC.transform.position).normalized;
+        playerC = player;
+        player.holdableItems.Add(this);
+        direction = (transform.position - player.transform.position).normalized;
 
         stuckToWall = false;
         flying = true;
-        charC.canMove = false;
-        charC.canJump = false;
+        player.canMove = false;
+        player.canJump = false;
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Throw");
 
         rb.isKinematic = false;
         rb.gravityScale = 0;
 
-        if (charC == charCs[0])
+        if (player == players[0])
         {
-            chara = charCs[0];
-            oChara = charCs[1];
+            playera = players[0];
+            otherPlayera = players[1];
         }
         else
         {
-            chara = charCs[1];
-            oChara = charCs[0];
+            playera = players[1];
+            otherPlayera = players[0];
         }
     }
 
-    public override void ThrowHeld(float throwStrength, CharacterController2D charC) => rb.velocity = (new Vector2(direction.x * speed, chara.moveValue.y * deviationSpeed)) * Time.deltaTime;
+    public override void ThrowHeld(float throwStrength, Player player) => rb.velocity = (new Vector2(direction.x * speed, player.moveValue.y * deviationSpeed)) * Time.deltaTime;
 
     public override void CancelThrow() => stopFlying();
 
-    public override void ThrowRelease(float throwStrength, CharacterController2D charC) => stopFlying();
+    public override void ThrowRelease(float throwStrength, Player player) => stopFlying();
 
     public override void OnCollisionEnter2D(Collision2D collision)
     {
         base.OnCollisionEnter2D(collision);
         bool c1 = flying && collision.collider.tag != "Ball" && collision.transform.tag != "Player";
-        bool c2 = collision.transform == oChara?.transform;
+        bool c2 = collision.transform == otherPlayera?.transform;
         if (c1 || c2) stopFlying();
     }
 
     void stopFlying()
     {
-        itemSystem.throwing = false;
-        chara.canMove = true;
-        chara.canJump = true;
+        playerC.throwing = false;
+        playera.canMove = true;
+        playera.canJump = true;
+        Physics2D.IgnoreCollision(playera.coll, col, false);
         isHeld = false;
 
-        itemSystem.heldItem = null;
+        playerC.heldItem = null;
         flying = false;
-        chara = null;
-        oChara = null;
+        playera = null;
+        otherPlayera = null;
         rb.gravityScale = ogGravity;
-        itemSystem = null;
+        playerC = null;
         setTagsLayers("Ball", "Ball", 7);
     }
 

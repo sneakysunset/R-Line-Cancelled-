@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Item_Ball_ToPlayer : Item_Ball
 {
-    CharacterController2D[] charCs;
+    Player[] players;
     public Transform target;
     public bool flying;
     float ogGravity;
@@ -13,8 +13,8 @@ public class Item_Ball_ToPlayer : Item_Ball
     public override void Start()
     {
         base.Start();
-        charCs = new CharacterController2D[2];
-        charCs = FindObjectsOfType<CharacterController2D>();
+        players = new Player[2];
+        players = FindObjectsOfType<Player>();
         ogGravity = rb.gravityScale;
     }
 
@@ -27,23 +27,23 @@ public class Item_Ball_ToPlayer : Item_Ball
         }
     }
 
-    public override void GrabStarted(Transform holdPoint)
+    public override void GrabStarted(Transform holdPoint, Player player)
     {
-        base.GrabStarted(holdPoint);
+        base.GrabStarted(holdPoint, player);
         flying = false;
         target = null;
         rb.gravityScale = ogGravity;
     }
 
-    public override void ThrowStarted(float throwStrength, CharacterController2D charC, ItemSystem iS)
+    public override void ThrowStarted(float throwStrength, Player player)
     {
         setTagsLayers("Ball", "Ball", 7);
 
-        iS.throwing = false;
-        charC.canMove = true;
-        charC.canJump = true;
-        
+        player.throwing = false;
+        player.canMove = true;
+        player.canJump = true;
         flying = true;
+        Physics2D.IgnoreCollision(player.coll, col, false);
 
         tP.pointFolder.gameObject.SetActive(false);
         tP._line.positionCount = 1;
@@ -53,17 +53,20 @@ public class Item_Ball_ToPlayer : Item_Ball
         rb.gravityScale = 0;
 
         isHeld = false;
-        iS.heldItem = null;
+        player.heldItem = null;
 
-        if (charC != charCs[0]) target = charC.transform;
-        else target = charCs[1].transform;
+        if (player != players[0]) target = player.transform;
+        else target = players[1].transform;
     }
 
-    public override void ThrowHeld(float throwStrength, CharacterController2D charC){}
+    public override void ThrowHeld(float throwStrength, Player player){}
 
     public override void CancelThrow(){}
 
-    public override void ThrowRelease(float throwStrength, CharacterController2D charC){}
+    public override void ThrowRelease(float throwStrength, Player player)
+    {
+
+    }
 
     public override void OnCollisionEnter2D(Collision2D collision)
     {

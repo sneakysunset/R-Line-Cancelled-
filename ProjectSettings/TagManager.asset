@@ -21,7 +21,7 @@ TagManager:
   - LineCollider
   - Ball
   - Player
-  - PlayerOff
+  - 
   - BallDetector
   - Pass Through
   - BallWall

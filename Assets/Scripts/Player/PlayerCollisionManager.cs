@@ -8,14 +8,11 @@ public class PlayerCollisionManager : MonoBehaviour
     private Item myItem;
     private Rigidbody2D rb;
     [HideInInspector] public GameObject coll;
-    Vector2 prevVelocity;
     [HideInInspector] public IEnumerator groundCheckEnum;
-    //[HideInInspector] public List<Transform> holdableObjects;
     [Range(-1f, 1f)] public float yGroundCheck = -.15f;
     [Range(0f, 1f)] public float yWallJump = .7f;
     [Range(-1f, 1f)] public float lineCollisionDetection = .1f;
     public float bounce = 1.5f;
-    private ItemSystem itemS;
     bool lineOverPlayer;
     bool enterAgain;
     bool inline;
@@ -25,11 +22,10 @@ public class PlayerCollisionManager : MonoBehaviour
         charC = GetComponent<CharacterController2D>();
         rb = GetComponent<Rigidbody2D>();
         coll = transform.Find("Collider").gameObject;
-        itemS = GetComponent<ItemSystem>();
         myItem = GetComponent<Item>();
     }
 
-    private void Update()
+    /*private void Update()
     {
         if (Physics2D.Raycast((Vector2)transform.position, Vector2.up, 100, LayerMask.NameToLayer("LineCollider"))) lineOverPlayer = true;
         else lineOverPlayer = false;
@@ -55,7 +51,7 @@ public class PlayerCollisionManager : MonoBehaviour
         }
 
         //Désactive la variable jumping lors de la collision avec un mur walljumpable.
-        if (collision.contacts[0].normal.y > -yWallJump && collision.contacts[0].normal.y < yWallJump && collision.gameObject.CompareTag("Jumpable") /*|| collision.gameObject.CompareTag("LineCollider")*/)
+        if (collision.contacts[0].normal.y > -yWallJump && collision.contacts[0].normal.y < yWallJump && collision.gameObject.CompareTag("Jumpable") *//*|| collision.gameObject.CompareTag("LineCollider")*//*)
         {
             charC.jumping = false;
         }
@@ -136,7 +132,7 @@ public class PlayerCollisionManager : MonoBehaviour
     //Le joueur à sa vélocité sur l'axe y égale à 0 pour ne pas glisser le long du mur.
     void WallJumpCollisionStay(Collision2D collision)
     {
-        if (collision.contacts[0].normal.y > -yWallJump && collision.contacts[0].normal.y < yWallJump && collision.gameObject.CompareTag("Jumpable") /*|| collision.gameObject.CompareTag("LineCollider")*/)
+        if (collision.contacts[0].normal.y > -yWallJump && collision.contacts[0].normal.y < yWallJump && collision.gameObject.CompareTag("Jumpable") *//*|| collision.gameObject.CompareTag("LineCollider")*//*)
         {
             //rb.velocity = new Vector3(rb.velocity.x, 0);
             charC.wallJumpable = collision.contacts[0].normal.x;
@@ -198,5 +194,5 @@ public class PlayerCollisionManager : MonoBehaviour
     {
         yield return new WaitForSeconds(timer);
         charC.groundCheck = false;
-    }
+    }*/
 }
