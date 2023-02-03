@@ -7,7 +7,7 @@ public class LineCreator : MonoBehaviour
 {
     #region Variables
     private float[] pointArray;
-    public List<Vector2> pointList = new List<Vector2>();
+    public List<Point> pointList = new List<Point>();
     private Color col;
     private CharacterController2D charC;
     Transform lineFolder;
@@ -34,7 +34,8 @@ public class LineCreator : MonoBehaviour
     public float lineEndX = 13f;
     public float width = .3f;
     public float lineYOffSet = 0;
-
+    public bool fond;
+    private bool flag;
     [Space(10)]
     [Header("Refresh Variables")]
     [Space(5)]
@@ -42,6 +43,8 @@ public class LineCreator : MonoBehaviour
     public float updateSoundFrequency;
     public AnimationCurve updateAnim;
     public float updateAnimSpeed;
+    public float fallTimer;
+    public float fallSpeed;
     #endregion
 
     IEnumerator fixDeMerdeSpawnLigne()
@@ -52,7 +55,7 @@ public class LineCreator : MonoBehaviour
         var a = transform.position.x - Mathf.FloorToInt(transform.position.x);
         var b = a - (a % lineResolution);
         var posX = Mathf.FloorToInt(transform.position.x) + b + lineResolution;
-        pointList.Add(new Vector2(posX, transform.position.y)) ;
+        pointList.Add(new Point(new Vector2(posX, transform.position.y))) ;
         //lineR.positionCount = 0;
     }
 
@@ -69,9 +72,30 @@ public class LineCreator : MonoBehaviour
         else pType = CharacterController2D.Team.Ball;
         ogPos = transform.position;
         var firstPoint = new Vector2(Utils_Points.closestPoint(pointArray, transform.position.x), transform.position.y);
-        pointList.Add(firstPoint);
+        pointList.Add(new Point(firstPoint));
         InstantiateLine();
         StartCoroutine(fixDeMerdeSpawnLigne());
+    }
+    private void Update()
+    {
+        if (fond)
+        {
+            foreach (Point point in pointList)
+            {
+                point.Fond(fallSpeed);
+            }
+        }
+
+        if(fond && !flag)
+        {
+            foreach (Point point in pointList) point.TimerTrigger(true, fallTimer);
+            flag = true;
+        }
+        else if(!fond && flag)
+        {
+            foreach (Point point in pointList) point.TimerTrigger(false, fallTimer);
+            flag = false;
+        }
     }
 
     //Au start cré la ligne et prend des références du lineRenderer, du edgeCollider et du transform. Change aussi la couleur de la ligne son nom et son layer.
@@ -101,7 +125,7 @@ public class LineCreator : MonoBehaviour
         if (pointList.Count == 0) return;
         if (!UpdatePointList()) return;
 
-        var list = pointList.OrderBy(v => v.x).ToList();
+        var list = pointList.OrderBy(v => v.pos.x).ToList();
         pointList = list;
 
         if (list.Count < 4 || edgeC.gameObject.layer == 10) return;
@@ -129,7 +153,7 @@ public class LineCreator : MonoBehaviour
         meshF.mesh = m;
 
         //lineR.SetPositions(vector3s);
-        StartCoroutine(afterPhysics());
+        StartCoroutine(afterPhysics(vec2));
     }
 
     //Etape intermédiaire dans laquel on décide si on ajoute un/des point(s) ou actualise un/des point(s) de la liste lors de cette frame physique.
@@ -139,8 +163,8 @@ public class LineCreator : MonoBehaviour
     public bool UpdatePointList()
     {
         Vector2 pPos = new Vector2(transform.position.x, transform.position.y);
-        bool condition1 = pointList[0].x - pPos.x > lineResolution || pPos.x - pointList[pointList.Count - 1].x > lineResolution;
-        bool condition2 = pointList[0].x - pPos.x < lineResolution && pPos.x - pointList[pointList.Count - 1].x < lineResolution;
+        bool condition1 = pointList[0].pos.x - pPos.x > lineResolution || pPos.x - pointList[pointList.Count - 1].pos.x > lineResolution;
+        bool condition2 = pointList[0].pos.x - pPos.x < lineResolution && pPos.x - pointList[pointList.Count - 1].pos.x < lineResolution;
         bool condition3 = transform.position.x != prevUpdatedIndex;
         if (condition1)
         {
@@ -154,6 +178,8 @@ public class LineCreator : MonoBehaviour
         }
         else return false;
     }
+
+
 
     //Méthode qui sert à rajouter un/des point(s).
     void AddPoint()
@@ -171,7 +197,7 @@ public class LineCreator : MonoBehaviour
 
         //Quand la balle est à gauche de la liste posX la position de la balle sur x arrondi à l'excès au multiple de "lineResolution".
         //Quand la balle est à gauche de la liste posX la position de la balle sur x arrondi au défaut au multiple de "lineResolution".
-        if (pointList[0].x - pPos.x > lineResolution)
+        if (pointList[0].pos.x - pPos.x > lineResolution)
         {
             posX = Mathf.FloorToInt(pPos.x) + b + lineResolution;
 
@@ -180,12 +206,20 @@ public class LineCreator : MonoBehaviour
             //mais aussi tous les points multiples de "lineResolution" séparant la balle du point actuel de la liste le plus proche.
             //Pour ce faire on ajoute des points de manière itérative de la position la plus proche de la balle arondie, à la position /n
             //la plus proche de la balle sur l'axe x appartenant à la liste avec une incrémentation de "lineResolution".
-            for (float i = posX; i < pointList[0].x; i += lineResolution)
+            for (float i = posX; i < pointList[0].pos.x; i += lineResolution)
             {
                 //Afin que la courbe de la ligne soit réaliste et smooth on interpole la position sur l'axe y de chaque point rajouté /n
                 //entre la position sur y de la balle et la position sur y du point de la liste le plus proche de la balle sur l'axe x.
-                float posY = Mathf.Lerp(pPos.y, pointList[0].y, numOfAdded / ((pointList[0].x - pPos.x) / lineResolution));
-                pointList.Add(new Vector2(i, posY));
+                float posY = Mathf.Lerp(pPos.y, pointList[0].pos.y, numOfAdded / ((pointList[0].pos.x - pPos.x) / lineResolution));
+                pointList.Add(new Point(new Vector2(i, posY)));
+                if (fond)
+                {
+                    pointList[pointList.Count - 1].TimerTrigger(true, fallTimer);
+                }
+                else if (!fond)
+                {
+                    pointList[pointList.Count - 1].TimerTrigger(false, fallTimer);
+                }
                 numOfAdded++;
             }
 
@@ -194,10 +228,18 @@ public class LineCreator : MonoBehaviour
         {
             posX = Mathf.FloorToInt(pPos.x) + b;
 
-            for (float i = posX; i > pointList[pointList.Count - 1].x; i -= lineResolution)
+            for (float i = posX; i > pointList[pointList.Count - 1].pos.x; i -= lineResolution)
             {
-                float posY = Mathf.Lerp(pPos.y, pointList[0].y, numOfAdded / ((pPos.x - pointList[pointList.Count - 1].x) / lineResolution));
-                pointList.Add(new Vector2(i, posY));
+                float posY = Mathf.Lerp(pPos.y, pointList[0].pos.y, numOfAdded / ((pPos.x - pointList[pointList.Count - 1].pos.x) / lineResolution));
+                pointList.Add(new Point(new Vector2(i, posY)));
+                if (fond)
+                {
+                    pointList[pointList.Count - 1].TimerTrigger(true, fallTimer);
+                }
+                else if (!fond)
+                {
+                    pointList[pointList.Count - 1].TimerTrigger(false, fallTimer);
+                }
                 numOfAdded++;
             }
         }
@@ -215,17 +257,24 @@ public class LineCreator : MonoBehaviour
         //Cette itération sert à trouver le point le plus proche de la balle appartenant à la liste.
         for (int i = 0; i < pointList.Count; i++)
         {
-            if (Mathf.Abs(pointList[i].x - pPos.x) < curDistance)
+            if (Mathf.Abs(pointList[i].pos.x - pPos.x) < curDistance)
             {
                 closestIndex = i;
-                curDistance = Mathf.Abs(pointList[i].x - pPos.x);
+                curDistance = Mathf.Abs(pointList[i].pos.x - pPos.x);
             }
         }
 
 
-        Vector2 newPos = new Vector2(pointList[closestIndex].x, pPos.y);
-        pointList[closestIndex] = newPos;
-
+        Vector2 newPos = new Vector2(pointList[closestIndex].pos.x, pPos.y);
+        pointList[closestIndex].pos = newPos;
+        if (fond)
+        {
+            pointList[closestIndex].TimerTrigger(true, 1);
+        }
+        else if (!fond)
+        {
+            pointList[closestIndex].TimerTrigger(false, 1);
+        }
         //Nous suivons ici un procédé similaire à celui de la méthode AddPoint sauf que l'itération se fait entre la position /n
         //la plus proche de la balle et la position la plus proche de la balle à la frame physique précédente.
         //L'incrémentation ne se fait aussi pas avec "lineResolution" mais avec les index séparant les 2 points évoqués au-dessus.
@@ -236,22 +285,46 @@ public class LineCreator : MonoBehaviour
             {
                 for (int i = closestIndex; i < prevUpdatedIndex; i++)
                 {
-                    float posY = Mathf.Lerp(pointList[closestIndex].y, pointList[prevUpdatedIndex].y, (Mathf.Abs(i) - Mathf.Abs(closestIndex)) / (Mathf.Abs(prevUpdatedIndex - closestIndex)));
-                    pointList[i] = new Vector2(pointList[i].x, posY);
+                    float posY = Mathf.Lerp(pointList[closestIndex].pos.y, pointList[prevUpdatedIndex].pos.y, (Mathf.Abs(i) - Mathf.Abs(closestIndex)) / (Mathf.Abs(prevUpdatedIndex - closestIndex)));
+                    pointList[i].pos = new Vector2(pointList[i].pos.x, posY);
+                    if (fond)
+                    {
+                        pointList[i].TimerTrigger(true, fallTimer);
+                    }
+                    else if (!fond)
+                    {
+                        pointList[i].TimerTrigger(false, fallTimer);
+                    }
                 }
             }
             else
             {
                 for (int i = closestIndex; i > prevUpdatedIndex; i--)
                 {
-                    float posY = Mathf.Lerp(pointList[prevUpdatedIndex].y, pointList[closestIndex].y, (Mathf.Abs(i) - Mathf.Abs(prevUpdatedIndex)) / (Mathf.Abs(closestIndex - prevUpdatedIndex)));
-                    pointList[i] = new Vector2(pointList[i].x, posY);
+                    float posY = Mathf.Lerp(pointList[prevUpdatedIndex].pos.y, pointList[closestIndex].pos.y, (Mathf.Abs(i) - Mathf.Abs(prevUpdatedIndex)) / (Mathf.Abs(closestIndex - prevUpdatedIndex)));
+                    pointList[i].pos = new Vector2(pointList[i].pos.x, posY);
+                    if (fond)
+                    {
+                        pointList[i].TimerTrigger(true, fallTimer);
+                    }
+                    else if (!fond)
+                    {
+                        pointList[i].TimerTrigger(false, fallTimer);
+                    }
                 }
             }
         }
         else
         {
-            pointList[closestIndex] = newPos;
+            pointList[closestIndex].pos = newPos;
+            if (fond)
+            {
+                pointList[closestIndex].TimerTrigger(true, fallTimer);
+            }
+            else if (!fond)
+            {
+                pointList[closestIndex].TimerTrigger(false, fallTimer);
+            }
         }
 
         prevUpdatedIndex = closestIndex;
@@ -259,10 +332,10 @@ public class LineCreator : MonoBehaviour
 
     //A cause de l'ordre d'execution des events physiques de Unity on doit actualiser le collider après le yuekd WaitForFixedUpdate.
     //https://docs.unity3d.com/Manual/ExecutionOrder.html
-    IEnumerator afterPhysics()
+    IEnumerator afterPhysics(List<Vector2> vec2s)
     {
         yield return new WaitForFixedUpdate();
-        edgeC.SetPoints(pointList);
+        edgeC.SetPoints(vec2s);
     }
 
     //Lorsque la balle est détruite la ligne associée est aussi détruite.
@@ -275,7 +348,7 @@ public class LineCreator : MonoBehaviour
     public List<Vector2> AddMediumPoints()
     {
         List<Vector2> vec2 = new List<Vector2>();
-        for (int i = 0; i < pointList.Count; i++) vec2.Add(pointList[i]);
+        for (int i = 0; i < pointList.Count; i++) vec2.Add(pointList[i].pos);
         for (int i = 0; i < vec2.Count - 1; i++)
         {
             bool taskDone = false;
