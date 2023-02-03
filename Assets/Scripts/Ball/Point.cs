@@ -24,12 +24,15 @@ public class Point
 
     public void Fond(float descendSpeed)
     {
-        if(timerOn && timerValue > 0)
+        RaycastHit2D hit = Physics2D.Raycast(pos, new Vector2(0, -1), Mathf.Infinity, LayerMask.GetMask("Ground"));
+        if (timerOn && timerValue > 0)
         {
             timerValue -= Time.deltaTime;
         }
-        else
+        else if (timerOn && timerValue <= 0 && (hit && Vector2.Distance(hit.point, pos) > 0))
         {
+            Debug.Log(Vector2.Distance(hit.point, pos - (-Vector2.up)));
+            Debug.Log(hit.collider);
             pos.y -= Time.deltaTime * descendSpeed;
         }
     }
