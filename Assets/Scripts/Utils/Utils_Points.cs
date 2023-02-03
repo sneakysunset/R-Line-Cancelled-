@@ -176,7 +176,7 @@ public class Utils_Points
 
     }
 
-    public static Vector2 GetParallelePoint(Vector2 pCentre, Vector2 pGauche, Vector2 pDroite, float distance)
+    public static Vector2 GetParallelePoint(Vector2 pCentre, Vector2 pGauche, Vector2 pDroite, float distance, bool up)
     {
         Vector2 dirGaucheCentre = (pGauche - pCentre).normalized;
         Vector2 dirCentreDroite = (pCentre - pDroite).normalized;
@@ -190,9 +190,16 @@ public class Utils_Points
             angle = Mathf.PI * 0.5f - angle;
         }
         float width = distance / Mathf.Max(Mathf.Epsilon, Mathf.Sin(angle));
-        
-        
-        Vector2 newPoint = pCentre + (cDir * width);
+
+        Vector2 newPoint = Vector2.zero;
+        if (up)
+        {
+            newPoint = pCentre + (cDir * width);
+        }
+        else
+        {
+            newPoint = pCentre - (cDir * width);
+        }
         Debug.DrawLine(pCentre, newPoint, Color.white, Time.deltaTime);
         return newPoint;
     }

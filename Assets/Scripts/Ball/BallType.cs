@@ -13,6 +13,7 @@ public class BallType : MonoBehaviour
     public GameObject Line;
     public bool collideWithPlayer;
     [HideInInspector] public int ID;
+    [HideInInspector] public bool isHeld;
     private void Awake()
     {
         ID = Random.Range(0, 999999);
@@ -119,6 +120,11 @@ public class BallType : MonoBehaviour
         if (cat) item.catchable = true;
         else item.catchable = false;
 
+    }
+
+    private void Update()
+    {
+        isHeld = item.isHeld;
     }
 
 }

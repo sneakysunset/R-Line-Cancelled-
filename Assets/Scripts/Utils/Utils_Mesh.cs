@@ -67,20 +67,25 @@ public static class Utils_Mesh
             if(i%2 == 0 && i != 0) distance += Vector2.Distance(pointList[i / 2], pointList[i / 2 - 1]) + lineWidth / Vector2.Distance(pointList[i / 2], pointList[i / 2 - 1]);
             if (i == vertices.Length - 1 || i == 1)
             {
-                vertices[i] = pointList[(i - 1) / 2] + new Vector2(0, lineWidth);
-                if(i == vertices.Length - 1) uvs[i] = new Vector2(1, 0);
+                vertices[i] = pointList[(i - 1) / 2] + new Vector2(0, lineWidth/2);
+                if(i == vertices.Length - 1) uvs[i] = new Vector2(1, 1);
                 else uvs[i] = new Vector2(0, 1);
             }
-            else if (i % 2 == 0)
+            else if (i % 2 == 0 && i != 0)
             {
-                vertices[i] = pointList[i / 2];
+                //vertices[i] = pointList[i / 2];
+                vertices[i] = Utils_Points.GetParallelePoint(pointList[i/2], pointList[(i / 2) - 1], pointList[(i / 2) + 1], lineWidth/2, false);
                 uvs[i] = new Vector2(distance, 0);
-
+            }
+            else if(i == 0)
+            {
+                vertices[i] = pointList[(i - 1) / 2] - new Vector2(0, lineWidth / 2);
+                uvs[i] = new Vector2(distance, 0);
             }
             else
             {
                 int pI = (i - 1) / 2;
-                vertices[i] = Utils_Points.GetParallelePoint(pointList[pI], pointList[pI - 1], pointList[pI + 1], lineWidth);
+                vertices[i] = Utils_Points.GetParallelePoint(pointList[pI], pointList[pI - 1], pointList[pI + 1], lineWidth/2, true);
                 uvs[i] = new Vector2(distance, 1);
             }
         }
