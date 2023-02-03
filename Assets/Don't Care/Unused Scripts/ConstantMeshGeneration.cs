@@ -70,7 +70,7 @@ public class ConstantMeshGeneration : MonoBehaviour
         Mesh m = new Mesh();
         m.name = "trailMesh";
 
-        Utils_Mesh.UpdateMeshVertices(list, width, m);
+        Utils_Mesh.UpdateMeshVertices(list, width, m, false);
         Utils_Mesh.UpdateMeshTriangles(list.Count, m);
         m.MarkDynamic();
         m.Optimize();

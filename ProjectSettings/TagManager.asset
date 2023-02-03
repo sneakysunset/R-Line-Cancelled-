@@ -10,7 +10,7 @@ TagManager:
   - Held
   - Jumpable
   - LineFolder
-  - Particule
+  - NotHeld
   layers:
   - Default
   - TransparentFX
@@ -29,7 +29,7 @@ TagManager:
   - BallHeld
   - RoomTopWall
   - Spawner
-  - 
+  - Ground
   - 
   - 
   - 
