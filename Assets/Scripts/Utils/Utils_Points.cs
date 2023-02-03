@@ -176,19 +176,33 @@ public class Utils_Points
 
     }
 
-    public static Vector3 GetParallelePoint(Vector3 p, Vector3 p1, Vector3 p2, float distance)
+    public static Vector2 GetParallelePoint(Vector2 pCentre, Vector2 pGauche, Vector2 pDroite, float distance)
     {
-        //var u = Vector3.Cross()
-        var targetPos = p + ((p - p1).normalized + (p - p2).normalized).normalized * distance;
-        if (targetPos.y < p.y)
-        {
-            targetPos = p - ((p - p1).normalized + (p - p2).normalized).normalized * distance;
-        }
+        Vector2 dirGaucheCentre = (pGauche - pCentre).normalized;
+        Vector2 dirCentreDroite = (pCentre - pDroite).normalized;
+        Vector2 aDir = Vector2.Lerp(dirGaucheCentre, dirCentreDroite, .5f).normalized;
+        Vector2 cDir = Vector3.Cross(aDir, Vector3.forward);
 
-        if (targetPos - p == Vector3.zero) targetPos.y += distance;
-        Debug.DrawLine(p, targetPos, Color.blue, Time.deltaTime);
-        Debug.DrawLine(p, p1, Color.red, Time.deltaTime);
-        Debug.DrawLine(p, p2, Color.red, Time.deltaTime);   
-        return targetPos;
+
+        float angle = Vector3.Angle(dirGaucheCentre, dirCentreDroite) * Mathf.Deg2Rad * 0.5f;
+        if (angle < Mathf.PI * 0.25f)
+        {
+            angle = Mathf.PI * 0.5f - angle;
+        }
+        float width = distance / Mathf.Max(Mathf.Epsilon, Mathf.Sin(angle));
+        
+        
+        Vector2 newPoint = pCentre + (cDir * width);
+        Debug.DrawLine(pCentre, newPoint, Color.white, Time.deltaTime);
+        return newPoint;
+    }
+
+    public static Vector2 GetSurfacePoint(Vector2 point)
+    {
+        var newPos = Vector2.zero;
+        RaycastHit2D hit = Physics2D.Raycast(point, -Vector2.up, Mathf.Infinity, LayerMask.GetMask("Ground"));
+        if (hit) newPos = hit.point;
+        return newPos;
+
     }
 }

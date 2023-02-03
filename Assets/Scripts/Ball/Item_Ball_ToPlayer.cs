@@ -78,7 +78,7 @@ public class Item_Ball_ToPlayer : Item_Ball
         {
             flying = false;
             target = null;
-            Physics2D.IgnoreCollision(pl.coll, lC.edgeC, false);
+            Physics2D.IgnoreCollision(pl.coll, lC.lineC, false);
             rb.gravityScale = ogGravity;
         }
     }
@@ -88,7 +88,7 @@ public class Item_Ball_ToPlayer : Item_Ball
         base.OnDestroy();
         if (flying)
         {
-            Physics2D.IgnoreCollision(pl.coll, lC.edgeC, false);
+            Physics2D.IgnoreCollision(pl.coll, lC.lineC, false);
             rb.gravityScale = ogGravity;
         }
     }

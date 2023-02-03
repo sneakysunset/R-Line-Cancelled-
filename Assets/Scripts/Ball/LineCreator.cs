@@ -12,7 +12,9 @@ public class LineCreator : MonoBehaviour
     private CharacterController2D charC;
     Transform lineFolder;
     //[HideInInspector] public LineRenderer lineR;
-    [HideInInspector] public EdgeCollider2D edgeC;
+    private EdgeCollider2D edgeC;
+    private PolygonCollider2D polC;
+    [HideInInspector] public Collider2D lineC;
     [HideInInspector] public Transform lineT;
 
     private CharacterController2D.Team pType;
@@ -24,7 +26,7 @@ public class LineCreator : MonoBehaviour
     int prevUpdatedIndex;
     public GameObject ballPrefab;
     private MeshFilter meshF;
-
+    private bool surfaceLine = false;
 
     [Space(10)]
     [Header("Line Variables")]
@@ -103,12 +105,25 @@ public class LineCreator : MonoBehaviour
     {
         lineT = Instantiate(linePrefab, lineFolder).transform;
         //lineR = lineT.GetComponentInChildren<LineRenderer>();
-        edgeC = lineT.GetComponentInChildren<EdgeCollider2D>();
+        if (!surfaceLine)
+        {
+            edgeC = lineT.GetComponentInChildren<EdgeCollider2D>();
+            edgeC.enabled = true;
+            edgeC.edgeRadius = width / 2;
+            edgeC.gameObject.layer = 6;
+            lineC = edgeC;
+        }
+        else
+        {
+            polC = lineT.GetComponentInChildren<PolygonCollider2D>();
+            polC.enabled = true;
+            polC.gameObject.layer = 6;
+            lineC = polC;
+        }
         meshF = lineT.GetComponentInChildren<MeshFilter>();
         //lineR.positionCount = 0;
         //lineR.material.color = col;
         //lineT.name = "Mesh " + pType.ToString() + " Off";
-        edgeC.gameObject.layer = 6;
         if (pType != CharacterController2D.Team.Ball)
             charC.meshObj = lineT.gameObject;
     }
@@ -128,7 +143,7 @@ public class LineCreator : MonoBehaviour
         var list = pointList.OrderBy(v => v.pos.x).ToList();
         pointList = list;
 
-        if (list.Count < 4 || edgeC.gameObject.layer == 10) return;
+        if (list.Count < 4 || lineC.gameObject.layer == 10) return;
 
         List<Vector2> vec2 = AddMediumPoints();
 
@@ -142,7 +157,7 @@ public class LineCreator : MonoBehaviour
         Mesh m = new Mesh();
         m.name = "trailMesh";
 
-        Utils_Mesh.UpdateMeshVertices(vec2, width, m);
+        Utils_Mesh.UpdateMeshVertices(vec2, width, m, surfaceLine);
         Utils_Mesh.UpdateMeshTriangles(vec2.Count, m);
         m.MarkDynamic();
         m.Optimize();
@@ -153,7 +168,9 @@ public class LineCreator : MonoBehaviour
         meshF.mesh = m;
 
         //lineR.SetPositions(vector3s);
-        StartCoroutine(afterPhysics(vec2));
+        if (!surfaceLine)
+            StartCoroutine(afterPhysics(vec2));
+        //else StartCoroutine(afterPhysicsSurface(surfacePList));
     }
 
     //Etape intermédiaire dans laquel on décide si on ajoute un/des point(s) ou actualise un/des point(s) de la liste lors de cette frame physique.
@@ -269,11 +286,11 @@ public class LineCreator : MonoBehaviour
         pointList[closestIndex].pos = newPos;
         if (fond)
         {
-            pointList[closestIndex].TimerTrigger(true, 1);
+            pointList[closestIndex].TimerTrigger(true, fallTimer);
         }
         else if (!fond)
         {
-            pointList[closestIndex].TimerTrigger(false, 1);
+            pointList[closestIndex].TimerTrigger(false, fallTimer);
         }
         //Nous suivons ici un procédé similaire à celui de la méthode AddPoint sauf que l'itération se fait entre la position /n
         //la plus proche de la balle et la position la plus proche de la balle à la frame physique précédente.
@@ -337,6 +354,13 @@ public class LineCreator : MonoBehaviour
         yield return new WaitForFixedUpdate();
         edgeC.SetPoints(vec2s);
     }
+
+    IEnumerator afterPhysicsSurface(Vector2[] vec2s)
+    {
+        yield return new WaitForFixedUpdate();
+        polC.points = vec2s;
+    }
+
 
     //Lorsque la balle est détruite la ligne associée est aussi détruite.
     private void OnDestroy()

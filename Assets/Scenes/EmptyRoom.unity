@@ -1626,15 +1626,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1339753458846042098, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
       propertyPath: fond
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1339753458846042098, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
       propertyPath: fallSpeed
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1339753458846042098, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
       propertyPath: fallTimer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1339753458846042098, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: surfaceLine
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1339753458846042098, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: lineResolution
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 8086875767729060720, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
       propertyPath: catchable

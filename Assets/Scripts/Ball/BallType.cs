@@ -85,7 +85,7 @@ public class BallType : MonoBehaviour
             item.col = col;
             item.generateLine = true;
             item.setTagsLayers("Held", "Held", 14);
-            Physics2D.IgnoreCollision(player.coll, item.lC.edgeC, true);
+            Physics2D.IgnoreCollision(player.coll, item.lC.lineC, true);
             item.rb.isKinematic = true;
             item.Highlight.SetActive(true);
             item.collideWithPlayer = collideWithPlayer;

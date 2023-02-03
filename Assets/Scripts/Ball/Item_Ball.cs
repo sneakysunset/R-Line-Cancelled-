@@ -27,7 +27,7 @@ public class Item_Ball : Item
         }
         base.GrabStarted(holdPoint, player);
 
-        Physics2D.IgnoreCollision(player.coll, lC.edgeC, true);
+        Physics2D.IgnoreCollision(player.coll, lC.lineC, true);
 
     }
 
@@ -36,7 +36,7 @@ public class Item_Ball : Item
         base.GrabRelease(player);
         setTagsLayers("Ball", "Ball", 7);
 
-        Physics2D.IgnoreCollision(player.coll, lC.edgeC, false);
+        Physics2D.IgnoreCollision(player.coll, lC.lineC, false);
     }
 
     public override void ThrowStarted(float throwStrength, Player player)
@@ -50,7 +50,7 @@ public class Item_Ball : Item
         base.ThrowRelease(throwStrength, player);
         setTagsLayers("Ball", "Ball", 7);
 
-        Physics2D.IgnoreCollision(player.coll, lC.edgeC, false);
+        Physics2D.IgnoreCollision(player.coll, lC.lineC, false);
 
     }
     public override void FixedUpdate()
@@ -80,6 +80,6 @@ public class Item_Ball : Item
 
     public virtual void OnDestroy()
     {
-        if(isHeld) Physics2D.IgnoreCollision(playerr.coll, lC.edgeC, true);
+        if(isHeld) Physics2D.IgnoreCollision(playerr.coll, lC.lineC, true);
     }
 }
