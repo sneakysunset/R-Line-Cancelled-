@@ -34,7 +34,12 @@ public class Player_ColHand : MonoBehaviour
     {
         if (col.CompareTag("LineCollider"))
         {
-            Physics2D.IgnoreCollision(player.coll, col, false);
+            
+            if (player.heldItem && player.heldItem.TryGetComponent(out Item_Ball it) && it.lC.edgeC == col) { }
+            else
+            {
+                Physics2D.IgnoreCollision(player.coll, col, false);
+            } 
         }
     }
 

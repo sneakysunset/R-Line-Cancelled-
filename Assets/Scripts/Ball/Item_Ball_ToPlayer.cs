@@ -9,14 +9,14 @@ public class Item_Ball_ToPlayer : Item_Ball
     public bool flying;
     private Player pl;
     float ogGravity;
-    public float speed = 50;
+    public float speed = 5;
 
     public override void Awake()
     {
         base.Awake();
         players = new Player[2];
         players = FindObjectsOfType<Player>();
-        ogGravity = rb.gravityScale;
+        ogGravity = rb.gravityScale;    
         throwPreview = false;
     }
 
@@ -25,7 +25,7 @@ public class Item_Ball_ToPlayer : Item_Ball
         base.FixedUpdate();
         if (flying)
         {
-            rb.velocity = (target.position - transform.position).normalized * speed * Time.deltaTime;
+            rb.velocity = (target.position - transform.position).normalized * speed;
         }
     }
 

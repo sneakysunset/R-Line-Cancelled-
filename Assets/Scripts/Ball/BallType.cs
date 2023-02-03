@@ -25,6 +25,11 @@ public class BallType : MonoBehaviour
         bool isHeld = false;
         Transform holdPoint = null;
         Player player = null;
+        GameObject highlight = null;
+        Rigidbody2D rb = null;
+        ThrowPreview tP = null;
+        Collider2D col = null;
+        LineCreator lC = null;
         if(TryGetComponent(out Item_Ball currentItem))
         {
             isHeld = currentItem.isHeld;
@@ -32,11 +37,11 @@ public class BallType : MonoBehaviour
             {
                 player = currentItem.playerr;
                 holdPoint = currentItem.heldPoint;
-                item.Highlight = currentItem.Highlight;
-                item.rb = currentItem.rb;
-                item.throwPreview = currentItem.throwPreview;
-                item.col = currentItem.col;
-                item.lC = currentItem.lC;
+                highlight = currentItem.Highlight;
+                rb = currentItem.rb;
+                tP = currentItem.tP;
+                col = currentItem.col;
+                lC = currentItem.lC;
             }
             Destroy(currentItem);
         }
@@ -72,9 +77,14 @@ public class BallType : MonoBehaviour
             player.heldItem = item;
             item.playerr = player;
 
+
+            item.rb = rb;
+            item.Highlight = highlight;
+            item.tP = tP;
+            item.lC = lC;
+            item.col = col;
             item.generateLine = true;
             item.setTagsLayers("Held", "Held", 14);
-            print(item.lC);
             Physics2D.IgnoreCollision(player.coll, item.lC.edgeC, true);
             item.rb.isKinematic = true;
             item.Highlight.SetActive(true);
@@ -82,6 +92,7 @@ public class BallType : MonoBehaviour
         }
         else
         {
+            item.generateLine = true;
             item.Highlight = transform.Find("Highlight").gameObject;
             item.rb = GetComponent<Rigidbody2D>();
             item.throwPreview = GetComponent<ThrowPreview>();
