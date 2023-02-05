@@ -19,7 +19,7 @@ public class LineCreator : MonoBehaviour
     Collider coll;
     [Header("Components")]
     [Space(5)]
-    public GameObject linePrefab;
+    [HideInInspector] public GameObject linePrefab;
     Vector2 ogPos;
     int prevUpdatedIndex;
     public GameObject ballPrefab;
@@ -106,18 +106,20 @@ public class LineCreator : MonoBehaviour
 
         if (list.Count < 4 || edgeC.gameObject.layer == 10) return;
 
+        List<Vector2> vec2 = AddMediumPoints();
+
         //lineR.positionCount = pointList.Count;
-        Vector3[] vector3s = new Vector3[pointList.Count];
+        Vector3[] vector3s = new Vector3[vec2.Count];
         for (int i = 0; i < vector3s.Length; i++)
         {
-            vector3s[i] = pointList[i];
+            vector3s[i] = vec2[i];
         }
 
         Mesh m = new Mesh();
         m.name = "trailMesh";
 
-        Utils_Mesh.UpdateMeshVertices(pointList, width, m);
-        Utils_Mesh.UpdateMeshTriangles(pointList.Count, m);
+        Utils_Mesh.UpdateMeshVertices(vec2, width, m);
+        Utils_Mesh.UpdateMeshTriangles(vec2.Count, m);
         m.MarkDynamic();
         m.Optimize();
         m.OptimizeReorderVertexBuffer();
@@ -268,5 +270,26 @@ public class LineCreator : MonoBehaviour
     {
         if (lineT)
             Destroy(lineT.gameObject);
+    }
+
+    public List<Vector2> AddMediumPoints()
+    {
+        List<Vector2> vec2 = new List<Vector2>();
+        for (int i = 0; i < pointList.Count; i++) vec2.Add(pointList[i]);
+        for (int i = 0; i < vec2.Count - 1; i++)
+        {
+            bool taskDone = false;
+            while (!taskDone)
+            {
+                if (Vector2.Distance(vec2[i], vec2[i + 1]) > lineResolution * 2)
+                {
+                    vec2.Insert(i + 1, vec2[i] + (vec2[i + 1] - vec2[i]).normalized * lineResolution);
+                    i++;
+                }
+                else taskDone = true;
+            }
+
+        }
+        return vec2;
     }
 }

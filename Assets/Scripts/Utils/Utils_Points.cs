@@ -186,9 +186,9 @@ public class Utils_Points
         }
 
         if (targetPos - p == Vector3.zero) targetPos.y += distance;
-        Debug.DrawLine(p, targetPos, Color.blue, .1f);
-        Debug.DrawLine(p, p1, Color.red, .1f);
-        Debug.DrawLine(p, p2, Color.red, .1f);
+        Debug.DrawLine(p, targetPos, Color.blue, Time.deltaTime);
+        Debug.DrawLine(p, p1, Color.red, Time.deltaTime);
+        Debug.DrawLine(p, p2, Color.red, Time.deltaTime);   
         return targetPos;
     }
 }

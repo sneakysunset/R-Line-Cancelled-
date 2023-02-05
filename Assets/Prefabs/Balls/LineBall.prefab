@@ -92,8 +92,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 356941409344012204}
+  - component: {fileID: 8086875767729060720}
   - component: {fileID: 1339753458846042098}
-  - component: {fileID: 1238972101}
   - component: {fileID: 1339753458846042103}
   - component: {fileID: 1339753458846042102}
   - component: {fileID: 1339753458846042091}
@@ -124,6 +124,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8086875767729060720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99438573390550179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d2ead92df0ea5c4ca3d64f2743ac2c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballThrowType: 0
+  ballCollisionType: 0
+  catchable: 1
+  Line: {fileID: 8470138877869589839, guid: ff770ce5c4b76214ab8f01110640449d, type: 3}
+  collideWithPlayer: 1
 --- !u!114 &1339753458846042098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,10 +154,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointList: []
-  lineR: {fileID: 0}
   edgeC: {fileID: 0}
   lineT: {fileID: 0}
-  linePrefab: {fileID: 8470138877869589839, guid: ff770ce5c4b76214ab8f01110640449d, type: 3}
+  linePrefab: {fileID: 2806532603236615975, guid: d9b0e85827059c74ab27ed823144ecc4, type: 3}
   ballPrefab: {fileID: 99438573390550179}
   lineResolution: 0.2
   lineBeginningX: -100
@@ -174,18 +190,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   updateAnimSpeed: 0
---- !u!114 &1238972101
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 99438573390550179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52743c3aebeb2e64e9bb60db903a5f77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1339753458846042103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,7 +206,7 @@ MonoBehaviour:
   BallPrefab: {fileID: 99438573390550179}
   _line: {fileID: 1339753458846042102}
   ptnPrefab: {fileID: 1172140396761346378, guid: 3a52d1ec47f070744b671a80019ffa24, type: 3}
-  ballHolder: {fileID: 7190875357817938291}
+  pointFolder: {fileID: 7190875357817938291}
   _maxPhysicsFrameIterations: 1500
   res: 20
 --- !u!120 &1339753458846042102
