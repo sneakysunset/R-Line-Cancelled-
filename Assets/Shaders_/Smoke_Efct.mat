@@ -40,7 +40,10 @@ Material:
     - _BUILTIN_ZWriteControl: 0
     - _Tex_Blending: -3.9
     - _Timer: 2.5
+    - _Vertex_Displacement_max: 9.8
+    - _Vertex_Displacement_min: 0
     - _Vor_Density: 15.28
+    - _noise_scale: 10
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 0}
     - _Vector3: {r: 0.98, g: 0.57, b: 0.39, a: 0}
