@@ -33,11 +33,19 @@ public class Ball_Collante : Ball_State
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (isActive)
+        if (isActive && collision.gameObject.CompareTag("Player"))
         {
             transform.SetParent(collision.transform);
             rb.velocity = Vector2.zero;
             rb.gravityScale = 0f;
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (isActive)
+        {
+            transform.SetParent(ballContainer);
+            rb.gravityScale = realGravityScale;
         }
     }
 
