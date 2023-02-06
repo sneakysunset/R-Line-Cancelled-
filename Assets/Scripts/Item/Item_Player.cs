@@ -30,8 +30,8 @@ public class Item_Player : Item
     public override void ThrowHeld(float throwStrength, Player player)
     {
         if(player.moveValue != Vector2.zero)
-            tP.Sim(throwStrength * new Vector2(player.moveValue.x, -1).normalized);
-        else tP.Sim(throwStrength * player.moveValue);
+            tP.Sim(throwStrength * new Vector2(player.moveValue.x, -1).normalized, true);
+        else tP.Sim(throwStrength * player.moveValue, true);
     }
 
     public override void ThrowRelease(float throwStrength, Player player)

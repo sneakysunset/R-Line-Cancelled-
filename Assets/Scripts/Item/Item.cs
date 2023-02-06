@@ -88,7 +88,7 @@ public class Item : MonoBehaviour
 
     public virtual void ThrowHeld(float throwStrength, Player player)
     {
-        tP.Sim(throwStrength * player.moveValue);
+        tP.Sim(throwStrength * player.moveValue, true);
     }
 
     public virtual void ThrowRelease(float throwStrength, Player player)

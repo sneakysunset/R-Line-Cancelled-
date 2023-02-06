@@ -7,7 +7,6 @@ public class LineCreator : MonoBehaviour
 {
     #region Variables
     private float[] pointArray;
-    private BallType bT;
     public List<Point> pointList = new List<Point>();
     private Color col;
     private CharacterController2D charC;
@@ -19,33 +18,32 @@ public class LineCreator : MonoBehaviour
     [HideInInspector] public Transform lineT;
 
     private CharacterController2D.Team pType;
-    Collider coll;
     [Header("Components")]
     [Space(5)]
-    [HideInInspector] public GameObject linePrefab;
     Vector2 ogPos;
     int prevUpdatedIndex;
-    public GameObject ballPrefab;
+   // public GameObject ballPrefab;
     private MeshFilter meshF;
     private bool surfaceLine = false;
 
     [Space(10)]
     [Header("Line Variables")]
     [Space(5)]
-    [Range(.001f, 1)] public float lineResolution = .5f;
-    public float lineBeginningX = -13f;
-    public float lineEndX = 13f;
-    public float width = .3f;
+    public GameObject linePrefab;
+    [Range(.001f, 1)] public float lineResolution = .2f;
+    public float lineBeginningX = -100f;
+    public float lineEndX = 100f;
+    public float width = .25f;
     public float lineYOffSet = 0;
-    public bool cascade;
     private bool flag;
-    [Space(10)]
-    [Header("Refresh Variables")]
-    [Space(5)]
 
-    public float fallTimer;
-    [Range(0.01f, 10)]public float fallSpeed;
-    [Range(0.01f, 10)]public float fallSpeedAccel;
+    [Space(10)]
+    [Header("Cascade Effect Variables")]
+    [Space(5)]
+    public bool cascade;
+    [Range(0f, 100f)]public float fallTimer;
+    [Range(0.01f, 10)]public float cascade_FallSpeed;
+    [Range(0.01f, 10)]public float cascade_FallSpeedAccel;
     #endregion
 
     IEnumerator fixDeMerdeSpawnLigne()
@@ -62,7 +60,6 @@ public class LineCreator : MonoBehaviour
 
     private void Start()
     {
-        bT = GetComponent<BallType>();
         lineFolder = GameObject.FindGameObjectWithTag("LineFolder").transform;
         pointArray = Utils_Points.GeneratePointArray(pointArray, lineBeginningX, lineEndX, lineResolution);
         if (GetComponent<CharacterController2D>())
@@ -89,12 +86,12 @@ public class LineCreator : MonoBehaviour
 
         if(cascade && !flag)
         {
-            foreach (Point point in pointList) point.TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
+            foreach (Point point in pointList) point.TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
             flag = true;
         }
         else if(!cascade && flag)
         {
-            foreach (Point point in pointList) point.TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
+            foreach (Point point in pointList) point.TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
             flag = false;
         }
     }
@@ -230,11 +227,11 @@ public class LineCreator : MonoBehaviour
                 pointList.Add(new Point(new Vector2(i, posY)));
                 if (cascade)
                 {
-                    pointList[pointList.Count - 1].TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
+                    pointList[pointList.Count - 1].TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
                 }
                 else if (!cascade)
                 {
-                    pointList[pointList.Count - 1].TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
+                    pointList[pointList.Count - 1].TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
                 }
                 numOfAdded++;
             }
@@ -250,11 +247,11 @@ public class LineCreator : MonoBehaviour
                 pointList.Add(new Point(new Vector2(i, posY)));
                 if (cascade)
                 {
-                    pointList[pointList.Count - 1].TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
+                    pointList[pointList.Count - 1].TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
                 }
                 else if (!cascade)
                 {
-                    pointList[pointList.Count - 1].TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
+                    pointList[pointList.Count - 1].TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
                 }
                 numOfAdded++;
             }
@@ -285,11 +282,11 @@ public class LineCreator : MonoBehaviour
         pointList[closestIndex].pos = newPos;
         if (cascade)
         {
-            pointList[closestIndex].TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
+            pointList[closestIndex].TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
         }
         else if (!cascade)
         {
-            pointList[closestIndex].TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
+            pointList[closestIndex].TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
         }
         //Nous suivons ici un procédé similaire à celui de la méthode AddPoint sauf que l'itération se fait entre la position /n
         //la plus proche de la balle et la position la plus proche de la balle à la frame physique précédente.
@@ -305,11 +302,11 @@ public class LineCreator : MonoBehaviour
                     pointList[i].pos = new Vector2(pointList[i].pos.x, posY);
                     if (cascade)
                     {
-                        pointList[i].TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
+                        pointList[i].TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
                     }
                     else if (!cascade)
                     {
-                        pointList[i].TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
+                        pointList[i].TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
                     }
                 }
             }
@@ -321,11 +318,11 @@ public class LineCreator : MonoBehaviour
                     pointList[i].pos = new Vector2(pointList[i].pos.x, posY);
                     if (cascade)
                     {
-                        pointList[i].TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
+                        pointList[i].TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
                     }
                     else if (!cascade)
                     {
-                        pointList[i].TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
+                        pointList[i].TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
                     }
                 }
             }
@@ -335,11 +332,11 @@ public class LineCreator : MonoBehaviour
             pointList[closestIndex].pos = newPos;
             if (cascade)
             {
-                pointList[closestIndex].TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
+                pointList[closestIndex].TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
             }
             else if (!cascade)
             {
-                pointList[closestIndex].TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
+                pointList[closestIndex].TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
             }
         }
 

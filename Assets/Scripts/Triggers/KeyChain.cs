@@ -36,13 +36,8 @@ public class KeyChain : Trigger
             line.SetPosition(i, keys[i].transform.position);
         }
 
-        var obj = OnKeyActivationEvent.GetPersistentTarget(0);
-        Door door = null;
-        if (obj.GetType().ToString() == "Door")
-        {
-            door = obj as Door;
-        } 
-        target = door.transform;
+        Component obj = OnKeyActivationEvent.GetPersistentTarget(0) as Component;
+        target = obj.transform;
         line.SetPosition(keys.Length, target.position);
 
         foreach (KeyScript key in keys) key.keyChain = this;

@@ -16,8 +16,7 @@ public class Item_Ball_ToPlayer : Item_Ball
         base.Awake();
         players = new Player[2];
         players = FindObjectsOfType<Player>();
-        ogGravity = rb.gravityScale;    
-        throwPreview = false;
+        ogGravity = rb.gravityScale;        
     }
 
     public override void FixedUpdate()

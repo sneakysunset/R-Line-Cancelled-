@@ -45,19 +45,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34b016359f6fa224db4127845e70ec93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keys: []
-  keysPos: []
-  open: {r: 0.24705882, g: 0.23137255, b: 0.8, a: 0.50980395}
-  close: {r: 0.8, g: 0.23137255, b: 0.27450982, a: 0.50980395}
   OnKeyActivationEvent:
     m_PersistentCalls:
       m_Calls: []
   OnKeyDesactivationEvent:
     m_PersistentCalls:
       m_Calls: []
-  InstantiateKeys: 0
+  activated: 0
+  keys: []
+  keysPos:
+  - {x: -17.292742, y: 6.562951, z: 0}
+  - {x: -16.292742, y: 6.562951, z: 0}
+  - {x: -15.292742, y: 6.562951, z: 0}
+  open: {r: 0.24705882, g: 0.23137255, b: 0.8, a: 0.50980395}
+  close: {r: 0.8, g: 0.23137255, b: 0.27450982, a: 0.50980395}
+  Key: {fileID: 1413362343121746940, guid: 3da59eb80e61f874fbcdff5ddcb14888, type: 3}
   numberOfKeys: 3
-  Key: {fileID: 0}
+  prevPos: {x: -17.292742, y: 6.562951, z: 0}
 --- !u!120 &3541205697605769523
 LineRenderer:
   m_ObjectHideFlags: 0
