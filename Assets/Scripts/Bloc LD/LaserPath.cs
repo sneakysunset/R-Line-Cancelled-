@@ -16,6 +16,8 @@ public class LaserPath : MonoBehaviour
     public float timerOff, timerOn;
     private float timer;
     bool isOn;
+    public bool activated;
+
     private void Start()
     {
         vector2s = new List<Vector2>();
@@ -25,6 +27,21 @@ public class LaserPath : MonoBehaviour
 
     private void Update()
     {
+        if (activated) LaserTimer();
+        else
+        {
+            isOn = false;
+            timer = timerOff;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if(isOn) Raycast();
+    }
+
+    void LaserTimer()
+    {
         timer -= Time.deltaTime;
         if (timer <= 0 && isOn)
         {
@@ -33,16 +50,11 @@ public class LaserPath : MonoBehaviour
             lineR.positionCount = 0;
             edgeC.enabled = false;
         }
-        else if(timer <= 0 && !isOn)
+        else if (timer <= 0 && !isOn)
         {
             isOn = true;
             timer = timerOn;
         }
-    }
-
-    private void FixedUpdate()
-    {
-        if(isOn) Raycast();
     }
 
     void Raycast()
@@ -104,11 +116,10 @@ public class LaserPath : MonoBehaviour
         return direction;
     }
 
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player")) Destroy(collision.gameObject);
     }
 
-    
+    public void ActivateLaser(bool activate) => activated = activate;
 }
