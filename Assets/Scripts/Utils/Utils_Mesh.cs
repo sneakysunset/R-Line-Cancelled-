@@ -6,12 +6,13 @@ using System.Linq;
 
 public static class Utils_Mesh 
 {
-    public static Vector2[] UpdateMeshVertices(List<Vector2> pointList, float lineWidth, Mesh m , bool surface)
+    public static Vector2[] UpdateMeshVertices(List<Vector2> pointList, float lineWidth, Mesh m , bool surface, Vector2[] uvList)
     {
         int listLength = 2 * pointList.Count - 1;
         Vector3[] vertices = new Vector3[listLength];
         Vector2[] uvs = new Vector2[listLength];
         float distance = 0;
+        //Vector2 vecUv = Vector2.zero;
         #region surface
         /*        if (surface)
                 {
@@ -68,27 +69,41 @@ public static class Utils_Mesh
             if (i == vertices.Length - 1 || i == 1)
             {
                 vertices[i] = pointList[(i - 1) / 2] + new Vector2(0, lineWidth/2);
-                if(i == vertices.Length - 1) uvs[i] = new Vector2(1, 1);
-                else uvs[i] = new Vector2(0, 1);
-            }
-            else if (i % 2 == 0 && i != 0)
-            {
-                //vertices[i] = pointList[i / 2];
-                vertices[i] = Utils_Points.GetParallelePoint(pointList[i/2], pointList[(i / 2) - 1], pointList[(i / 2) + 1], lineWidth/2, false);
-                uvs[i] = new Vector2(distance, 0);
+                //if(i == vertices.Length - 1) uvs[i] = uvList[uvList.Length - 1];
+                //else uvs[i] = uvList[1];
+
+               // Debug.Log(uvs[i]);
+
             }
             else if(i == 0)
             {
                 vertices[i] = pointList[(i - 1) / 2] - new Vector2(0, lineWidth / 2);
-                uvs[i] = new Vector2(distance, 0);
+                //uvs[i] = uvList[0];
+                //Debug.Log(uvs[i]);
+
+            }
+            else if (i % 2 == 0 && i != 0)
+            {
+                //vertices[i] = pointList[i / 2];
+                vertices[i] = Utils_Points.GetParallelePoint(pointList[i / 2], pointList[(i / 2) - 1], pointList[(i / 2) + 1], lineWidth / 2, false);
+
+                //vecUv = uvList[UnityEngine.Random.Range(2, uvList.Length - 2)];
+
+                //uvs[i] = vecUv;
+                //Debug.Log(uvs[i]);
+
             }
             else
             {
                 int pI = (i - 1) / 2;
                 vertices[i] = Utils_Points.GetParallelePoint(pointList[pI], pointList[pI - 1], pointList[pI + 1], lineWidth/2, true);
-                uvs[i] = new Vector2(distance, 1);
+                //uvs[i] = vecUv + Vector2.up * (1 / 3);
+                //Debug.Log(uvs[i]);
             }
+
+           // if (i == vertices.Length - 2) uvs[i] = uvList[uvList.Length - 2];
         }
+        
         m.vertices = vertices;
         m.uv = uvs;
         return uvs;

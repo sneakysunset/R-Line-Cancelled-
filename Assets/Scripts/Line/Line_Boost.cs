@@ -8,7 +8,6 @@ public class Line_Boost : MonoBehaviour
     public float boostDuration = 1;
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        print(collision.name);
         if (collision.CompareTag("Player"))
         {
             print(collision.name);

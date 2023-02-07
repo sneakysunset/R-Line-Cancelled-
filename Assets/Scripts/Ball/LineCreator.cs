@@ -16,7 +16,7 @@ public class LineCreator : MonoBehaviour
     private PolygonCollider2D polC;
     [HideInInspector] public Collider2D lineC;
     [HideInInspector] public Transform lineT;
-
+    Vector2[] uvRandomArray;
     private CharacterController2D.Team pType;
     [Header("Components")]
     [Space(5)]
@@ -60,6 +60,8 @@ public class LineCreator : MonoBehaviour
 
     private void Start()
     {
+        uvRandomArray = new Vector2[]{ Vector2.zero, Vector2.up / 3, Vector2.up * (2/3), Vector2.up, Vector2.right / 3, Vector2.one * (1/3), new Vector2(1/3, 2/3), new Vector2(1/3, 1), Vector2.right * (2/3), new Vector2(2/3, 1/3), Vector2.one * (2/3), new Vector2(2/3, 1), Vector2.right, new Vector2(1, 1/3), new Vector2(1, 2/3), Vector2.one};
+
         lineFolder = GameObject.FindGameObjectWithTag("LineFolder").transform;
         pointArray = Utils_Points.GeneratePointArray(pointArray, lineBeginningX, lineEndX, lineResolution);
         if (GetComponent<CharacterController2D>())
@@ -153,7 +155,7 @@ public class LineCreator : MonoBehaviour
         Mesh m = new Mesh();
         m.name = "trailMesh";
 
-        Utils_Mesh.UpdateMeshVertices(vec2, width, m, surfaceLine);
+        Utils_Mesh.UpdateMeshVertices(vec2, width, m, surfaceLine, uvRandomArray);
         Utils_Mesh.UpdateMeshTriangles(vec2.Count, m);
         m.MarkDynamic();
         m.Optimize();

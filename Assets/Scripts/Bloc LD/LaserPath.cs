@@ -11,6 +11,7 @@ public class LaserPath : MonoBehaviour
     List<Vector2> vector2s;
     Vector3 origin;
     Collider2D col;
+    Collider2D myCol;
     public EdgeCollider2D edgeC;
 
     public float timerOff, timerOn;
@@ -23,6 +24,7 @@ public class LaserPath : MonoBehaviour
         vector2s = new List<Vector2>();
         lineR = GetComponentInChildren<LineRenderer>();
         timer = timerOff;
+        myCol = GetComponent<Collider2D>();
     }
 
     private void Update()
@@ -64,11 +66,12 @@ public class LaserPath : MonoBehaviour
         vector2s.Clear();
         vector2s.Add(origin);
 
-
+        myCol.isTrigger = true;
         for (int i = 0; i < maxBounceNum; i++)
         {
             Physics2D.queriesHitTriggers = false;
-            RaycastHit2D hit = Physics2D.Raycast(origin, direction, Mathf.Infinity, hitLayer);
+            
+            RaycastHit2D hit = Physics2D.Raycast(origin, direction, Mathf.Infinity);
             Physics2D.queriesHitTriggers = true;
 
             if (hit.collider != null && hit.transform.gameObject.tag == "LineCollider")
@@ -85,6 +88,7 @@ public class LaserPath : MonoBehaviour
                 vector2s.Add(hit.point);
                 break;
             }
+            myCol.isTrigger = false;
         }
 
         if (col != null) col.isTrigger = false;
