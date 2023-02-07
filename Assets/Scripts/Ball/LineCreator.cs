@@ -25,6 +25,7 @@ public class LineCreator : MonoBehaviour
    // public GameObject ballPrefab;
     private MeshFilter meshF;
     private bool surfaceLine = false;
+    private bool flag;
 
     [Space(10)]
     [Header("Line Variables")]
@@ -35,7 +36,6 @@ public class LineCreator : MonoBehaviour
     public float lineEndX = 100f;
     public float width = .25f;
     public float lineYOffSet = 0;
-    private bool flag;
 
     [Space(10)]
     [Header("Cascade Effect Variables")]
@@ -191,8 +191,6 @@ public class LineCreator : MonoBehaviour
         }
         else return false;
     }
-
-
 
     //Méthode qui sert à rajouter un/des point(s).
     void AddPoint()

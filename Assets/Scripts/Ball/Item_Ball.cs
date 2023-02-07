@@ -26,6 +26,7 @@ public class Item_Ball : Item
     {
         
         base.Awake();
+        lC = GetComponent<LineCreator>();
         ogGravity = rb.gravityScale;
         throwPreview = true;
         players = new Player[2];
