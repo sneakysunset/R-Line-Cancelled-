@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 1855786148796738785}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.7053, y: 2.086657, z: 1}
+  m_LocalScale: {x: 2, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1855786149402477697}
@@ -160,9 +160,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 1
   generateLine: 0
+  rb: {fileID: 0}
+  tP: {fileID: 0}
+  col: {fileID: 0}
+  heldPoint: {fileID: 0}
   isHeld: 0
   throwPreview: 0
   Highlight: {fileID: 0}
+  catchable: 1
   timerValue: 1
 --- !u!114 &1855786149402477699
 MonoBehaviour:
