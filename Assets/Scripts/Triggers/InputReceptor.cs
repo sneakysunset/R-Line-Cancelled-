@@ -5,7 +5,7 @@ using UnityEngine.Events;
 public class InputReceptor : Trigger
 {
     public Trigger[] triggers;
-    int numberOfActivated;
+    public int numberOfActivated;
     private void Update()
     {
         CheckTriggers();

@@ -20,7 +20,7 @@ public class PressurePlate : Trigger
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Player") && activated)
+        if (collision.collider.CompareTag("Player") && activated && collision.collider.CompareTag("Cube"))
         {
             OnKeyDesactivationEvent?.Invoke();
             activated = false;
