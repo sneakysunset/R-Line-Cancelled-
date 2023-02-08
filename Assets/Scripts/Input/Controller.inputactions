@@ -24,15 +24,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Dash",
-                    "type": "Button",
-                    "id": "1296602d-2a12-4fda-8d05-80917587b966",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "Press(pressPoint=1.401298E-45)",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Interaction",
                     "type": "Button",
                     "id": "39a6aec1-efa2-4e5d-9da3-537b97697fbd",
@@ -142,28 +133,6 @@
                 },
                 {
                     "name": "",
-                    "id": "c06bf732-1021-42a9-9343-f75c8364fbc1",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Dash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b93a2fa0-3d66-4ae4-8c71-c963c511d56b",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyBoard And Mouse",
-                    "action": "Dash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "7186c6b9-0fa0-4ac4-81c7-1729f3b6d6cb",
                     "path": "<Gamepad>/buttonWest",
                     "interactions": "",
@@ -203,34 +172,6 @@
                     "processors": "",
                     "groups": "KeyBoard And Mouse",
                     "action": "Throw",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "LineControl",
-            "id": "f3190e17-8b0a-4ade-9fd0-e40fbd4cf3e5",
-            "actions": [
-                {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "73a65cec-409c-4d79-a276-548c63a473a9",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "8177617a-6e3e-4901-8d1b-55246d5b669c",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyBoard And Mouse",
-                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

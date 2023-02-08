@@ -5,55 +5,53 @@ using UnityEngine;
 public class PlayerCollisionManager : MonoBehaviour
 {
     [HideInInspector] public CharacterController2D charC;
+    private Item myItem;
     private Rigidbody2D rb;
     [HideInInspector] public GameObject coll;
-    Vector2 prevVelocity;
     [HideInInspector] public IEnumerator groundCheckEnum;
-    [HideInInspector] public List<Transform> holdableObjects;
-    [HideInInspector] public bool holdingBall = false;
     [Range(-1f, 1f)] public float yGroundCheck = -.15f;
     [Range(0f, 1f)] public float yWallJump = .7f;
     [Range(-1f, 1f)] public float lineCollisionDetection = .1f;
     public float bounce = 1.5f;
+    bool lineOverPlayer;
+    bool enterAgain;
+    bool inline;
 
     private void Start()
     {
         charC = GetComponent<CharacterController2D>();
         rb = GetComponent<Rigidbody2D>();
         coll = transform.Find("Collider").gameObject;
-    }
-    public bool yo;
-    private void FixedUpdate()
-    {
-        StartCoroutine(WaitForPhysics());
+        myItem = GetComponent<Item>();
     }
 
-    private void Update()
+    /*private void Update()
     {
-        if (Physics2D.Raycast((Vector2)transform.position, Vector2.up, 100, LayerMask.NameToLayer("LineCollider"))) yo = true;
-        else yo = false;
+        if (Physics2D.Raycast((Vector2)transform.position, Vector2.up, 100, LayerMask.NameToLayer("LineCollider"))) lineOverPlayer = true;
+        else lineOverPlayer = false;
 
 
-        if ((charC.moveValue.y >= -1 && charC.moveValue.y < -.85f) || holdingBall || yo)
+        if (((charC.moveValue.y >= -1 && charC.moveValue.y < -.85f) || (itemS.heldItem != null && itemS.heldItem.generateLine) || lineOverPlayer) && !myItem.isHeld)
         {
             coll.layer = LayerMask.NameToLayer("PlayerOff");
         }
-        else if (!inline)
+        else if (!inline && !myItem.isHeld)
         {
             coll.layer = LayerMask.NameToLayer("Player");
         }
     }
 
-    bool enterAgain;
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        LineCollisionEnter(collision);
-        GroundCheckCollisionEnter(collision);
-        CollisionWithPlayer(collision);
+        if (!myItem.isHeld)
+        {
+            LineCollisionEnter(collision);
+            GroundCheckCollisionEnter(collision);
+            CollisionWithPlayer(collision);
+        }
 
         //Désactive la variable jumping lors de la collision avec un mur walljumpable.
-        if (collision.contacts[0].normal.y > -yWallJump && collision.contacts[0].normal.y < yWallJump && collision.gameObject.CompareTag("Jumpable") /*|| collision.gameObject.CompareTag("LineCollider")*/)
+        if (collision.contacts[0].normal.y > -yWallJump && collision.contacts[0].normal.y < yWallJump && collision.gameObject.CompareTag("Jumpable") *//*|| collision.gameObject.CompareTag("LineCollider")*//*)
         {
             charC.jumping = false;
         }
@@ -134,7 +132,7 @@ public class PlayerCollisionManager : MonoBehaviour
     //Le joueur à sa vélocité sur l'axe y égale à 0 pour ne pas glisser le long du mur.
     void WallJumpCollisionStay(Collision2D collision)
     {
-        if (collision.contacts[0].normal.y > -yWallJump && collision.contacts[0].normal.y < yWallJump && collision.gameObject.CompareTag("Jumpable") /*|| collision.gameObject.CompareTag("LineCollider")*/)
+        if (collision.contacts[0].normal.y > -yWallJump && collision.contacts[0].normal.y < yWallJump && collision.gameObject.CompareTag("Jumpable") *//*|| collision.gameObject.CompareTag("LineCollider")*//*)
         {
             //rb.velocity = new Vector3(rb.velocity.x, 0);
             charC.wallJumpable = collision.contacts[0].normal.x;
@@ -153,25 +151,11 @@ public class PlayerCollisionManager : MonoBehaviour
         charC.wallJumpable = 0;
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.transform.CompareTag("Ball"))
-        {
-            GetBallOnTriggerEnter(other);
-        }
-    }
-
     //Si le joueur rentre dans la zone de trigger autour d'une balle elle rejoint la liste des objets attrapables à proximité.
-    void GetBallOnTriggerEnter(Collider2D other)
-    {
-         other.transform.parent.Find("Highlight").gameObject.SetActive(true);
-         holdableObjects.Add(other.transform.parent);
-    }
-    bool inline;
     //Quand la ligne est dans la zone de trigger à l'intérieur du joueur, ce dernier n'a pas de collision avec elle.
     private void OnTriggerStay2D(Collider2D other)
     {
-        if(other.tag == "LineCollider")
+        if(other.tag == "LineCollider" && !myItem.isHeld)
         {
             gameObject.layer = LayerMask.NameToLayer("PlayerOff");
             inline = true;
@@ -180,17 +164,7 @@ public class PlayerCollisionManager : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        RemoveBallTriggerExit(other);
         ExitLineTriggerExit(other);
-    }
-
-    void RemoveBallTriggerExit(Collider2D other)
-    {
-        if (other.transform.CompareTag("Ball"))
-        {
-            other.transform.parent.Find("Highlight").gameObject.SetActive(false);
-            holdableObjects.Remove(other.transform.parent);
-        }
     }
 
     //Quand la ligne sort de la zone de trigger à l'intérieur du joueur et que ce dernier ne tient pas de balle, le joueur recommence à rentrer en collision avec la ligne.
@@ -201,7 +175,7 @@ public class PlayerCollisionManager : MonoBehaviour
         {
             inline = false;
             coll.layer = LayerMask.NameToLayer("Player");
-            if (holdingBall)
+            if (itemS.heldItem != null && itemS.heldItem.generateLine)
             {
                 coll.layer = LayerMask.NameToLayer("PlayerOff");
             }
@@ -220,17 +194,5 @@ public class PlayerCollisionManager : MonoBehaviour
     {
         yield return new WaitForSeconds(timer);
         charC.groundCheck = false;
-    }
-
-    Vector3 prevprevVelo;
-
-    public IEnumerator WaitForPhysics()
-    {
-        yield return new WaitForFixedUpdate();
-       // prevprevVelo = prevVelocity;
-       // prevVelocity = rb.velocity;
-    }
-
-
-
+    }*/
 }
