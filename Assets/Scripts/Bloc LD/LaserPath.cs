@@ -13,7 +13,7 @@ public class LaserPath : MonoBehaviour
     Collider2D col;
     Collider2D myCol;
     public EdgeCollider2D edgeC;
-
+    public bool _timer;
     public float timerOff, timerOn;
     private float timer;
     bool isOn;
@@ -29,8 +29,8 @@ public class LaserPath : MonoBehaviour
 
     private void Update()
     {
-        if (activated) LaserTimer();
-        else
+        if (activated && _timer) LaserTimer();
+        else if( !activated && _timer)
         {
             isOn = false;
             timer = timerOff;
@@ -39,7 +39,12 @@ public class LaserPath : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(isOn) Raycast();
+        if ((isOn || !_timer) && activated)
+        {
+            edgeC.enabled = true;
+            Raycast();
+        }
+        else edgeC.enabled = false;
     }
 
     void LaserTimer()
