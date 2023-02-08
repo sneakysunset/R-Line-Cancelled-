@@ -23,10 +23,8 @@ public class PressurePlate : Trigger
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        print(1);
         if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Cube"))
         {
-            print(2);
             if(collisions.Count == 0)
             {
                 OnKeyActivationEvent?.Invoke();

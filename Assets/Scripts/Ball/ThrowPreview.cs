@@ -11,6 +11,7 @@ public class ThrowPreview : MonoBehaviour
     public int res = 20;
     private void Start()
     {
+        _line = GetComponent<LineRenderer>();
         pointFolder = transform.Find("pointHolder");
         for (int i = 0; i < _maxPhysicsFrameIterations; i++)
         {

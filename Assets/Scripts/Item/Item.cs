@@ -63,6 +63,8 @@ public class Item : MonoBehaviour
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Catch");
         Physics2D.IgnoreCollision(player.coll, col, true);
         rb.isKinematic = true;
+        if(player.holdableItems.Contains(this))
+            player.holdableItems.Remove(this);
         heldPoint = holdPoint;
         Highlight.SetActive(false);
     }
@@ -75,7 +77,7 @@ public class Item : MonoBehaviour
         rb.angularVelocity = 0;
         Physics2D.IgnoreCollision(player.coll, col, false);
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Grab");
-
+        player.holdableItems.Add(this);
         setTagsLayers(mytag, mytag, 17);
     }
 
@@ -104,6 +106,7 @@ public class Item : MonoBehaviour
         player.canMove = true;
         player.canJump = true;
         rb.isKinematic = false;
+        player.holdableItems.Add(this);
         Physics2D.IgnoreCollision(player.coll, col, false) ;
         rb.velocity = player.moveValue * throwStrength;
 
