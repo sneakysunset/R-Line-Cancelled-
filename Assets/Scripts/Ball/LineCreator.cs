@@ -16,7 +16,7 @@ public class LineCreator : MonoBehaviour
     private PolygonCollider2D polC;
     [HideInInspector] public Collider2D lineC;
     [HideInInspector] public Transform lineT;
-
+    public Vector2[] uvRandomArray;
     private CharacterController2D.Team pType;
     [Header("Components")]
     [Space(5)]
@@ -41,6 +41,7 @@ public class LineCreator : MonoBehaviour
     [Header("Cascade Effect Variables")]
     [Space(5)]
     public bool cascade;
+    public bool cascadeWhenCloseToGround;
     [Range(0f, 100f)]public float fallTimer;
     [Range(0.01f, 10)]public float cascade_FallSpeed;
     [Range(0.01f, 10)]public float cascade_FallSpeedAccel;
@@ -60,6 +61,16 @@ public class LineCreator : MonoBehaviour
 
     private void Start()
     {
+        uvRandomArray = new Vector2[]
+        {
+            Vector2.up / 3, 
+            Vector2.up * 2 / 3, 
+            Vector2.right / 3, 
+            Vector2.one /3, 
+            Vector2.right /3 + Vector2.up * 2 / 3,
+            Vector2.right * 2 / 3,
+            Vector2.right * 2 / 3 + Vector2.up / 3
+        };
         lineFolder = GameObject.FindGameObjectWithTag("LineFolder").transform;
         pointArray = Utils_Points.GeneratePointArray(pointArray, lineBeginningX, lineEndX, lineResolution);
         if (GetComponent<CharacterController2D>())
@@ -77,24 +88,34 @@ public class LineCreator : MonoBehaviour
     }
     private void Update()
     {
-        
+
         foreach (Point point in pointList)
         {
             point.Fond();
         }
 
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Vector2 pPos = new Vector2(transform.position.x, transform.position.y);
 
-        if(cascade && !flag)
-        {
-            foreach (Point point in pointList) point.TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-            flag = true;
-        }
-        else if(!cascade && flag)
-        {
-            foreach (Point point in pointList) point.TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-            flag = false;
+            float posX = Mathf.FloorToInt(pPos.x);
+
+            float curDistance = 100000;
+            int closestIndex = 10000;
+            //Cette itération sert à trouver le point le plus proche de la balle appartenant à la liste.
+            for (int i = 0; i < pointList.Count; i++)
+            {
+                if (Mathf.Abs(pointList[i].pos.x - pPos.x) < curDistance)
+                {
+                    closestIndex = i;
+                    curDistance = Mathf.Abs(pointList[i].pos.x - pPos.x);
+                }
+            }
+            pointList[closestIndex].Printer();
         }
     }
+
+    void CascadeTrigger(Point point) => point.TimerTrigger(cascade, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width, cascadeWhenCloseToGround);
 
     //Au start cré la ligne et prend des références du lineRenderer, du edgeCollider et du transform. Change aussi la couleur de la ligne son nom et son layer.
     private void InstantiateLine()
@@ -153,7 +174,7 @@ public class LineCreator : MonoBehaviour
         Mesh m = new Mesh();
         m.name = "trailMesh";
 
-        Utils_Mesh.UpdateMeshVertices(vec2, width, m, surfaceLine);
+        Utils_Mesh.UpdateMeshVertices(vec2, width, m, surfaceLine, uvRandomArray);
         Utils_Mesh.UpdateMeshTriangles(vec2.Count, m);
         m.MarkDynamic();
         m.Optimize();
@@ -223,14 +244,8 @@ public class LineCreator : MonoBehaviour
                 //entre la position sur y de la balle et la position sur y du point de la liste le plus proche de la balle sur l'axe x.
                 float posY = Mathf.Lerp(pPos.y, pointList[0].pos.y, numOfAdded / ((pointList[0].pos.x - pPos.x) / lineResolution));
                 pointList.Add(new Point(new Vector2(i, posY)));
-                if (cascade)
-                {
-                    pointList[pointList.Count - 1].TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-                }
-                else if (!cascade)
-                {
-                    pointList[pointList.Count - 1].TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-                }
+
+                CascadeTrigger(pointList[pointList.Count - 1]);
                 numOfAdded++;
             }
 
@@ -243,14 +258,7 @@ public class LineCreator : MonoBehaviour
             {
                 float posY = Mathf.Lerp(pPos.y, pointList[0].pos.y, numOfAdded / ((pPos.x - pointList[pointList.Count - 1].pos.x) / lineResolution));
                 pointList.Add(new Point(new Vector2(i, posY)));
-                if (cascade)
-                {
-                    pointList[pointList.Count - 1].TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-                }
-                else if (!cascade)
-                {
-                    pointList[pointList.Count - 1].TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-                }
+                CascadeTrigger(pointList[pointList.Count - 1]);
                 numOfAdded++;
             }
         }
@@ -278,14 +286,8 @@ public class LineCreator : MonoBehaviour
 
         Vector2 newPos = new Vector2(pointList[closestIndex].pos.x, pPos.y);
         pointList[closestIndex].pos = newPos;
-        if (cascade)
-        {
-            pointList[closestIndex].TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-        }
-        else if (!cascade)
-        {
-            pointList[closestIndex].TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-        }
+        CascadeTrigger(pointList[closestIndex]);
+
         //Nous suivons ici un procédé similaire à celui de la méthode AddPoint sauf que l'itération se fait entre la position /n
         //la plus proche de la balle et la position la plus proche de la balle à la frame physique précédente.
         //L'incrémentation ne se fait aussi pas avec "lineResolution" mais avec les index séparant les 2 points évoqués au-dessus.
@@ -298,14 +300,7 @@ public class LineCreator : MonoBehaviour
                 {
                     float posY = Mathf.Lerp(pointList[closestIndex].pos.y, pointList[prevUpdatedIndex].pos.y, (Mathf.Abs(i) - Mathf.Abs(closestIndex)) / (Mathf.Abs(prevUpdatedIndex - closestIndex)));
                     pointList[i].pos = new Vector2(pointList[i].pos.x, posY);
-                    if (cascade)
-                    {
-                        pointList[i].TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-                    }
-                    else if (!cascade)
-                    {
-                        pointList[i].TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-                    }
+                    CascadeTrigger(pointList[i]);
                 }
             }
             else
@@ -314,28 +309,14 @@ public class LineCreator : MonoBehaviour
                 {
                     float posY = Mathf.Lerp(pointList[prevUpdatedIndex].pos.y, pointList[closestIndex].pos.y, (Mathf.Abs(i) - Mathf.Abs(prevUpdatedIndex)) / (Mathf.Abs(closestIndex - prevUpdatedIndex)));
                     pointList[i].pos = new Vector2(pointList[i].pos.x, posY);
-                    if (cascade)
-                    {
-                        pointList[i].TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-                    }
-                    else if (!cascade)
-                    {
-                        pointList[i].TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-                    }
+                    CascadeTrigger(pointList[i]);
                 }
             }
         }
         else
         {
             pointList[closestIndex].pos = newPos;
-            if (cascade)
-            {
-                pointList[closestIndex].TimerTrigger(true, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-            }
-            else if (!cascade)
-            {
-                pointList[closestIndex].TimerTrigger(false, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width);
-            }
+            CascadeTrigger(pointList[closestIndex]);
         }
 
         prevUpdatedIndex = closestIndex;
@@ -372,7 +353,7 @@ public class LineCreator : MonoBehaviour
             bool taskDone = false;
             while (!taskDone)
             {
-                if (Vector2.Distance(vec2[i], vec2[i + 1]) > lineResolution * 2)
+                if (Vector2.Distance(vec2[i], vec2[i + 1]) > lineResolution * 1.5f)
                 {
                     vec2.Insert(i + 1, vec2[i] + (vec2[i + 1] - vec2[i]).normalized * lineResolution);
                     i++;

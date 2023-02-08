@@ -117,13 +117,16 @@ public class Door : MonoBehaviour
 
     public void MovePoint(bool pA, Vector3 pos, Vector3 center)
     {
-            var a = Destination();
+            var a = destination;
             destination = new Vector3(pos.x, pos.y, 0);
     }
-    public Vector3 Destination()
+
+    private void OnDrawGizmos()
     {
-        destination.z = 0;
-        return destination;
+        if (Selection.activeGameObject != gameObject)
+        {
+            Gizmos.DrawWireSphere(destination, .4f);
+        }
     }
     #endregion
 }
@@ -144,11 +147,11 @@ public class Door_Editor : Editor
     {
         MoveHandlesAlongObject();
         Handles.color = Color.black;
-        Handles.DrawLine(door.Destination(), door.transform.position);
+        Handles.DrawLine(door.destination, door.transform.position);
 
         Handles.color = Color.red;
-        Vector3 newPosA = Handles.FreeMoveHandle(door.Destination(), Quaternion.identity, .5f, Vector3.zero, Handles.CylinderHandleCap);
-        if (door.Destination() != newPosA)
+        Vector3 newPosA = Handles.FreeMoveHandle(door.destination, Quaternion.identity, .5f, Vector3.zero, Handles.CylinderHandleCap);
+        if (door.destination != newPosA)
         {
             Undo.RecordObject(door, "MovePoint");
             door.MovePoint(true, newPosA, door.transform.position);
@@ -162,7 +165,7 @@ public class Door_Editor : Editor
 
     void MoveHandlesAlongObject()
     {
-        if (door.prevPos != door.transform.position)
+        if (door.prevPos != door.transform.position && !Application.isPlaying)
         {
             Vector3 movement = door.transform.position - door.prevPos;
             door.destination += movement;

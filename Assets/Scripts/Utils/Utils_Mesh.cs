@@ -6,12 +6,15 @@ using System.Linq;
 
 public static class Utils_Mesh 
 {
-    public static Vector2[] UpdateMeshVertices(List<Vector2> pointList, float lineWidth, Mesh m , bool surface)
+    public static Vector2[] UpdateMeshVertices(List<Vector2> pointList, float lineWidth, Mesh m , bool surface, Vector2[] uvList)
     {
         int listLength = 2 * pointList.Count - 1;
         Vector3[] vertices = new Vector3[listLength];
         Vector2[] uvs = new Vector2[listLength];
+        Vector2 uvCord = Vector2.zero;
         float distance = 0;
+        bool uvFlag = false;
+        //Vector2 vecUv = Vector2.zero;
         #region surface
         /*        if (surface)
                 {
@@ -64,31 +67,62 @@ public static class Utils_Mesh
         #endregion
         for (int i = 0; i < vertices.Length; i++)
         {
-            if(i%2 == 0 && i != 0) distance += Vector2.Distance(pointList[i / 2], pointList[i / 2 - 1]) + lineWidth / Vector2.Distance(pointList[i / 2], pointList[i / 2 - 1]);
+            if (i == 0) uvs[i] = Vector2.zero;
+            else if (i == 1) uvs[i] = Vector2.up / 3;
+            else if (i == 2) uvs[i] = Vector2.right / 3;
+            else if (i == 3) uvs[i] = Vector2.one / 3;
+            else if (i == uvList.Length - 4) uvs[i] = Vector2.one * (2 / 3);
+            else if (i == uvList.Length - 3) uvs[i] = new Vector2(2 / 3, 1);
+            else if (i == uvList.Length - 2) uvs[i] = new Vector2(1, 2 / 3);
+            else if (i == uvList.Length - 1) uvs[i] = Vector2.one;
+            else if (i % 2 == 0 && !uvFlag) 
+            {
+                uvCord = uvList[i % (uvList.Length - 1)];
+                uvs[i] = uvCord;
+            }
+
+            else if (i % 2 == 1 && !uvFlag) 
+            {
+                uvFlag = true;
+                uvCord.y += 1 / 3;
+                uvs[i] = uvCord;
+            }
+            else if(i % 2 == 0 && uvFlag)
+            {
+                uvCord.x += 1 / 3;
+                uvCord.y -= 1 / 3;
+                uvs[i] = uvCord;
+            }
+            else if(i % 2 == 1 && uvFlag)
+            {
+                uvFlag = false;
+                uvCord.y += 1 / 3;
+                uvs[i] = uvCord;
+            }
+            else Debug.Log(i);
+
+
+            //if(i%2 == 0 && i != 0) distance += Vector2.Distance(pointList[i / 2], pointList[i / 2 - 1]) + lineWidth / Vector2.Distance(pointList[i / 2], pointList[i / 2 - 1]);
             if (i == vertices.Length - 1 || i == 1)
             {
                 vertices[i] = pointList[(i - 1) / 2] + new Vector2(0, lineWidth/2);
-                if(i == vertices.Length - 1) uvs[i] = new Vector2(1, 1);
-                else uvs[i] = new Vector2(0, 1);
-            }
-            else if (i % 2 == 0 && i != 0)
-            {
-                //vertices[i] = pointList[i / 2];
-                vertices[i] = Utils_Points.GetParallelePoint(pointList[i/2], pointList[(i / 2) - 1], pointList[(i / 2) + 1], lineWidth/2, false);
-                uvs[i] = new Vector2(distance, 0);
             }
             else if(i == 0)
             {
                 vertices[i] = pointList[(i - 1) / 2] - new Vector2(0, lineWidth / 2);
-                uvs[i] = new Vector2(distance, 0);
+            }
+            else if (i % 2 == 0 && i != 0)
+            {
+                //vertices[i] = pointList[i / 2];
+                vertices[i] = Utils_Points.GetParallelePoint(pointList[i / 2], pointList[(i / 2) - 1], pointList[(i / 2) + 1], lineWidth / 2, false);
             }
             else
             {
                 int pI = (i - 1) / 2;
                 vertices[i] = Utils_Points.GetParallelePoint(pointList[pI], pointList[pI - 1], pointList[pI + 1], lineWidth/2, true);
-                uvs[i] = new Vector2(distance, 1);
             }
         }
+        
         m.vertices = vertices;
         m.uv = uvs;
         return uvs;
