@@ -15,7 +15,7 @@ public class InputReceptor : Trigger
     {
         numberOfActivated = 0;
         foreach (Trigger trigger in triggers)
-        {
+        { 
             if (!trigger.activated)
             {
                 if (activated)
