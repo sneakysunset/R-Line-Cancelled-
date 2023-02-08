@@ -5,7 +5,9 @@ using UnityEngine.Events;
 public class InputReceptor : Trigger
 {
     public Trigger[] triggers;
-    public int numberOfActivated;
+    int numberOfActivated;
+
+
     private void Update()
     {
         CheckTriggers();
@@ -16,17 +18,20 @@ public class InputReceptor : Trigger
         numberOfActivated = 0;
         foreach (Trigger trigger in triggers)
         {
-            if (!trigger.activated)
+            if (trigger.activated) numberOfActivated++;
+            else
             {
                 if (activated)
                 {
                     OnKeyDesactivationEvent?.Invoke();
                     activated = false;
-                } 
+                }
                 return;
             }
         }
-        if (!activated)
+
+
+        if (numberOfActivated == triggers.Length)
         {
             OnKeyActivationEvent?.Invoke();
             activated = true;

@@ -174,7 +174,7 @@ public class LineCreator : MonoBehaviour
         Mesh m = new Mesh();
         m.name = "trailMesh";
 
-        Utils_Mesh.UpdateMeshVertices(vec2, width, m, surfaceLine, uvRandomArray);
+        Utils_Mesh.UpdateMeshVertices(vec2, width, m, surfaceLine, uvRandomArray, 3, false);
         Utils_Mesh.UpdateMeshTriangles(vec2.Count, m);
         m.MarkDynamic();
         m.Optimize();
