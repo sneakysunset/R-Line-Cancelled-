@@ -1703,6 +1703,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1339753458846042098, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: linePrefab
+      value: 
+      objectReference: {fileID: 8470138877869589839, guid: ff770ce5c4b76214ab8f01110640449d, type: 3}
+    - target: {fileID: 1339753458846042098, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
       propertyPath: surfaceLine
       value: 1
       objectReference: {fileID: 0}
@@ -2045,6 +2049,26 @@ PrefabInstance:
     - target: {fileID: 8086875767729060720, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
       propertyPath: collideWithPlayer
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: ballColType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: ballThrowType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: flyingTrajSpeed
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: flyingToPlayerSpeed
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: flyingTrajDeviationSpeed
+      value: 400
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
