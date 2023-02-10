@@ -57,7 +57,6 @@ public class Item : MonoBehaviour
 
     public virtual void GrabStarted(Transform holdPoint, Player player)
     {
-        print(1);
         isHeld = true;
         setTagsLayers(mytag, mytag, 14);
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Catch");
