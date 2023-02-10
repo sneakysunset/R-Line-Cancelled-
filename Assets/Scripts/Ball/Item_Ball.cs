@@ -104,7 +104,7 @@ public class Item_Ball : Item
         base.GrabRelease(player);
         setTagsLayers("Ball", "Ball", 7);
 
-        Physics2D.IgnoreCollision(player.coll, lC.lineC, false);
+        Physics2D.IgnoreCollision(player.coll, lC.lineC, true);
         
     }
     #endregion
@@ -169,7 +169,7 @@ public class Item_Ball : Item
         {
             base.ThrowRelease(throwStrength, player);
             setTagsLayers("Ball", "Ball", 7);
-            Physics2D.IgnoreCollision(player.coll, lC.lineC, false);
+            Physics2D.IgnoreCollision(player.coll, lC.lineC, true);
         }
 
         if (ballThrowType == BallType.BallThrowType.straightLine) flying = true;

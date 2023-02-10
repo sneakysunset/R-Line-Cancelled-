@@ -42,7 +42,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Sound Test.unity
     guid: 0fee96c8b6d8c994486a714c5547907e
   - enabled: 0
-    path: Assets/Scenes/LD_MainTest.unity
+    path: Assets/Scenes/LD_LEVEL2.unity
     guid: 45b70e1f5bd7a934ca13a253eaf215b4
   - enabled: 0
     path: 

@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 8124790628018030775}
   - component: {fileID: 1339753458846042098}
   - component: {fileID: 1339753458846042103}
+  - component: {fileID: 7208546231461539624}
   - component: {fileID: 1339753458846042102}
   - component: {fileID: 1339753458846042091}
   - component: {fileID: -5115322315258834901}
@@ -199,6 +200,25 @@ MonoBehaviour:
   pointFolder: {fileID: 7190875357817938291}
   _maxPhysicsFrameIterations: 1500
   res: 20
+--- !u!114 &7208546231461539624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99438573390550179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a088290b9fff1de4784631e8b03f8ef3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  paintOrigin: {fileID: 356941409344012204}
+  paintRange: 100
+  paintLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  brushWidth: 0.05
+  brushTexture: {fileID: 2800000, guid: 31f01a2315fb4b345adf2df220778df0, type: 3}
 --- !u!120 &1339753458846042102
 LineRenderer:
   m_ObjectHideFlags: 0
