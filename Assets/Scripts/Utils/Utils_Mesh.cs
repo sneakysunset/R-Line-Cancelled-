@@ -136,10 +136,13 @@ public static class Utils_Mesh
                 #endregion
                 n++;
             }
+            //else Debug.Log(1);
         }
         if(debugger)
             foreach (Vector2 uv in uvs) Debug.Log(uv);
         m.vertices = vertices;
+        //Debug.Log("m.vertices = " + vertices[vertices.Length - 1]);
+        //Debug.Log("pointList = " + pointList[pointList.Count - 1]);
         m.uv = uvs;
         return uvs;
     }   

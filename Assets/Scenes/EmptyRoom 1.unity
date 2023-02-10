@@ -2050,6 +2050,26 @@ PrefabInstance:
       propertyPath: collideWithPlayer
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: ballColType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: ballThrowType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: flyingTrajSpeed
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: flyingToPlayerSpeed
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: flyingTrajDeviationSpeed
+      value: 400
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
 --- !u!4 &856062154 stripped

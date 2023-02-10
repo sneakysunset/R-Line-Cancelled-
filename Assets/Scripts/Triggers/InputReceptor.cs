@@ -6,8 +6,6 @@ public class InputReceptor : Trigger
 {
     public Trigger[] triggers;
     int numberOfActivated;
-
-
     private void Update()
     {
         CheckTriggers();
@@ -17,21 +15,18 @@ public class InputReceptor : Trigger
     {
         numberOfActivated = 0;
         foreach (Trigger trigger in triggers)
-        {
-            if (trigger.activated) numberOfActivated++;
-            else
+        { 
+            if (!trigger.activated)
             {
                 if (activated)
                 {
                     OnKeyDesactivationEvent?.Invoke();
                     activated = false;
-                }
+                } 
                 return;
             }
         }
-
-
-        if (numberOfActivated == triggers.Length)
+        if (!activated)
         {
             OnKeyActivationEvent?.Invoke();
             activated = true;

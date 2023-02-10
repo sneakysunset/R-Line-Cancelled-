@@ -9,7 +9,7 @@ public class Item_Ball : Item
     public BallType.BallCollisionType ballColType;
     public BallType.BallThrowType ballThrowType;
     protected bool stuckToWall;
-    private float direction;
+    public float direction;
     private bool flying;
     public float flyingTrajSpeed = 500;
     public float flyingTrajDeviationSpeed = 700;
@@ -35,6 +35,7 @@ public class Item_Ball : Item
     }
     public override void FixedUpdate()
     {
+        if(!flying)
         base.FixedUpdate();
         lC.LineUpdater();
 
@@ -52,7 +53,7 @@ public class Item_Ball : Item
             }
             else if (ballThrowType == BallType.BallThrowType.controlTarget)
             {
-                rb.velocity = new Vector2(direction * flyingTrajSpeed, _player.moveValue.normalized.y * flyingTrajDeviationSpeed * Time.deltaTime);
+                rb.velocity = new Vector2(direction * flyingTrajSpeed, _player.moveValue.normalized.y * flyingTrajDeviationSpeed ) * Time.deltaTime;
             }
         }
     }
@@ -68,9 +69,9 @@ public class Item_Ball : Item
             rb.AddForce(new Vector2(0, 2), ForceMode2D.Impulse);
         }
 
-        if (ballThrowType == BallType.BallThrowType.targetPlayer || ballThrowType == BallType.BallThrowType.controlTarget)
+        if ((ballThrowType == BallType.BallThrowType.targetPlayer || ballThrowType == BallType.BallThrowType.controlTarget) && flying)
             StopFlying();
-        else if (ballThrowType == BallType.BallThrowType.straightLine) rb.gravityScale = ogGravity;
+        else if (ballThrowType == BallType.BallThrowType.straightLine && flying) rb.gravityScale = ogGravity;
 
         if (ballThrowType == BallType.BallThrowType.straightLine) flying = false;
     }
@@ -208,6 +209,7 @@ public class Item_Ball : Item
     #region OtherEvents
     private void StopFlying()
     {
+        print(1);
         _player.throwing = false;
         _player.canMove = true;
         _player.canJump = true;
