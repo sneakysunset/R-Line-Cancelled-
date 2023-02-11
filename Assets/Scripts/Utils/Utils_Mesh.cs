@@ -6,14 +6,14 @@ using System.Linq;
 
 public static class Utils_Mesh 
 {
-    public static Vector2[] UpdateMeshVertices(List<Vector2> pointList, float lineWidth, Mesh m, bool surface, Vector2[] uvList, int textC, bool debugger)
+    public static Vector2[] UpdateMeshVertices(List<Vector2> pointList, float lineWidth, Mesh m, bool surface, Vector2[] uvList, int texR, bool debugger)
     {
         int listLength = 4 * pointList.Count - 4;
         //Vector3[] vertices = new Vector3[listLength];
         //Vector2[] uvs = new Vector2[listLength];
         Vector2 uvCord = Vector2.zero;
         
-        #region square UVs [Current]
+        #region square UVs [Old]
         /*vertices[0] = pointList[0] - new Vector2(0, lineWidth / 2);
         vertices[1] = pointList[0] + new Vector2(0, lineWidth / 2);
         vertices[2] = Utils_Points.GetParallelePoint(pointList[1], pointList[0], pointList[2], lineWidth / 2, false);
@@ -45,7 +45,7 @@ public static class Utils_Mesh
         }*/
         #endregion
 
-        #region distance UVs [Trying]
+        #region distance UVs [Current]
         List<Vector3> verticess = new List<Vector3>();
         List<Vector2> uvss = new List<Vector2>();
         int n = 0;
@@ -53,7 +53,7 @@ public static class Utils_Mesh
         verticess.Add(pointList[0] - new Vector2(0, lineWidth / 2));
         verticess.Add(pointList[0] + new Vector2(0, lineWidth / 2));
         uvss.Add(uvList[0]);
-        uvss.Add(uvList[0] + Vector2.up / 3);
+        uvss.Add(uvList[0] + Vector2.up / texR);
         for (int i = 1; i < pointList.Count - 1; i++)
         {
             if (i > 1 && distance + Vector2.Distance(pointList[i], pointList[i - 1]) >= lineWidth)
@@ -65,8 +65,8 @@ public static class Utils_Mesh
                 verticess.Add(Utils_Points.GetParallelePoint(tempPoint, pointList[i - 1], pointList[i], lineWidth / 2, false));
                 verticess.Add(Utils_Points.GetParallelePoint(tempPoint, pointList[i - 1], pointList[i], lineWidth / 2, true));
 
-                uvss.Add(uvCord + Vector2.right / 3);
-                uvss.Add(uvCord + Vector2.one / 3);
+                uvss.Add(uvCord + Vector2.right / texR);
+                uvss.Add(uvCord + Vector2.one / texR);
                 n++;
                 int b = n % (uvList.Length - 2);
                 if (b == 0) b++;
@@ -79,7 +79,7 @@ public static class Utils_Mesh
                 if (dist <= lineWidth) uvCord = uvList[uvList.Length - 1];
 
                 uvss.Add(uvCord);
-                uvss.Add(uvCord + Vector2.up / 3);
+                uvss.Add(uvCord + Vector2.up / texR);
                 distance = Vector2.Distance(pointList[i], tempPoint);
             }
             else distance += Vector2.Distance(pointList[i], pointList[i - 1]);
@@ -87,13 +87,13 @@ public static class Utils_Mesh
             verticess.Add(Utils_Points.GetParallelePoint(pointList[i], pointList[i - 1], pointList[i + 1], lineWidth / 2, false));
             verticess.Add(Utils_Points.GetParallelePoint(pointList[i], pointList[i - 1], pointList[i + 1], lineWidth / 2, true));
 
-            uvss.Add(uvCord + Vector2.right / 3 * distance / lineWidth);
-            uvss.Add(uvCord + Vector2.right / 3 * distance / lineWidth + Vector2.up / 3);
+            uvss.Add(uvCord + Vector2.right / texR * distance / lineWidth);
+            uvss.Add(uvCord + Vector2.right / texR * distance / lineWidth + Vector2.up / texR);
         }
         verticess.Add(pointList[pointList.Count - 1] - new Vector2(0, lineWidth / 2));
         verticess.Add(pointList[pointList.Count - 1] + new Vector2(0, lineWidth / 2));
-        uvss.Add(uvList[uvList.Length - 1] + Vector2.right / 3);
-        uvss.Add(uvList[uvList.Length - 1] + Vector2.one / 3);
+        uvss.Add(uvList[uvList.Length - 1] + Vector2.right / texR);
+        uvss.Add(uvList[uvList.Length - 1] + Vector2.one / texR);
 
 
         Vector3[] vertices = new Vector3[verticess.Count];

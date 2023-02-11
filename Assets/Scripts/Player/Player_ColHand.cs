@@ -18,7 +18,7 @@ public class Player_ColHand : MonoBehaviour
         {
             player.coll.gameObject.layer = LayerMask.NameToLayer("PlayerOff");
         }
-        else if (!player.myItem.isHeld)
+        else
         {
             player.coll.gameObject.layer = LayerMask.NameToLayer("Player");
         }
