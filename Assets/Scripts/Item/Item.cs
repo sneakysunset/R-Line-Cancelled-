@@ -16,12 +16,15 @@ public class Item : MonoBehaviour
     [HideInInspector] public GameObject Highlight;
     public bool catchable = true;
     private string mytag;
+    protected Collider2D triggerBox;
     public virtual void Awake()
     {
         Highlight = transform.Find("Highlight").gameObject;
         if (TryGetComponent<Rigidbody2D>(out rb)) { }
         if (TryGetComponent<ThrowPreview>(out tP)) { }
-        col = GetComponentInChildren<Collider2D>();
+        col = transform.Find("Collider").GetComponent<Collider2D>();
+        if (transform.Find("lineChecker")) 
+            triggerBox = transform.Find("lineChecker").GetComponent<Collider2D>();
         mytag = tag;
     }
 
@@ -130,5 +133,21 @@ public class Item : MonoBehaviour
     public virtual void SecondaryInputReleased()
     {
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("LineCollider") && isHeld)
+        {
+            Physics2D.IgnoreCollision(collision, col, true);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("LineCollider"))
+        {
+            Physics2D.IgnoreCollision(collision, col, false);
+        }
     }
 }

@@ -164,6 +164,7 @@ public class Door : MonoBehaviour
             destination = new Vector3(pos.x, pos.y, 0);
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (Selection.activeGameObject != gameObject)
@@ -171,7 +172,8 @@ public class Door : MonoBehaviour
             Gizmos.DrawWireSphere(destination, .4f);
         }
     }
-    #endregion
+#endif
+#endregion
 }
 
 

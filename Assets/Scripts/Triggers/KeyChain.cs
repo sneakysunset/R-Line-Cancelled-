@@ -11,7 +11,7 @@ public class KeyChain : Trigger
     int nOpen;
     LineRenderer line;
     public Color open, close;
-
+    public bool InstantiateKeys;
     [Space(10)]
     [Header("Editor")]
     public KeyScript Key;
@@ -23,10 +23,13 @@ public class KeyChain : Trigger
     private void Start()
     {
         line = GetComponent<LineRenderer>();
-        keys = new KeyScript[keysPos.Length];
-        for (int i = 0; i < keysPos.Length; i++)
+        if(keys == null)
         {
-            keys[i] = Instantiate(Key, keysPos[i], Quaternion.identity, transform);
+            keys = new KeyScript[keysPos.Length];
+            for (int i = 0; i < keysPos.Length; i++)
+            {
+                keys[i] = Instantiate(Key, keysPos[i], Quaternion.identity, transform);
+            }
         }
 
         //Génère une ligne reliant les clés et la porte.
@@ -96,6 +99,7 @@ public class KeyChain : Trigger
         keysPos[i] = new Vector3(pos.x, pos.y, 0);
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if(Selection.activeGameObject != gameObject)
@@ -105,7 +109,23 @@ public class KeyChain : Trigger
                 Gizmos.DrawWireSphere(pos, .4f);
             }
         }
+        if (InstantiateKeys)
+        {
+            InstantiateKeys = false;
+            if (!Application.isPlaying)
+            {
+                keys = new KeyScript[keysPos.Length];
+                for (int i = 0; i < keysPos.Length; i++)
+                {
+                    keys[i] = PrefabUtility.InstantiatePrefab(Key) as KeyScript;
+                    keys[i].transform.position = keysPos[i];
+                    keys[i].transform.parent = transform;
+                }
+            }
+        }
+        if (keys.Length != 0) for (int i = 0; i < keys.Length; i++) keys[i].transform.position = keysPos[i];
     }
+#endif
 }
 
 #if UNITY_EDITOR
