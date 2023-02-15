@@ -4,18 +4,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class ThrowPreview : MonoBehaviour
 {
-    [SerializeField] Transform SolidesParent;
-    private Scene _simulatedScene;
-    private PhysicsScene2D _physicsScene;
-    public GameObject BallPrefab;
-    public LineRenderer _line;
+    [HideInInspector] public LineRenderer _line;
     public GameObject ptnPrefab;
-    public Transform pointFolder;
-    public int _maxPhysicsFrameIterations = 100;
-    List<Transform> balls;
-    public int res;
+    [HideInInspector] public Transform pointFolder;
+    public int _maxPhysicsFrameIterations = 1500;
+    public int res = 20;
     private void Start()
     {
+        _line = GetComponent<LineRenderer>();
+        pointFolder = transform.Find("pointHolder");
         for (int i = 0; i < _maxPhysicsFrameIterations; i++)
         {
             Transform point = Instantiate(ptnPrefab, pointFolder).transform;
@@ -23,10 +20,10 @@ public class ThrowPreview : MonoBehaviour
     }
 
     //Lance la simulation de la trajectoire de la balle.
-    public void Sim(Vector2 velocity)
+    public void Sim(Vector2 velocity, bool applyGravity)
     {
         //ballHolder.gameObject.SetActive(true);
-        Vector2[] vector2s = trajArray(GetComponent<Rigidbody2D>(), transform.position, velocity, _maxPhysicsFrameIterations);
+        Vector2[] vector2s = trajArray(GetComponent<Rigidbody2D>(), transform.position, velocity, _maxPhysicsFrameIterations, applyGravity);
         _line.positionCount = _maxPhysicsFrameIterations;
         Vector3[] vec = new Vector3[_maxPhysicsFrameIterations];
         for (int i = 0; i < pointFolder.childCount; i++)
@@ -37,7 +34,7 @@ public class ThrowPreview : MonoBehaviour
     }
 
     //Calcule les points traversables par la balle en faisant des itérations sur le moteur physique 2D et en rajoutant à la simulation la vitesse de base, la gravité et le drag.
-    Vector2[] trajArray(Rigidbody2D rb, Vector2 pos, Vector2 velocity, int steps)
+    Vector2[] trajArray(Rigidbody2D rb, Vector2 pos, Vector2 velocity, int steps, bool applyGravity)
     {
         Vector2[] results =  new Vector2[steps];
 
@@ -51,7 +48,7 @@ public class ThrowPreview : MonoBehaviour
 
             for (int i = 0; i < steps; i++)
             {
-                movestep += gravityAccel;
+                if(applyGravity) movestep += gravityAccel;
                 movestep *= drag;
                 pos += movestep;
                 results[i] = pos;
@@ -68,6 +65,13 @@ public class ThrowPreview : MonoBehaviour
     }
 
     #region Not Used
+    //[SerializeField] Transform SolidesParent;
+    //private Scene _simulatedScene;
+    //private PhysicsScene2D _physicsScene;
+    //public GameObject BallPrefab;
+    //List<Transform> balls;
+
+
     /*void CreatePhysicsScene()
     {
         _simulatedScene = SceneManager.CreateScene("Simulation", new CreateSceneParameters(LocalPhysicsMode.Physics2D));

@@ -7,7 +7,6 @@ public class LineCreator : MonoBehaviour
 {
     #region Variables
     private float[] pointArray;
-    private BallType bT;
     public List<Point> pointList = new List<Point>();
     private Color col;
     private CharacterController2D charC;
@@ -17,35 +16,35 @@ public class LineCreator : MonoBehaviour
     private PolygonCollider2D polC;
     [HideInInspector] public Collider2D lineC;
     [HideInInspector] public Transform lineT;
-
+    public Vector2[] uvRandomArray;
     private CharacterController2D.Team pType;
-    Collider coll;
     [Header("Components")]
     [Space(5)]
-    [HideInInspector] public GameObject linePrefab;
     Vector2 ogPos;
     int prevUpdatedIndex;
-    public GameObject ballPrefab;
+   // public GameObject ballPrefab;
     private MeshFilter meshF;
     private bool surfaceLine = false;
-
+    private bool flag;
+    public int lineTextureComplexion = 9;
     [Space(10)]
     [Header("Line Variables")]
     [Space(5)]
-    [Range(.001f, 1)] public float lineResolution = .5f;
-    public float lineBeginningX = -13f;
-    public float lineEndX = 13f;
-    public float width = .3f;
+    public GameObject linePrefab;
+    [Range(.001f, 1)] public float lineResolution = .2f;
+    public float lineBeginningX = -100f;
+    public float lineEndX = 100f;
+    public float width = .25f;
     public float lineYOffSet = 0;
-    public bool cascade;
-    private bool flag;
-    [Space(10)]
-    [Header("Refresh Variables")]
-    [Space(5)]
 
-    public float fallTimer;
-    [Range(0.01f, 10)]public float fallSpeed;
-    [Range(0.01f, 10)]public float fallSpeedAccel;
+    [Space(10)]
+    [Header("Cascade Effect Variables")]
+    [Space(5)]
+    public bool cascade;
+    public bool cascadeWhenCloseToGround;
+    [Range(0f, 100f)]public float fallTimer;
+    [Range(0.01f, 10)]public float cascade_FallSpeed;
+    [Range(0.01f, 10)]public float cascade_FallSpeedAccel;
     #endregion
 
     IEnumerator fixDeMerdeSpawnLigne()
@@ -62,7 +61,16 @@ public class LineCreator : MonoBehaviour
 
     private void Start()
     {
-        bT = GetComponent<BallType>();
+        uvRandomArray = new Vector2[]
+        {
+            Vector2.right / 3, 
+            Vector2.right * 2 / 3,
+            Vector2.up / 3, 
+            Vector2.one /3,
+            Vector2.right * 2 / 3 + Vector2.up / 3,
+            Vector2.up * 2 / 3, 
+            Vector2.right /3 + Vector2.up * 2 / 3
+        };
         lineFolder = GameObject.FindGameObjectWithTag("LineFolder").transform;
         pointArray = Utils_Points.GeneratePointArray(pointArray, lineBeginningX, lineEndX, lineResolution);
         if (GetComponent<CharacterController2D>())
@@ -80,24 +88,34 @@ public class LineCreator : MonoBehaviour
     }
     private void Update()
     {
-        
+
         foreach (Point point in pointList)
         {
             point.Fond();
         }
 
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Vector2 pPos = new Vector2(transform.position.x, transform.position.y);
 
-        if(cascade && !flag)
-        {
-            foreach (Point point in pointList) point.TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
-            flag = true;
-        }
-        else if(!cascade && flag)
-        {
-            foreach (Point point in pointList) point.TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
-            flag = false;
+            float posX = Mathf.FloorToInt(pPos.x);
+
+            float curDistance = 100000;
+            int closestIndex = 10000;
+            //Cette itération sert à trouver le point le plus proche de la balle appartenant à la liste.
+            for (int i = 0; i < pointList.Count; i++)
+            {
+                if (Mathf.Abs(pointList[i].pos.x - pPos.x) < curDistance)
+                {
+                    closestIndex = i;
+                    curDistance = Mathf.Abs(pointList[i].pos.x - pPos.x);
+                }
+            }
+            pointList[closestIndex].Printer();
         }
     }
+
+    void CascadeTrigger(Point point) => point.TimerTrigger(cascade, fallTimer, cascade_FallSpeed, cascade_FallSpeedAccel, width, cascadeWhenCloseToGround);
 
     //Au start cré la ligne et prend des références du lineRenderer, du edgeCollider et du transform. Change aussi la couleur de la ligne son nom et son layer.
     private void InstantiateLine()
@@ -155,8 +173,10 @@ public class LineCreator : MonoBehaviour
 
         Mesh m = new Mesh();
         m.name = "trailMesh";
-
-        Utils_Mesh.UpdateMeshVertices(vec2, width, m, surfaceLine);
+        bool b = false;
+        if (Input.GetKeyDown(KeyCode.K)) b = true;
+        Utils_Mesh.UpdateMeshVertices(vec2, width, m, surfaceLine, uvRandomArray, lineTextureComplexion, b);
+        b = false;
         Utils_Mesh.UpdateMeshTriangles(vec2.Count, m);
         m.MarkDynamic();
         m.Optimize();
@@ -195,8 +215,6 @@ public class LineCreator : MonoBehaviour
         else return false;
     }
 
-
-
     //Méthode qui sert à rajouter un/des point(s).
     void AddPoint()
     {
@@ -228,14 +246,8 @@ public class LineCreator : MonoBehaviour
                 //entre la position sur y de la balle et la position sur y du point de la liste le plus proche de la balle sur l'axe x.
                 float posY = Mathf.Lerp(pPos.y, pointList[0].pos.y, numOfAdded / ((pointList[0].pos.x - pPos.x) / lineResolution));
                 pointList.Add(new Point(new Vector2(i, posY)));
-                if (cascade)
-                {
-                    pointList[pointList.Count - 1].TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
-                }
-                else if (!cascade)
-                {
-                    pointList[pointList.Count - 1].TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
-                }
+
+                CascadeTrigger(pointList[pointList.Count - 1]);
                 numOfAdded++;
             }
 
@@ -248,14 +260,7 @@ public class LineCreator : MonoBehaviour
             {
                 float posY = Mathf.Lerp(pPos.y, pointList[0].pos.y, numOfAdded / ((pPos.x - pointList[pointList.Count - 1].pos.x) / lineResolution));
                 pointList.Add(new Point(new Vector2(i, posY)));
-                if (cascade)
-                {
-                    pointList[pointList.Count - 1].TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
-                }
-                else if (!cascade)
-                {
-                    pointList[pointList.Count - 1].TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
-                }
+                CascadeTrigger(pointList[pointList.Count - 1]);
                 numOfAdded++;
             }
         }
@@ -283,14 +288,8 @@ public class LineCreator : MonoBehaviour
 
         Vector2 newPos = new Vector2(pointList[closestIndex].pos.x, pPos.y);
         pointList[closestIndex].pos = newPos;
-        if (cascade)
-        {
-            pointList[closestIndex].TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
-        }
-        else if (!cascade)
-        {
-            pointList[closestIndex].TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
-        }
+        CascadeTrigger(pointList[closestIndex]);
+
         //Nous suivons ici un procédé similaire à celui de la méthode AddPoint sauf que l'itération se fait entre la position /n
         //la plus proche de la balle et la position la plus proche de la balle à la frame physique précédente.
         //L'incrémentation ne se fait aussi pas avec "lineResolution" mais avec les index séparant les 2 points évoqués au-dessus.
@@ -303,14 +302,7 @@ public class LineCreator : MonoBehaviour
                 {
                     float posY = Mathf.Lerp(pointList[closestIndex].pos.y, pointList[prevUpdatedIndex].pos.y, (Mathf.Abs(i) - Mathf.Abs(closestIndex)) / (Mathf.Abs(prevUpdatedIndex - closestIndex)));
                     pointList[i].pos = new Vector2(pointList[i].pos.x, posY);
-                    if (cascade)
-                    {
-                        pointList[i].TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
-                    }
-                    else if (!cascade)
-                    {
-                        pointList[i].TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
-                    }
+                    CascadeTrigger(pointList[i]);
                 }
             }
             else
@@ -319,28 +311,14 @@ public class LineCreator : MonoBehaviour
                 {
                     float posY = Mathf.Lerp(pointList[prevUpdatedIndex].pos.y, pointList[closestIndex].pos.y, (Mathf.Abs(i) - Mathf.Abs(prevUpdatedIndex)) / (Mathf.Abs(closestIndex - prevUpdatedIndex)));
                     pointList[i].pos = new Vector2(pointList[i].pos.x, posY);
-                    if (cascade)
-                    {
-                        pointList[i].TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
-                    }
-                    else if (!cascade)
-                    {
-                        pointList[i].TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
-                    }
+                    CascadeTrigger(pointList[i]);
                 }
             }
         }
         else
         {
             pointList[closestIndex].pos = newPos;
-            if (cascade)
-            {
-                pointList[closestIndex].TimerTrigger(true, fallTimer, fallSpeed, fallSpeedAccel, width);
-            }
-            else if (!cascade)
-            {
-                pointList[closestIndex].TimerTrigger(false, fallTimer, fallSpeed, fallSpeedAccel, width);
-            }
+            CascadeTrigger(pointList[closestIndex]);
         }
 
         prevUpdatedIndex = closestIndex;
@@ -377,7 +355,7 @@ public class LineCreator : MonoBehaviour
             bool taskDone = false;
             while (!taskDone)
             {
-                if (Vector2.Distance(vec2[i], vec2[i + 1]) > lineResolution * 2)
+                if (Vector2.Distance(vec2[i], vec2[i + 1]) > lineResolution * 1.5f)
                 {
                     vec2.Insert(i + 1, vec2[i] + (vec2[i + 1] - vec2[i]).normalized * lineResolution);
                     i++;
@@ -386,6 +364,12 @@ public class LineCreator : MonoBehaviour
             }
 
         }
+
+/*        for(int i = 0; i < vec2.Count * 2 - 5; i++)
+        {
+            vec2.Insert(i + 1, );
+            i++;
+        }*/
         return vec2;
     }
 }

@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 6780280350817831958}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 34, y: 5, z: 0}
-  m_LocalScale: {x: 1, y: 8, z: 1}
+  m_LocalScale: {x: 1, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -49,10 +49,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63be527613c70b1448b9095b4b05d7c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keys:
-  - {fileID: 0}
-  - {fileID: 0}
-  doorDestination: {x: -14, y: 0}
   doorOpenSpeed: 1
   doorCloseSpeed: 1
   openCurve:
@@ -103,8 +99,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  open: {r: 0.24705882, g: 0.23137255, b: 0.8, a: 0.50980395}
-  close: {r: 0.8, g: 0.23137255, b: 0.27328905, a: 0.50980395}
+  isOpen: 0
+  prevPos: {x: -257, y: 51, z: 0}
+  destination: {x: -257, y: 51, z: 0}
 --- !u!212 &6780280350817831965
 SpriteRenderer:
   m_ObjectHideFlags: 0

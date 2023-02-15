@@ -17,7 +17,7 @@ public class Point
         this.pos = pos;
     }
 
-    public void TimerTrigger(bool timerOn, float _timerValue, float _descendSpeed, float _descendSpeedAccel, float width)
+    public void TimerTrigger(bool timerOn, float _timerValue, float _descendSpeed, float _descendSpeedAccel, float width, bool cascadeLowToGround)
     {
         RaycastHit2D hit2D = Physics2D.Raycast(pos, -Vector2.up, Mathf.Infinity, LayerMask.GetMask("Ground"));
         if (hit2D)
@@ -29,9 +29,14 @@ public class Point
         descendSpeedAccel = _descendSpeedAccel;
         descendSpeed = _descendSpeed;
         timerValue = _timerValue;
-        if (Vector2.Distance(hit, pos) < 1 && hit.y < pos.y) this.timerOn = true;   
+        if (Vector2.Distance(hit, pos) < 1 && hit.y < pos.y && cascadeLowToGround) this.timerOn = true;   
 
         f = 0;
+    }
+
+    public void Printer()
+    {
+        Debug.Log("Distance : " + Vector2.Distance(hit, pos));
     }
 
     public void Fond()

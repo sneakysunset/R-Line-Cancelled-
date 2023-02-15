@@ -36,14 +36,14 @@ public class KeyChain : Trigger
             line.SetPosition(i, keys[i].transform.position);
         }
 
-        var obj = OnKeyActivationEvent.GetPersistentTarget(0);
-        Door door = null;
-        if (obj.GetType().ToString() == "Door")
+        if (OnKeyActivationEvent.GetPersistentEventCount() > 0)
         {
-            door = obj as Door;
-        } 
-        target = door.transform;
-        line.SetPosition(keys.Length, target.position);
+            print(OnKeyActivationEvent.GetPersistentEventCount());
+            Component obj = OnKeyActivationEvent.GetPersistentTarget(0) as Component;
+            target = obj.transform;
+            line.SetPosition(keys.Length, target.position);
+        }
+        else line.positionCount--;
 
         foreach (KeyScript key in keys) key.keyChain = this;
 
@@ -54,7 +54,10 @@ public class KeyChain : Trigger
     private void Update()
     {
         //Actualise la position des points de la ligne reliant les clés et la porte.
-        line.SetPosition(keys.Length, target.position);
+        if (target)
+        {
+            line.SetPosition(keys.Length, target.position);
+        }
         if (isOpen)
         {
             line.startColor = open;
@@ -92,6 +95,17 @@ public class KeyChain : Trigger
     {
         keysPos[i] = new Vector3(pos.x, pos.y, 0);
     }
+
+    private void OnDrawGizmos()
+    {
+        if(Selection.activeGameObject != gameObject)
+        {
+            foreach(Vector3 pos in keysPos)
+            {
+                Gizmos.DrawWireSphere(pos, .4f);
+            }
+        }
+    }
 }
 
 #if UNITY_EDITOR
@@ -105,6 +119,7 @@ public class KeyChain_Editor : Editor
 
     void Draw()
     {
+
         Vector3[] vecs = keyChain.keysPos;
         keyChain.keysPos = new Vector3[keyChain.numberOfKeys];
         for (int i = 0; i < keyChain.keysPos.Length; i++)
