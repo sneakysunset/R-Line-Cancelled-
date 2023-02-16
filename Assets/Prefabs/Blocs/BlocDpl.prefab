@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5507074734709618475}
   - component: {fileID: 5507074734709618472}
-  m_Layer: 17
+  m_Layer: 7
   m_Name: Collider
   m_TagString: Cube
   m_Icon: {fileID: 0}
@@ -67,7 +67,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5507074735664051441}
-  m_Layer: 17
+  m_Layer: 7
   m_Name: pointHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 5507074735687361505}
   - component: {fileID: 5507074735687361510}
   - component: {fileID: 5507074735687361511}
-  m_Layer: 17
+  m_Layer: 7
   m_Name: BlocDpl
   m_TagString: Cube
   m_Icon: {fileID: 0}
@@ -347,7 +347,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5507074735845957397}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Highlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
