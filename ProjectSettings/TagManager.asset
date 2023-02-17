@@ -11,6 +11,10 @@ TagManager:
   - Jumpable
   - LineFolder
   - NotHeld
+  - Cube
+  - Particule
+  - Laser
+  - LaserReceptor
   layers:
   - Default
   - TransparentFX

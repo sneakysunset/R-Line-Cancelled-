@@ -36,6 +36,7 @@ public class LineCreator : MonoBehaviour
     public float lineEndX = 100f;
     public float width = .25f;
     public float lineYOffSet = 0;
+    [Range(3, 10)] public int textureResolution;
 
     [Space(10)]
     [Header("Cascade Effect Variables")]
@@ -63,13 +64,22 @@ public class LineCreator : MonoBehaviour
     {
         uvRandomArray = new Vector2[]
         {
-            Vector2.right / 3, 
-            Vector2.right * 2 / 3,
-            Vector2.up / 3, 
-            Vector2.one /3,
-            Vector2.right * 2 / 3 + Vector2.up / 3,
-            Vector2.up * 2 / 3, 
-            Vector2.right /3 + Vector2.up * 2 / 3
+            Vector2.zero,
+            Vector2.right / 4,
+            Vector2.right * 2 / 4,
+            Vector2.right * 3 / 4,
+            Vector2.up / 4,
+            Vector2.one / 4,
+            Vector2.right * 2 / 4 + Vector2.up / 4,
+            Vector2.right * 3 / 4 + Vector2.up / 4,
+            Vector2.up * 2 / 4,
+            Vector2.right * 1 / 4 + Vector2.up * 2 / 4,
+            Vector2.one * 2 / 4,
+            Vector2.right * 3 / 4 + Vector2.up * 2 / 4,
+            Vector2.up * 3 / 4,
+            Vector2.right * 1 / 4 + Vector2.up * 3 / 4,
+            Vector2.right * 2 / 4 + Vector2.up * 3 / 4,
+            Vector2.one * 3 / 4
         };
         lineFolder = GameObject.FindGameObjectWithTag("LineFolder").transform;
         pointArray = Utils_Points.GeneratePointArray(pointArray, lineBeginningX, lineEndX, lineResolution);
@@ -175,9 +185,9 @@ public class LineCreator : MonoBehaviour
         m.name = "trailMesh";
         bool b = false;
         if (Input.GetKeyDown(KeyCode.K)) b = true;
-        Utils_Mesh.UpdateMeshVertices(vec2, width, m, surfaceLine, uvRandomArray, lineTextureComplexion, b);
+        Utils_Mesh.UpdateMeshVertices(vec2, width, m, surfaceLine, uvRandomArray, 4, b);
         b = false;
-        Utils_Mesh.UpdateMeshTriangles(vec2.Count, m);
+        Utils_Mesh.UpdateMeshTriangles(m.vertices.Length, m);
         m.MarkDynamic();
         m.Optimize();
         m.OptimizeReorderVertexBuffer();

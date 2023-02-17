@@ -17,12 +17,18 @@ public class Door : MonoBehaviour
     int nOpen;
     private Vector2 ogPos;
     private IEnumerator doorOpening, doorClosing;
+    private Rigidbody2D rb;
     [HideInInspector] public bool isOpen;
     [HideInInspector] public Vector3 prevPos;
+    bool isBlocked;
     #endregion
 
     #region Functions
-    private void Start() => ogPos = transform.position;
+    private void Start()
+    {
+        ogPos = transform.position;
+        rb = GetComponent<Rigidbody2D>();
+    }
 
     public void OpenDoor()
     {
@@ -52,7 +58,39 @@ public class Door : MonoBehaviour
         }
     }
 
-    
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("LineCollider"))
+        {
+            if(doorOpening != null)
+            {
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.position - destination, Mathf.Infinity, 6);
+                if (hit.collider == collision)
+                    isBlocked = true;
+                else isBlocked = false;
+            }
+            else if(doorClosing != null)
+            {
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.position - (Vector3)ogPos, Mathf.Infinity, 6);
+                if (hit.collider == collision)
+                    isBlocked = true;
+                else isBlocked = false;
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("LineCollider"))
+        {
+            if (doorOpening != null || doorClosing != null)
+            {
+                isBlocked = false;
+            }
+        }
+    }
+
     bool IsPlaying(FMOD.Studio.EventInstance instance)
     {
         FMOD.Studio.PLAYBACK_STATE state;
@@ -74,11 +112,14 @@ public class Door : MonoBehaviour
             i += Time.deltaTime * doorOpenSpeed;
             transform.position = Vector2.Lerp(startPos, destination, openCurve.Evaluate(i));
             isOpen = true;
+            if (isBlocked) print(1);
+            yield return new WaitUntil(() => !isBlocked);
 
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
         transform.position = destination;
         isOpen = true;
+        doorOpening = null;
         slidingSound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         slidingSound.release();
         FMODUnity.RuntimeManager.PlayOneShot("event:/BlockLd/DoorClose");
@@ -96,15 +137,17 @@ public class Door : MonoBehaviour
         }
         while (i < 1)
         {
-            i += Time.deltaTime * doorOpenSpeed;
-            transform.position = Vector2.Lerp(startPos, ogPos, openCurve.Evaluate(i));
+            i += Time.deltaTime * doorCloseSpeed;
+            transform.position = Vector2.Lerp(startPos, ogPos, closeCurve.Evaluate(i));
             isOpen = false;
 
+            yield return new WaitUntil(() => !isBlocked);
             yield return new WaitForEndOfFrame();
         }
         transform.position = ogPos;
 
         isOpen = false;
+        doorClosing = null;
         slidingSound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         slidingSound.release();
         FMODUnity.RuntimeManager.PlayOneShot("event:/BlockLd/DoorClose");
@@ -121,6 +164,7 @@ public class Door : MonoBehaviour
             destination = new Vector3(pos.x, pos.y, 0);
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (Selection.activeGameObject != gameObject)
@@ -128,7 +172,8 @@ public class Door : MonoBehaviour
             Gizmos.DrawWireSphere(destination, .4f);
         }
     }
-    #endregion
+#endif
+#endregion
 }
 
 

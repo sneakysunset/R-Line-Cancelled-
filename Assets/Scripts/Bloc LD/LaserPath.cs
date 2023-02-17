@@ -18,7 +18,7 @@ public class LaserPath : MonoBehaviour
     private float timer;
     bool isOn;
     public bool activated;
-
+    Collider2D receptor;
     private void Start()
     {
         vector2s = new List<Vector2>();
@@ -71,13 +71,39 @@ public class LaserPath : MonoBehaviour
         vector2s.Clear();
         vector2s.Add(origin);
 
-        myCol.isTrigger = true;
+        //myCol.isTrigger = true;
         for (int i = 0; i < maxBounceNum; i++)
         {
             Physics2D.queriesHitTriggers = false;
-            
-            RaycastHit2D hit = Physics2D.Raycast(origin, direction, Mathf.Infinity);
+            myCol.isTrigger = true;
+            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, Mathf.Infinity);
             Physics2D.queriesHitTriggers = true;
+            RaycastHit2D hit = hits[0];
+            float distance = Mathf.Infinity;
+            foreach(RaycastHit2D hitR in hits)
+            {
+                float d = Vector2.Distance(hitR.point, origin);
+                if (d > .5f && d < distance)
+                {
+                    distance = d;
+                    hit = hitR;
+                }
+            }
+
+            if (hit.collider.CompareTag("LaserReceptor") && receptor == null)
+            {
+                receptor = hit.collider;
+                Trigger trig = hit.transform.GetComponent<Trigger>();
+                trig.activated = true;
+                trig.OnKeyActivationEvent?.Invoke();
+            }
+            else if (!hit.collider.CompareTag("LaserReceptor") && receptor != null)
+            {
+                Trigger trig = receptor.GetComponent<Trigger>();
+                trig.activated = false;
+                trig.OnKeyDesactivationEvent?.Invoke();
+                receptor = null;
+            }
 
             if (hit.collider != null && hit.transform.gameObject.tag == "LineCollider")
             {
@@ -116,10 +142,6 @@ public class LaserPath : MonoBehaviour
     {
         direction = Vector2.Reflect(direction, hit.normal);
         origin = hit.point;
-        if (col == null) col = hit.collider;
-        col.isTrigger = false;
-        col = hit.collider;
-        col.isTrigger = true;
         vector2s.Add(hit.point);
 
         return direction;
