@@ -8,15 +8,18 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Smoke_Efct
-  m_Shader: {fileID: -6465566751694194690, guid: 35df69628efaa2543a5c3307e0ad2755, type: 3}
-  m_ValidKeywords: []
+  m_Shader: {fileID: -6465566751694194690, guid: e9e371767a297af428e7536d19e827d6, type: 3}
+  m_ValidKeywords:
+  - _BUILTIN_ALPHATEST_ON
+  - _BUILTIN_AlphaClip
+  - _BUILTIN_SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap:
-    RenderType: Opaque
+    RenderType: Transparent
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -25,27 +28,31 @@ Material:
         m_Texture: {fileID: 2800000, guid: bdab21fab5ed13f47a226718aec5d98b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_22d6e1b8be244b6d86f07d21f4ba03d6_Texture_1:
+        m_Texture: {fileID: 2800000, guid: bdab21fab5ed13f47a226718aec5d98b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BUILTIN_AlphaClip: 0
-    - _BUILTIN_Blend: 0
+    - _BUILTIN_AlphaClip: 1
+    - _BUILTIN_Blend: 2
     - _BUILTIN_CullMode: 0
-    - _BUILTIN_DstBlend: 0
+    - _BUILTIN_DstBlend: 1
     - _BUILTIN_QueueControl: 1
-    - _BUILTIN_QueueOffset: 0
-    - _BUILTIN_SrcBlend: 1
-    - _BUILTIN_Surface: 0
+    - _BUILTIN_QueueOffset: -8
+    - _BUILTIN_SrcBlend: 5
+    - _BUILTIN_Surface: 1
     - _BUILTIN_ZTest: 4
     - _BUILTIN_ZWrite: 1
-    - _BUILTIN_ZWriteControl: 0
-    - _Tex_Blending: -3.9
-    - _Timer: 2.5
+    - _BUILTIN_ZWriteControl: 1
+    - _Tex_Blending: 2.2
+    - _Timer: 1.45
     - _Vertex_Displacement_max: 9.8
     - _Vertex_Displacement_min: 0
-    - _Vor_Density: 15.28
-    - _noise_scale: 10
+    - _Vor_Density: 2.81
+    - _noise_scale: 4.5
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 0}
+    - _Color: {r: 0.6792453, g: 0.108583815, b: 0, a: 1}
     - _Vector3: {r: 0.98, g: 0.57, b: 0.39, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &2432881346814526570
