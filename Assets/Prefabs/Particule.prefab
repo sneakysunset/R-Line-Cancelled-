@@ -101,10 +101,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distanceMaxTarget: 2
-  speed: 2
+  speed: 0
   randomDistance: 0
   randomSpeed: 0
-  idleColor: {r: 0.18039216, g: 0.30980393, b: 0.78431374, a: 1}
+  idleColor: {r: 1, g: 0.9937168, b: 0.35283017, a: 1}
 --- !u!114 &1219566743503293538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,13 +112,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4657169399304871201}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 295fd931f4d9aed4daa4f357360c2694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6.65
-  detectedColor: {r: 0.34877056, g: 0.8207547, b: 0.29036134, a: 1}
+  speed: 0.4
+  detectedColor: {r: 1, g: 0.99215686, b: 0.3529412, a: 1}
 --- !u!58 &4657169399304871212
 CircleCollider2D:
   m_ObjectHideFlags: 0

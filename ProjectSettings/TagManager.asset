@@ -11,6 +11,10 @@ TagManager:
   - Jumpable
   - LineFolder
   - NotHeld
+  - Cube
+  - Particule
+  - Laser
+  - LaserReceptor
   layers:
   - Default
   - TransparentFX
@@ -29,7 +33,7 @@ TagManager:
   - BallHeld
   - RoomTopWall
   - Spawner
-  - Post_Process
+  - Ground
   - 
   - 
   - 
@@ -50,19 +54,4 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Plan1
-    uniqueID: 4248530001
-    locked: 0
-  - name: Plan2
-    uniqueID: 1567453145
-    locked: 0
-  - name: Plan3
-    uniqueID: 396366949
-    locked: 0
-  - name: Plan4
-    uniqueID: 1309577469
-    locked: 0
-  - name: Plan5
-    uniqueID: 214495267
     locked: 0

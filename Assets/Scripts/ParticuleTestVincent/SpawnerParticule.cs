@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpawnerParticule: MonoBehaviour
 {
     public GameObject particulePrefab;
-    [Range(0,500)] public int maxParticule = 20;
+    [Range(0,5000)] public int maxParticule = 20;
     [Range(1, 5)] public int particulePerFrame;
     public int particuleCurrently = 0;
     Transform particuleContainer;
@@ -17,7 +17,7 @@ public class SpawnerParticule: MonoBehaviour
     }
     private void Update()
     {
-        MaintainPop();
+        //MaintainPop();
     }
     void InitialPopulation()
     {

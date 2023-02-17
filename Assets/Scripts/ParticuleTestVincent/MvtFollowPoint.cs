@@ -5,7 +5,7 @@ using UnityEngine;
 public class MvtFollowPoint : MonoBehaviour
 {
     DetectionParticule detectionManager;
-    [Range(1f,10f)] public float speed;
+    [Range(.1f,10f)] public float speed;
     public Color detectedColor;
     bool gizmo;
     private void Awake()

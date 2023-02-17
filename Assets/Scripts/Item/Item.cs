@@ -15,12 +15,17 @@ public class Item : MonoBehaviour
     public bool throwPreview;
     [HideInInspector] public GameObject Highlight;
     public bool catchable = true;
+    private string mytag;
+    protected Collider2D triggerBox;
     public virtual void Awake()
     {
         Highlight = transform.Find("Highlight").gameObject;
         if (TryGetComponent<Rigidbody2D>(out rb)) { }
         if (TryGetComponent<ThrowPreview>(out tP)) { }
-        col = GetComponentInChildren<Collider2D>();
+        col = transform.Find("Collider").GetComponent<Collider2D>();
+        if (transform.Find("lineChecker")) 
+            triggerBox = transform.Find("lineChecker").GetComponent<Collider2D>();
+        mytag = tag;
     }
 
     public virtual void OnEnable()
@@ -56,10 +61,12 @@ public class Item : MonoBehaviour
     public virtual void GrabStarted(Transform holdPoint, Player player)
     {
         isHeld = true;
-        setTagsLayers("Held", "Held", 14);
+        setTagsLayers(mytag, mytag, 14);
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Catch");
         Physics2D.IgnoreCollision(player.coll, col, true);
         rb.isKinematic = true;
+        if(player.holdableItems.Contains(this))
+            player.holdableItems.Remove(this);
         heldPoint = holdPoint;
         Highlight.SetActive(false);
     }
@@ -72,8 +79,8 @@ public class Item : MonoBehaviour
         rb.angularVelocity = 0;
         Physics2D.IgnoreCollision(player.coll, col, false);
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Grab");
-
-        setTagsLayers("NotHeld", "NotHeld", 17);
+        player.holdableItems.Add(this);
+        setTagsLayers(mytag, mytag, 17);
     }
 
     public virtual void ThrowStarted(float throwStrength, Player player)
@@ -88,12 +95,12 @@ public class Item : MonoBehaviour
 
     public virtual void ThrowHeld(float throwStrength, Player player)
     {
-        tP.Sim(throwStrength * player.moveValue);
+        tP.Sim(throwStrength * player.moveValue, true);
     }
 
     public virtual void ThrowRelease(float throwStrength, Player player)
     {
-        setTagsLayers("NotHeld", "NotHeld", 17);
+        setTagsLayers(mytag, mytag, 17);
 
         tP.pointFolder.gameObject.SetActive(false);
         tP._line.positionCount = 1;
@@ -101,6 +108,7 @@ public class Item : MonoBehaviour
         player.canMove = true;
         player.canJump = true;
         rb.isKinematic = false;
+        player.holdableItems.Add(this);
         Physics2D.IgnoreCollision(player.coll, col, false) ;
         rb.velocity = player.moveValue * throwStrength;
 
@@ -125,5 +133,21 @@ public class Item : MonoBehaviour
     public virtual void SecondaryInputReleased()
     {
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("LineCollider") && isHeld)
+        {
+            Physics2D.IgnoreCollision(collision, col, true);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("LineCollider"))
+        {
+            Physics2D.IgnoreCollision(collision, col, false);
+        }
     }
 }

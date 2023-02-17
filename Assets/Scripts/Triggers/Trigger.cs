@@ -7,5 +7,5 @@ public class Trigger : MonoBehaviour
 {
     public UnityEvent OnKeyActivationEvent;
     public UnityEvent OnKeyDesactivationEvent;
-    [HideInInspector] public bool activated;
+     public bool activated;
 }

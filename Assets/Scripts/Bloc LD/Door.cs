@@ -17,12 +17,18 @@ public class Door : MonoBehaviour
     int nOpen;
     private Vector2 ogPos;
     private IEnumerator doorOpening, doorClosing;
+    private Rigidbody2D rb;
     [HideInInspector] public bool isOpen;
     [HideInInspector] public Vector3 prevPos;
+    bool isBlocked;
     #endregion
 
     #region Functions
-    private void Start() => ogPos = transform.position;
+    private void Start()
+    {
+        ogPos = transform.position;
+        rb = GetComponent<Rigidbody2D>();
+    }
 
     public void OpenDoor()
     {
@@ -52,7 +58,39 @@ public class Door : MonoBehaviour
         }
     }
 
-    
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("LineCollider"))
+        {
+            if(doorOpening != null)
+            {
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.position - destination, Mathf.Infinity, 6);
+                if (hit.collider == collision)
+                    isBlocked = true;
+                else isBlocked = false;
+            }
+            else if(doorClosing != null)
+            {
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.position - (Vector3)ogPos, Mathf.Infinity, 6);
+                if (hit.collider == collision)
+                    isBlocked = true;
+                else isBlocked = false;
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("LineCollider"))
+        {
+            if (doorOpening != null || doorClosing != null)
+            {
+                isBlocked = false;
+            }
+        }
+    }
+
     bool IsPlaying(FMOD.Studio.EventInstance instance)
     {
         FMOD.Studio.PLAYBACK_STATE state;
@@ -74,11 +112,14 @@ public class Door : MonoBehaviour
             i += Time.deltaTime * doorOpenSpeed;
             transform.position = Vector2.Lerp(startPos, destination, openCurve.Evaluate(i));
             isOpen = true;
+            if (isBlocked) print(1);
+            yield return new WaitUntil(() => !isBlocked);
 
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
         transform.position = destination;
         isOpen = true;
+        doorOpening = null;
         slidingSound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         slidingSound.release();
         FMODUnity.RuntimeManager.PlayOneShot("event:/BlockLd/DoorClose");
@@ -96,15 +137,17 @@ public class Door : MonoBehaviour
         }
         while (i < 1)
         {
-            i += Time.deltaTime * doorOpenSpeed;
-            transform.position = Vector2.Lerp(startPos, ogPos, openCurve.Evaluate(i));
+            i += Time.deltaTime * doorCloseSpeed;
+            transform.position = Vector2.Lerp(startPos, ogPos, closeCurve.Evaluate(i));
             isOpen = false;
 
+            yield return new WaitUntil(() => !isBlocked);
             yield return new WaitForEndOfFrame();
         }
         transform.position = ogPos;
 
         isOpen = false;
+        doorClosing = null;
         slidingSound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         slidingSound.release();
         FMODUnity.RuntimeManager.PlayOneShot("event:/BlockLd/DoorClose");
@@ -117,15 +160,20 @@ public class Door : MonoBehaviour
 
     public void MovePoint(bool pA, Vector3 pos, Vector3 center)
     {
-            var a = Destination();
+            var a = destination;
             destination = new Vector3(pos.x, pos.y, 0);
     }
-    public Vector3 Destination()
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
     {
-        destination.z = 0;
-        return destination;
+        if (Selection.activeGameObject != gameObject)
+        {
+            Gizmos.DrawWireSphere(destination, .4f);
+        }
     }
-    #endregion
+#endif
+#endregion
 }
 
 
@@ -144,11 +192,11 @@ public class Door_Editor : Editor
     {
         MoveHandlesAlongObject();
         Handles.color = Color.black;
-        Handles.DrawLine(door.Destination(), door.transform.position);
+        Handles.DrawLine(door.destination, door.transform.position);
 
         Handles.color = Color.red;
-        Vector3 newPosA = Handles.FreeMoveHandle(door.Destination(), Quaternion.identity, .5f, Vector3.zero, Handles.CylinderHandleCap);
-        if (door.Destination() != newPosA)
+        Vector3 newPosA = Handles.FreeMoveHandle(door.destination, Quaternion.identity, .5f, Vector3.zero, Handles.CylinderHandleCap);
+        if (door.destination != newPosA)
         {
             Undo.RecordObject(door, "MovePoint");
             door.MovePoint(true, newPosA, door.transform.position);
@@ -162,7 +210,7 @@ public class Door_Editor : Editor
 
     void MoveHandlesAlongObject()
     {
-        if (door.prevPos != door.transform.position)
+        if (door.prevPos != door.transform.position && !Application.isPlaying)
         {
             Vector3 movement = door.transform.position - door.prevPos;
             door.destination += movement;

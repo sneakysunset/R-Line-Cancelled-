@@ -1,11 +1,11 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 public class InputReceptor : Trigger
 {
     public Trigger[] triggers;
-    
+    int numberOfActivated;
     private void Update()
     {
         CheckTriggers();
@@ -13,8 +13,9 @@ public class InputReceptor : Trigger
 
     private void CheckTriggers()
     {
+        numberOfActivated = 0;
         foreach (Trigger trigger in triggers)
-        {
+        { 
             if (!trigger.activated)
             {
                 if (activated)

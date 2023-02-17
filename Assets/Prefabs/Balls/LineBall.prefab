@@ -92,12 +92,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 356941409344012204}
-  - component: {fileID: 8086875767729060720}
+  - component: {fileID: 8124790628018030775}
   - component: {fileID: 1339753458846042098}
   - component: {fileID: 1339753458846042103}
+  - component: {fileID: 7208546231461539624}
   - component: {fileID: 1339753458846042102}
   - component: {fileID: 1339753458846042091}
   - component: {fileID: -5115322315258834901}
+  - component: {fileID: 8086875767729060720}
   m_Layer: 0
   m_Name: LineBall
   m_TagString: Ball
@@ -114,7 +116,7 @@ Transform:
   m_GameObject: {fileID: 99438573390550179}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6696455043273277937}
@@ -124,7 +126,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8086875767729060720
+--- !u!114 &8124790628018030775
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,15 +135,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 99438573390550179}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d2ead92df0ea5c4ca3d64f2743ac2c9, type: 3}
+  m_Script: {fileID: 11500000, guid: 65db9b97c2555d048ba978eab6b94a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballThrowType: 0
-  ballCollisionType: 0
+  itemType: 0
+  generateLine: 0
+  rb: {fileID: 0}
+  tP: {fileID: 0}
+  col: {fileID: 0}
+  heldPoint: {fileID: 0}
+  isHeld: 0
+  throwPreview: 0
+  Highlight: {fileID: 0}
   catchable: 1
-  Line: {fileID: 8470138877869589839, guid: ff770ce5c4b76214ab8f01110640449d, type: 3}
+  lC: {fileID: 0}
+  ballColType: 0
+  ballThrowType: 0
+  flyingTrajSpeed: 500
+  flyingTrajDeviationSpeed: 700
+  flyingToPlayerSpeed: 500
   collideWithPlayer: 1
-  ID: 0
+  _player: {fileID: 0}
 --- !u!114 &1339753458846042098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,8 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1f00882fb5dbac45a325abd0179a369, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointList: []
-  edgeC: {fileID: 0}
+  lineC: {fileID: 0}
   lineT: {fileID: 0}
   linePrefab: {fileID: 2806532603236615975, guid: d9b0e85827059c74ab27ed823144ecc4, type: 3}
   ballPrefab: {fileID: 99438573390550179}
@@ -164,33 +177,10 @@ MonoBehaviour:
   lineEndX: 100
   width: 0.25
   lineYOffSet: 0
-  threshHoldToUpdatePoints: 0.1
-  updateSoundFrequency: 0
-  updateAnim:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  updateAnimSpeed: 0
+  cascade: 0
+  fallTimer: 0
+  fallSpeed: 0
+  fallSpeedAccel: 0
 --- !u!114 &1339753458846042103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,6 +200,25 @@ MonoBehaviour:
   pointFolder: {fileID: 7190875357817938291}
   _maxPhysicsFrameIterations: 1500
   res: 20
+--- !u!114 &7208546231461539624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99438573390550179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a088290b9fff1de4784631e8b03f8ef3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  paintOrigin: {fileID: 356941409344012204}
+  paintRange: 100
+  paintLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  brushWidth: 0.05
+  brushTexture: {fileID: 2800000, guid: 31f01a2315fb4b345adf2df220778df0, type: 3}
 --- !u!120 &1339753458846042102
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -343,6 +352,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   freeMove: 1
   freeScale: 1
+--- !u!114 &8086875767729060720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99438573390550179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d2ead92df0ea5c4ca3d64f2743ac2c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
 --- !u!1 &4045773664216329104
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,7 +390,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4045773664216329104}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -413,8 +435,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1309577469
-  m_SortingLayer: 4
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
   m_Color: {r: 0.93327296, g: 1, b: 0, a: 1}
@@ -452,7 +474,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4121782692891272594}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

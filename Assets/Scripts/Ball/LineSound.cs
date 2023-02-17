@@ -21,6 +21,8 @@ public class LineSound : MonoBehaviour
         waiter = new WaitForSeconds(soundUpdateTimer);
     }
 
+
+
     //Event pour l'instant activé manuellement avec un bouton.
     //Il lance la mécanique principale sonore (synthétiseur sonore avec pitch dépendant de la courbe créée par la ligne).
     public void PlaySound()
@@ -32,13 +34,13 @@ public class LineSound : MonoBehaviour
         {
             sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             sound.release();
-            currentVisual.position = lineC.pointList[0];
+            currentVisual.position = lineC.pointList[0].pos;
             StopCoroutine(soundEnum);
             soundEnum = null;
         }
         else
         {
-            currentVisual = Instantiate(visualPrefab, lineC.pointList[0], Quaternion.identity).transform;
+            currentVisual = Instantiate(visualPrefab, lineC.pointList[0].pos, Quaternion.identity).transform;
         }
 
         soundEnum = SoundControl();
@@ -84,8 +86,8 @@ public class LineSound : MonoBehaviour
         while(i < lineC.pointList.Count - 1)
         {
             i++;
-            sound.setParameterByName("Pitch", (lineC.pointList[i].y - minHeight)/ maxHeight, true);
-            currentVisual.position = lineC.pointList[i];
+            sound.setParameterByName("Pitch", (lineC.pointList[i].pos.y - minHeight)/ maxHeight, true);
+            currentVisual.position = lineC.pointList[i].pos;
 
             yield return waiter;
         }
@@ -93,8 +95,8 @@ public class LineSound : MonoBehaviour
         while (i > 0)
         {
             i--;
-            sound.setParameterByName("Pitch", (lineC.pointList[i].y - minHeight) / maxHeight, true);
-            currentVisual.position = lineC.pointList[i];
+            sound.setParameterByName("Pitch", (lineC.pointList[i].pos.y - minHeight) / maxHeight, true);
+            currentVisual.position = lineC.pointList[i].pos;
 
             yield return waiter;
         }
