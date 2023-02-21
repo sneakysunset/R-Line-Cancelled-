@@ -10,7 +10,7 @@ public class Item_Ball : Item
     public BallType.BallThrowType ballThrowType;
     protected bool stuckToWall;
     public float direction;
-    private bool flying;
+    public bool flying;
     public float flyingTrajSpeed = 500;
     public float flyingTrajDeviationSpeed = 700;
     public float flyingToPlayerSpeed = 500;
@@ -74,6 +74,7 @@ public class Item_Ball : Item
         else if (ballThrowType == BallType.BallThrowType.straightLine && flying && collision.transform != _player.transform)
         {
             print(collision.transform.name);
+            flying = false;
             rb.gravityScale = ogGravity;
         }
 

@@ -36,7 +36,7 @@ public class PressurePlate : Trigger
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(ballOnly && (collision.collider.CompareTag("Ball") || collision.collider.CompareTag("BallHeld")))
+        if(ballOnly && (collision.collider.CompareTag("Ball") || collision.collider.CompareTag("Held")))
         {
             if (collisions.Count == 0)
             {
@@ -47,7 +47,7 @@ public class PressurePlate : Trigger
             return;
         }
 
-        if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Cube") || collision.collider.CompareTag("Ball") || collision.collider.CompareTag("BallHeld"))
+        if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Cube") || collision.collider.CompareTag("Ball") || collision.collider.CompareTag("Held"))
         {
             if(collisions.Count == 0)
             {

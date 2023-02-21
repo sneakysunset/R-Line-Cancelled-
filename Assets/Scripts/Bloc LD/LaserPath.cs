@@ -66,6 +66,7 @@ public class LaserPath : MonoBehaviour
 
     void Raycast()
     {
+        if (!activated) return;
         origin = transform.position;
         Vector3 direction = transform.right;
         vector2s.Clear();
@@ -149,8 +150,26 @@ public class LaserPath : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player")) Destroy(collision.transform.parent.gameObject);
+        if (collision.CompareTag("Player") && activated) Destroy(collision.transform.parent.gameObject);
     }
 
-    public void ActivateLaser(bool activate) => activated = activate;
+    public void ActivateLaser(bool activate)
+    {
+        if (!activate)
+        {
+            vector2s.Clear();
+            Vector3[] vec = new Vector3[vector2s.Count];
+            Vector2[] vec2d = new Vector2[vector2s.Count];
+            lineR.SetPositions(vec);
+            edgeC.points = new Vector2[vec2d.Length];
+            edgeC.enabled = false;
+            lineR.enabled = false;
+        }
+        else
+        {
+            edgeC.enabled = true;
+            lineR.enabled = true;
+        }
+        activated = activate;
+    }
 }
