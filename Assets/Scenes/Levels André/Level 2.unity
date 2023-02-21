@@ -737,7 +737,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4037485886296925799, guid: db45109c01f252b42971d364e8fe329e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -26.85
+      value: -23.25
       objectReference: {fileID: 0}
     - target: {fileID: 4037485886296925799, guid: db45109c01f252b42971d364e8fe329e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2785,6 +2785,14 @@ PrefabInstance:
     - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
       propertyPath: ballColType
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: generateLine
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
+      propertyPath: throwPreview
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8124790628018030775, guid: cd4f2825f5afbf7438792119cc4993a3, type: 3}
       propertyPath: ballThrowType
@@ -5218,11 +5226,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1070076605666580860, guid: c0163c4d61686a346809713ecd373cc4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 18
+      value: -27
       objectReference: {fileID: 0}
     - target: {fileID: 1070076605666580860, guid: c0163c4d61686a346809713ecd373cc4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 23
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 1070076605666580860, guid: c0163c4d61686a346809713ecd373cc4, type: 3}
       propertyPath: m_LocalPosition.z

@@ -59,6 +59,19 @@ public class PressurePlate : Trigger
     }
 
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player") || collision.CompareTag("Cube") || collision.CompareTag("Ball") || collision.CompareTag("Held"))
+        {
+            if (collisions.Count == 0)
+            {
+                OnKeyActivationEvent?.Invoke();
+                activated = true;
+            }
+            collisions.Add(collision);
+        }
+    }
+
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Cube") || collision.collider.CompareTag("Ball") || collision.collider.CompareTag("BallHeld"))
