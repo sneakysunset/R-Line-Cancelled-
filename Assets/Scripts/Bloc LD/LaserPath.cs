@@ -149,7 +149,7 @@ public class LaserPath : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player")) Destroy(collision.gameObject);
+        if (collision.CompareTag("Player")) Destroy(collision.transform.parent.gameObject);
     }
 
     public void ActivateLaser(bool activate) => activated = activate;

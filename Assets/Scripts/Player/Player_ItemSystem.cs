@@ -88,7 +88,7 @@ public class Player_ItemSystem : MonoBehaviour
     private void Update()
     {
         if (player.heldItem != null && secondaryInputHold) player.heldItem.SecondaryInputHeld();
-        if (player.heldItem != null && player)
+        if (player.heldItem != null && player.throwing)
         {
             player.heldItem.ThrowHeld(throwStrength, player);
         }

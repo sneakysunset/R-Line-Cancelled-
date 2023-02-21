@@ -71,7 +71,11 @@ public class Item_Ball : Item
 
         if ((ballThrowType == BallType.BallThrowType.targetPlayer || ballThrowType == BallType.BallThrowType.controlTarget) && flying)
             StopFlying();
-        else if (ballThrowType == BallType.BallThrowType.straightLine && flying) rb.gravityScale = ogGravity;
+        else if (ballThrowType == BallType.BallThrowType.straightLine && flying && collision.transform != _player.transform)
+        {
+            print(collision.transform.name);
+            rb.gravityScale = ogGravity;
+        }
 
         if (ballThrowType == BallType.BallThrowType.straightLine) flying = false;
     }
@@ -181,6 +185,7 @@ public class Item_Ball : Item
         player.holdableItems.Add(this);
         stuckToWall = false;
         flying = true;
+        rb.constraints = RigidbodyConstraints2D.None;
         player.canMove = false;
         player.canJump = false;
         rb.isKinematic = false;
@@ -196,6 +201,7 @@ public class Item_Ball : Item
         player.holdableItems.Add(this);
         stuckToWall = false;
         flying = true;
+        rb.constraints = RigidbodyConstraints2D.None;
         player.canMove = false;
         player.canJump = false;
         rb.isKinematic = false;

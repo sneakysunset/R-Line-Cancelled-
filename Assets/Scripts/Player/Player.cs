@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     public enum Team { J1, J2, Ball };
     [HideInInspector] public Vector2 moveValue;
     [HideInInspector] public Item heldItem;
-    [HideInInspector] public List<Item> holdableItems;
+    /*[HideInInspector]*/ public List<Item> holdableItems;
     [HideInInspector] public Item closestItem;
     [HideInInspector] public Rigidbody2D rb;
     [HideInInspector] public Color col;
@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool jumpingInput;
     [HideInInspector] public bool moving;
     [HideInInspector] public bool throwing;
-    /*[HideInInspector]*/ public bool wallJumpCheck;
+    [HideInInspector] public bool wallJumpCheck;
     [HideInInspector] public Collider2D coll;
     //Variables that Show in inspector
     public Team playerType;

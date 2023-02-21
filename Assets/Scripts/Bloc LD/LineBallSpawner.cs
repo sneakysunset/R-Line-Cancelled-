@@ -27,12 +27,13 @@ public class LineBallSpawner : MonoBehaviour
     //Détruit la balle actuelle associée puis en spawn une autre et lui donne une vélocité vers le bas.
     public void Spawn()
     {
+        var tempBall = Instantiate(currentBall, spawnPoint.position, transform.rotation);
+        tempBall.GetComponent<LineCreator>().pointList.Clear();
         if (currentBall)
         {
             Destroy(currentBall);
         }
-        currentBall = Instantiate(lineBallPrefab, spawnPoint.position, transform.rotation);
-        currentBall.GetComponent<LineCreator>().pointList.Clear();
+        currentBall = tempBall;
         currentBall.GetComponent<Rigidbody2D>().AddForce(-transform.up * throwStrength, ForceMode2D.Impulse);
     }
 }
