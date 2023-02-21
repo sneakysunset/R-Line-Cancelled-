@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class LaserPath : MonoBehaviour
 {
     public int maxBounceNum = 2;
@@ -91,6 +91,7 @@ public class LaserPath : MonoBehaviour
                 }
             }
 
+            if(hit.transform.CompareTag("Player")) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             if (hit.collider.CompareTag("LaserReceptor") && receptor == null)
             {
                 receptor = hit.collider;
@@ -150,7 +151,11 @@ public class LaserPath : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && activated) Destroy(collision.transform.parent.gameObject);
+            print(1);
+        if (collision.CompareTag("Player") && activated)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 
     public void ActivateLaser(bool activate)
