@@ -111,12 +111,6 @@ public class LineCreator : MonoBehaviour
     }
     private void Update()
     {
-
-/*        foreach (Point point in pointList)
-        {
-            point.Fond();
-        }*/
-
         if (Input.GetKeyDown(KeyCode.L))
         {
             Vector2 pPos = new Vector2(transform.position.x, transform.position.y);
