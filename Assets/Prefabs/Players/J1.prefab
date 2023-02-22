@@ -176,7 +176,7 @@ MonoBehaviour:
   colorJ2: {r: 0.49019608, g: 0.49019608, b: 0.49019608, a: 1}
   canJump: 1
   canMove: 1
-  myItem: {fileID: 0}
+  noCol: 0
 --- !u!114 &7333970221887948285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,13 +300,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c474d0968fff0b42afde6aa22bc9086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SolidesParent: {fileID: 0}
-  BallPrefab: {fileID: 0}
   _line: {fileID: 8810157283791512890}
   ptnPrefab: {fileID: 1172140396761346378, guid: 3a52d1ec47f070744b671a80019ffa24, type: 3}
   pointFolder: {fileID: 6075364710367750342}
-  _maxPhysicsFrameIterations: 100
-  res: 0
+  _maxPhysicsFrameIterations: 1500
+  res: 20
 --- !u!114 &6984929972057871670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -412,6 +410,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 2c911e0d-1cb3-49c7-acfc-8865eb20cf97
     m_ActionName: UI/Pause[/Keyboard/escape,/DualSenseGamepadHID/start]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1707737033990768578}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: OnCol
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d5a68df0-bb36-4552-a3c1-f2e6ad926cb2
+    m_ActionName: Movement/NoCol[/Keyboard/leftShift]
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: Controller
   m_DefaultActionMap: Movement

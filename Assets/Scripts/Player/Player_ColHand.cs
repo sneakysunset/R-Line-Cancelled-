@@ -14,7 +14,7 @@ public class Player_ColHand : MonoBehaviour
 
     private void Update()
     {
-        if (player.moveValue.y >= -1 && player.moveValue.y < -.85f)
+        if (player.noCol)
         {
             player.coll.gameObject.layer = LayerMask.NameToLayer("PlayerOff");
         }
