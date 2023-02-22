@@ -40,6 +40,15 @@
                     "processors": "",
                     "interactions": "Hold(duration=1E+09)",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "NoCol",
+                    "type": "Button",
+                    "id": "d5a68df0-bb36-4552-a3c1-f2e6ad926cb2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Hold(duration=1E+09)",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -172,6 +181,28 @@
                     "processors": "",
                     "groups": "KeyBoard And Mouse",
                     "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "22888a88-8b28-4c9a-9af8-5644c656fba9",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "NoCol",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8c37025f-077d-4371-9bd0-44a9cbfb758c",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard And Mouse",
+                    "action": "NoCol",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

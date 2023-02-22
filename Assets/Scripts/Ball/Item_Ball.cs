@@ -73,12 +73,11 @@ public class Item_Ball : Item
             StopFlying();
         else if (ballThrowType == BallType.BallThrowType.straightLine && flying && collision.transform != _player.transform)
         {
-            print(collision.transform.name);
             flying = false;
             rb.gravityScale = ogGravity;
         }
 
-        if (ballThrowType == BallType.BallThrowType.straightLine) flying = false;
+        //if (ballThrowType == BallType.BallThrowType.straightLine && collision.transform.tag != "Player") flying = false;
     }
 
     public virtual void OnDestroy()
@@ -216,7 +215,6 @@ public class Item_Ball : Item
     #region OtherEvents
     private void StopFlying()
     {
-        print(1);
         _player.throwing = false;
         _player.canMove = true;
         _player.canJump = true;

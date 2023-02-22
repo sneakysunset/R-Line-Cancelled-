@@ -13,9 +13,12 @@ public class ThrowPreview : MonoBehaviour
     {
         _line = GetComponent<LineRenderer>();
         pointFolder = transform.Find("pointHolder");
-        for (int i = 0; i < _maxPhysicsFrameIterations; i++)
+        if(pointFolder.childCount == 0)
         {
-            Transform point = Instantiate(ptnPrefab, pointFolder).transform;
+            for (int i = 0; i < _maxPhysicsFrameIterations; i++)
+            {
+                Transform point = Instantiate(ptnPrefab, pointFolder).transform;
+            }
         }
     }
 
