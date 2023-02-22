@@ -24,9 +24,11 @@ public class Player_ColHand : MonoBehaviour
         }
     }
 
+
     public void OnLineTriggerStay(Collider2D col)
     {
-        if(col.CompareTag("LineCollider")) Physics2D.IgnoreCollision(player.coll, col, true);
+        
+        if (col.CompareTag("LineCollider")) Physics2D.IgnoreCollision(player.coll, col, true);
 
     }
 
@@ -48,6 +50,7 @@ public class Player_ColHand : MonoBehaviour
         bool condition1 = col.gameObject.tag == "LineCollider";
         bool condition2 = col.contacts[0].normal.y > lineColliderNormalY;
 
+        
         if (condition1 && !condition2)
         {
             Physics2D.IgnoreCollision(player.coll, col.collider, true);

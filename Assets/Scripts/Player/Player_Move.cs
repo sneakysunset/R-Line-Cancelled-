@@ -32,13 +32,16 @@ public class Player_Move : MonoBehaviour
 
     private void Move()
     {
-        Vector2 movementVector = Vector2.zero;
-        movementVector.x = player.moveValue.x * moveSpeed * Time.deltaTime;
+        Vector2 movementVector = rb.velocity;
+        movementVector = transform.right * player.moveValue.x * moveSpeed * Time.deltaTime ;
+        
         var acc = movementVector.x != 0 ? acceleration : deceleration;
 
 
         playerVelocity = Vector2.Lerp(rb.velocity, movementVector, acc * Time.deltaTime);
-        playerVelocity.y = rb.velocity.y;
+        playerVelocity = (Vector2)transform.right * playerVelocity.x + (Vector2)transform.up * transform.InverseTransformDirection(rb.velocity).y;
+        Debug.DrawRay(transform.position, playerVelocity, Color.black, Time.deltaTime);
+        print(playerVelocity);
         rb.velocity = playerVelocity;
 
         if (player.moveValue != Vector2.zero && player.groundCheck) player.moving = true;
@@ -61,8 +64,8 @@ public class Player_Move : MonoBehaviour
 
     private void ChangeDirection()
     {
-        if (player.moveValue.x < 0) transform.rotation = Quaternion.Euler(0, 180, 0);
-        if (player.moveValue.x > 0) transform.rotation = Quaternion.Euler(0, 0, 0);
+        if (player.moveValue.x < 0) player.rend.transform.rotation = Quaternion.Euler(0, 180, 0);
+        if (player.moveValue.x > 0) player.rend.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     private void LimitVelocity() => rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -maxXVelocity, maxXVelocity), Mathf.Clamp(rb.velocity.y, -1000, maxYVelocity));
