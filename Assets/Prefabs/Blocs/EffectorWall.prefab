@@ -200,3 +200,4 @@ MonoBehaviour:
       m_Calls: []
   activated: 0
   collisions: []
+  ballOnly: 0
