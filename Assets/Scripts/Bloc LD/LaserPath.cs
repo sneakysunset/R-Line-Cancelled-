@@ -35,6 +35,14 @@ public class LaserPath : MonoBehaviour
             isOn = false;
             timer = timerOff;
         }
+
+        if(!activated && receptor != null)
+        {
+            Trigger trig = receptor.GetComponent<Trigger>();
+            trig.activated = false;
+            trig.OnKeyDesactivationEvent?.Invoke();
+            receptor = null;
+        } 
     }
 
     private void FixedUpdate()
@@ -151,7 +159,6 @@ public class LaserPath : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-            print(1);
         if (collision.CompareTag("Player") && activated)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);

@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     public Color colorJ1, colorJ2;
     public bool canJump;
     public bool canMove;
-
+    public bool noCol;
 
     #endregion
 
@@ -63,4 +63,16 @@ public class Player : MonoBehaviour
     }
 
     public void OnMove(InputAction.CallbackContext value) => moveValue = value.ReadValue<Vector2>();
+
+    public void OnCol(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            noCol = true;
+        }
+        if(context.canceled || context.performed)
+        {
+            noCol = false;
+        }
+    }
 }

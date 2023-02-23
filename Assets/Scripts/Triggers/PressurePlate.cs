@@ -36,20 +36,22 @@ public class PressurePlate : Trigger
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(ballOnly && (collision.collider.CompareTag("Ball") || collision.collider.CompareTag("Held")))
+        if (ballOnly)
+        {
+            if ((collision.collider.CompareTag("Ball") || collision.collider.CompareTag("Held")))
+            {
+                if (collisions.Count == 0)
+                {
+                    OnKeyActivationEvent?.Invoke();
+                    activated = true;
+                }
+                collisions.Add(collision.collider);
+                return;
+            }
+        }
+        else if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Cube") || collision.collider.CompareTag("Ball") || collision.collider.CompareTag("Held"))
         {
             if (collisions.Count == 0)
-            {
-                OnKeyActivationEvent?.Invoke();
-                activated = true;
-            }
-            collisions.Add(collision.collider);
-            return;
-        }
-
-        if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Cube") || collision.collider.CompareTag("Ball") || collision.collider.CompareTag("Held"))
-        {
-            if(collisions.Count == 0)
             {
                 OnKeyActivationEvent?.Invoke();
                 activated = true;
@@ -61,7 +63,20 @@ public class PressurePlate : Trigger
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") || collision.CompareTag("Cube") || collision.CompareTag("Ball") || collision.CompareTag("Held"))
+        if (ballOnly)
+        {
+            if ((collision.CompareTag("Ball") || collision.CompareTag("Held")))
+            {
+                if (collisions.Count == 0)
+                {
+                    OnKeyActivationEvent?.Invoke();
+                    activated = true;
+                }
+                collisions.Add(collision);
+                return;
+            }
+        }
+        else if (collision.CompareTag("Player") || collision.CompareTag("Cube") || collision.CompareTag("Ball") || collision.CompareTag("Held"))
         {
             if (collisions.Count == 0)
             {
