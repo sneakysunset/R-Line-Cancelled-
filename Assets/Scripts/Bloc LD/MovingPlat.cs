@@ -88,6 +88,12 @@ public class MovingPlat : MonoBehaviour
             }
         }
     }
+
+    public void StopMoving(bool move)
+    {
+        if (move) moving = true;
+        else moving = false;
+    }
 }
 
 
