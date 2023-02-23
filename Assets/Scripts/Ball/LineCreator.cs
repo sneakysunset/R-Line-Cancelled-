@@ -107,7 +107,7 @@ public class LineCreator : MonoBehaviour
         InstantiateLine();
         StartCoroutine(fixDeMerdeSpawnLigne());
         waitSec = new WaitForSeconds(cascadeRefreshRate);
-        StartCoroutine(pointCascade());
+        if(cascade || cascadeWhenCloseToGround)StartCoroutine(pointCascade());
     }
     private void Update()
     {

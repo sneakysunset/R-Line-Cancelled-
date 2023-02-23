@@ -92,6 +92,7 @@ public class Item_Ball : Item
     public override void GrabStarted(Transform holdPoint, Player player)
     {
         _player = player;
+        player.mCol.Add(lC.lineC);
         if (!catchable)
         {
             GrabRelease(player);
@@ -107,7 +108,7 @@ public class Item_Ball : Item
     {
         base.GrabRelease(player);
         setTagsLayers("Ball", "Ball", 7);
-
+        player.mCol.Remove(lC.lineC);
         Physics2D.IgnoreCollision(player.coll, lC.lineC, true);
         
     }
@@ -172,6 +173,7 @@ public class Item_Ball : Item
         else
         {
             base.ThrowRelease(throwStrength, player);
+            player.mCol.Remove(lC.lineC);
             setTagsLayers("Ball", "Ball", 7);
             Physics2D.IgnoreCollision(player.coll, lC.lineC, true);
         }
@@ -218,6 +220,7 @@ public class Item_Ball : Item
         _player.throwing = false;
         _player.canMove = true;
         _player.canJump = true;
+        _player.mCol.Remove(lC.lineC);
         Physics2D.IgnoreCollision(_player.coll, col, false);
         isHeld = false;
 

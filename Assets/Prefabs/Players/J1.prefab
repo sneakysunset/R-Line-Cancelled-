@@ -166,6 +166,7 @@ MonoBehaviour:
   wallJumpCheck: 0
   coll: {fileID: 0}
   rend: {fileID: 0}
+  mCol: {fileID: 0}
   playerType: 0
   colorJ1: {r: 0.6509804, g: 0.1882353, b: 0.1882353, a: 1}
   colorJ2: {r: 0.49019608, g: 0.49019608, b: 0.49019608, a: 1}
@@ -205,11 +206,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fallMult: 7
   lowJumpMult: 10
+  riseGravMult: 0
   jumpStrength: 15
+  revertGravitySpeed: 0
   wallJumpDirection: {x: 1, y: 0.6}
   wallJumpStrength: 2
   yGroundCheck: 0.1
   gravityScale: 1
+  gravityLayer:
+    serializedVersion: 2
+    m_Bits: 233591
+  gravityIgnoreLineLayer:
+    serializedVersion: 2
+    m_Bits: 233527
 --- !u!114 &6999140409556955140
 MonoBehaviour:
   m_ObjectHideFlags: 0

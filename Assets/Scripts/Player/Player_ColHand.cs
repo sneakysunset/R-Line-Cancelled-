@@ -29,7 +29,11 @@ public class Player_ColHand : MonoBehaviour
     public void OnLineTriggerStay(Collider2D col)
     {
         
-        if (col.CompareTag("LineCollider")) Physics2D.IgnoreCollision(player.coll, col, true);
+        if (col.CompareTag("LineCollider") && !player.mCol.Contains(col))
+        {
+            player.mCol.Add(col);
+            Physics2D.IgnoreCollision(player.coll, col, true);
+        }
 
     }
 
@@ -39,8 +43,9 @@ public class Player_ColHand : MonoBehaviour
         {
             
             if (player.heldItem && player.heldItem.TryGetComponent(out Item_Ball it) && it.lC.lineC == col) { }
-            else
+            else if(player.mCol.Contains(col))
             {
+                player.mCol.Remove(col);
                 Physics2D.IgnoreCollision(player.coll, col, false);
             } 
         }
@@ -54,8 +59,8 @@ public class Player_ColHand : MonoBehaviour
         
         if (condition1 && !condition2)
         {
-            Physics2D.IgnoreCollision(player.coll, col.collider, true);
-            player.rb.velocity = -col.relativeVelocity;
+            //Physics2D.IgnoreCollision(player.coll, col.collider, true);
+           // player.rb.velocity = -col.relativeVelocity;
         }
         else if (condition1 && !condition2)
         {

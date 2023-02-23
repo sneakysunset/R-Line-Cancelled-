@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool wallJumpCheck;
     [HideInInspector] public Collider2D coll;
     [HideInInspector] public SpriteRenderer rend;
+    [HideInInspector]  public List<Collider2D> mCol;
     //Variables that Show in inspector
     public Team playerType;
     public Color colorJ1, colorJ2;
@@ -31,6 +32,7 @@ public class Player : MonoBehaviour
 
     public virtual void Start()
     {
+        mCol = new List<Collider2D>();
         rend = transform.Find("Renderer").GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         PlayerTypeChange(); 
