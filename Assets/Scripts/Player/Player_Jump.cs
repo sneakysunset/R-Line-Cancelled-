@@ -16,6 +16,7 @@ public class Player_Jump : MonoBehaviour
     private Vector2 gravity = Vector2.zero;
     //Prevent groundCheck = true on the frame the player jumps
     bool jumpCheck;
+
     private void Start()
     {
         player = GetComponent<Player>();
@@ -27,7 +28,6 @@ public class Player_Jump : MonoBehaviour
     {
         jumpCheck = true;
         if (player.jumpingInput && (player.groundCheck || player.wallJumpCheck) && player.canJump && jumpCheck) Jump();
-        else if (!player.groundCheck) Falling();
         ArtificialGravity();
         player.groundCheck = false;
     }
@@ -40,13 +40,6 @@ public class Player_Jump : MonoBehaviour
         rb.AddForce(transform.up * jumpStrength, ForceMode2D.Impulse);
     }
 
-    void Falling()
-    {
-       
-        //if ((rb.velocity * transform.up).magnitude < 0) rb.velocity += (Vector2)transform.up * Time.deltaTime * Physics2D.gravity.magnitude * (fallMult - 1);
-        //else if ((rb.velocity * transform.up).magnitude > 0 && !player.jumpingInput) rb.velocity += (Vector2)transform.up * Time.deltaTime * Physics2D.gravity.magnitude * (lowJumpMult - 1);
-    }
-
     public void GroundCheck(Collision2D col)
     {
         if (/*col.contacts[0].normal.y > yGroundCheck &&*/ jumpCheck)
@@ -56,29 +49,31 @@ public class Player_Jump : MonoBehaviour
         }
     }
 
+
     void ArtificialGravity()
     {
         Vector2 gravityFlatValue = Physics2D.gravity.magnitude * Vector2.up;
+        Physics2D.queriesHitTriggers = false;
+        player.coll.isTrigger = true;
+        RaycastHit2D hitRight = Physics2D.Raycast(rayCastPoint.position, (-transform.up + .5f * player.rend.transform.right).normalized, 1f);
+        RaycastHit2D hitUpRight = Physics2D.Raycast(rayCastPoint.position, (transform.up + .5f * player.rend.transform.right).normalized, 1f);
+        player.coll.isTrigger = false;
+        Physics2D.queriesHitTriggers = true;
         if (player.groundCheck && player.moving)
         {
-            Physics2D.queriesHitTriggers = false;
-            player.coll.isTrigger = true;
-            RaycastHit2D hit = Physics2D.Raycast(rayCastPoint.position, (-transform.up + .5f * player.rend.transform.right).normalized, 1f);
-            player.coll.isTrigger = false;
-            Physics2D.queriesHitTriggers = true;
-            if (hit)
+            if (hitRight)
             {
-                gravityFlatValue = Physics2D.gravity.magnitude * (Vector2)hit.normal.normalized;
-                Debug.DrawRay(hit.point, gravityFlatValue, Color.yellow, Time.deltaTime);
-                transform.up = hit.normal.normalized;
+                gravityFlatValue = Physics2D.gravity.magnitude * (Vector2)hitRight.normal.normalized;
+                Debug.DrawRay(hitRight.point, gravityFlatValue, Color.yellow, Time.deltaTime);
+                transform.up = hitRight.normal.normalized;
             }
             else
             {
-                hit = Physics2D.Raycast(transform.position, -transform.up, 1f);
-                if (hit)
+                hitRight = Physics2D.Raycast(transform.position, -transform.up, 1f);
+                if (hitRight)
                 {
-                    gravityFlatValue = Physics2D.gravity.magnitude * (Vector2)hit.normal.normalized;
-                    transform.up = hit.normal.normalized;
+                    gravityFlatValue = Physics2D.gravity.magnitude * (Vector2)hitRight.normal.normalized;
+                    transform.up = hitRight.normal.normalized;
                 }
             }
         }
@@ -86,25 +81,47 @@ public class Player_Jump : MonoBehaviour
         {
             gravityFlatValue = Physics2D.gravity.magnitude * (Vector2)transform.up;
         }
-        else if ((rb.velocity * transform.up).magnitude < 0)
+        else if(!player.groundCheck && hitUpRight)
         {
-            gravityFlatValue = Vector2.up * Physics2D.gravity.y * (fallMult - 1); ;
-            gravity = Vector2.up * Physics2D.gravity.y * (fallMult - 1); ;
-
-            transform.up = Vector3.Lerp(transform.up, Vector3.up, Time.deltaTime * 10);
+            gravityFlatValue = Physics2D.gravity.magnitude * (Vector2)hitUpRight.normal.normalized;
+            Debug.DrawRay(hitUpRight.point, gravityFlatValue, Color.yellow, Time.deltaTime);
+            transform.up = hitUpRight.normal.normalized;
         }
-        else if ((rb.velocity * transform.up).magnitude > 0 && !player.jumpingInput)
+        else if (rbIsOverY())
         {
             gravityFlatValue = (Vector2)transform.up * -Physics2D.gravity.y * (lowJumpMult - 1);
             gravity = (Vector2)transform.up * -Physics2D.gravity.y * (lowJumpMult - 1);
+        }
+        else if (!rbIsOverY() && !player.jumpingInput)
+        {
+            gravityFlatValue = Vector2.up * -Physics2D.gravity.y * (fallMult - 1); ;
+            gravity = Vector2.up * -Physics2D.gravity.y * (fallMult - 1);
+
+            transform.up = Vector3.Lerp(transform.up, Vector3.up, Time.deltaTime * 10);
         }
 
         gravity = Vector2.Lerp(gravity, gravityFlatValue, Time.deltaTime * 10f);
          
         rb.velocity -= gravity * gravityScale * Time.deltaTime;
 
-        //Debug.DrawRay(rayCastPoint.position,( -transform.up + .5f * player.rend.transform.right).normalized, Color.red, Time.deltaTime);
-        //Debug.DrawRay(transform.position,gravity.normalized, Color.white, Time.deltaTime);
-        //Debug.DrawRay(transform.position,gravity * Time.deltaTime, Color.blue, Time.deltaTime);
+        Debug.DrawRay(rayCastPoint.position,( -transform.up + .5f * player.rend.transform.right).normalized, Color.red, Time.deltaTime);
+        Debug.DrawRay(rayCastPoint.position,( transform.up + .5f * player.rend.transform.right).normalized, Color.red, Time.deltaTime);
+        Debug.DrawRay(transform.position,gravity.normalized, Color.white, Time.deltaTime);
+        
+    }
+
+    private bool rbIsOverY() 
+    {
+        bool result = false;
+        if (rb.velocity == Vector2.zero) return false;
+        float rbAngle = Vector2.SignedAngle(Vector2.right, rb.velocity.normalized);
+        float trAngle = Vector2.SignedAngle(Vector2.right, transform.up);
+        Vector2 gRb = new Vector2(Mathf.Cos((rbAngle + trAngle - 90) * 2 * Mathf.PI / 360  ), Mathf.Sin((rbAngle + trAngle - 90) * 2 * Mathf.PI / 360));
+        if (gRb.y > 0) result = true;
+        else result = false;
+
+        print("Rb = " + gRb + " Angle = " + (rbAngle + trAngle));
+
+        return result;
     }
 }

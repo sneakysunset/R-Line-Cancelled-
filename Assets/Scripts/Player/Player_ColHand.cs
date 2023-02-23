@@ -7,6 +7,7 @@ public class Player_ColHand : MonoBehaviour
     Item_Ball ballItemHeld;
     private Player player;
     [Range(-1, 1)] public float lineColliderNormalY;
+    
     private void Start()
     {
         player = GetComponent<Player>();
