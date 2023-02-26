@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     public enum Team { J1, J2, Ball };
     [HideInInspector] public Vector2 moveValue;
     [HideInInspector] public Item heldItem;
-    [HideInInspector] public List<Item> holdableItems;
+    /*[HideInInspector]*/ public List<Item> holdableItems;
     [HideInInspector] public Item closestItem;
     [HideInInspector] public Rigidbody2D rb;
     [HideInInspector] public Color col;
@@ -17,14 +17,14 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool jumpingInput;
     [HideInInspector] public bool moving;
     [HideInInspector] public bool throwing;
-    /*[HideInInspector]*/ public bool wallJumpCheck;
+    [HideInInspector] public bool wallJumpCheck;
     [HideInInspector] public Collider2D coll;
     //Variables that Show in inspector
     public Team playerType;
     public Color colorJ1, colorJ2;
     public bool canJump;
     public bool canMove;
-
+    public bool noCol;
 
     #endregion
 
@@ -63,4 +63,16 @@ public class Player : MonoBehaviour
     }
 
     public void OnMove(InputAction.CallbackContext value) => moveValue = value.ReadValue<Vector2>();
+
+    public void OnCol(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            noCol = true;
+        }
+        if(context.canceled || context.performed)
+        {
+            noCol = false;
+        }
+    }
 }

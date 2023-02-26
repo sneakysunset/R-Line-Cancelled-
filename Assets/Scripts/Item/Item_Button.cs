@@ -16,9 +16,18 @@ public class Item_Button : Item
     public override void InteractStarted()
     {
         base.InteractStarted();
-        myTrigger.activated = true;
-        myTrigger.OnKeyActivationEvent?.Invoke();
-        timer = timerValue;
+        if (!myTrigger.activated)
+        {
+            myTrigger.activated = true;
+            myTrigger.OnKeyActivationEvent?.Invoke();
+            timer = timerValue;
+        }
+        else
+        {
+            myTrigger.activated = false;
+            myTrigger.OnKeyDesactivationEvent?.Invoke();
+            timer = 0;
+        }
     }
 
     public override void Update()

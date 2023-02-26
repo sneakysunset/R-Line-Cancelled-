@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class LaserPath : MonoBehaviour
 {
     public int maxBounceNum = 2;
@@ -35,6 +35,14 @@ public class LaserPath : MonoBehaviour
             isOn = false;
             timer = timerOff;
         }
+
+        if(!activated && receptor != null)
+        {
+            Trigger trig = receptor.GetComponent<Trigger>();
+            trig.activated = false;
+            trig.OnKeyDesactivationEvent?.Invoke();
+            receptor = null;
+        } 
     }
 
     private void FixedUpdate()
@@ -66,6 +74,7 @@ public class LaserPath : MonoBehaviour
 
     void Raycast()
     {
+        if (!activated) return;
         origin = transform.position;
         Vector3 direction = transform.right;
         vector2s.Clear();
@@ -90,6 +99,7 @@ public class LaserPath : MonoBehaviour
                 }
             }
 
+            if(hit.transform.CompareTag("Player")) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             if (hit.collider.CompareTag("LaserReceptor") && receptor == null)
             {
                 receptor = hit.collider;
@@ -149,8 +159,29 @@ public class LaserPath : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player")) Destroy(collision.gameObject);
+        if (collision.CompareTag("Player") && activated)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 
-    public void ActivateLaser(bool activate) => activated = activate;
+    public void ActivateLaser(bool activate)
+    {
+        if (!activate)
+        {
+            vector2s.Clear();
+            Vector3[] vec = new Vector3[vector2s.Count];
+            Vector2[] vec2d = new Vector2[vector2s.Count];
+            lineR.SetPositions(vec);
+            edgeC.points = new Vector2[vec2d.Length];
+            edgeC.enabled = false;
+            lineR.enabled = false;
+        }
+        else
+        {
+            edgeC.enabled = true;
+            lineR.enabled = true;
+        }
+        activated = activate;
+    }
 }
