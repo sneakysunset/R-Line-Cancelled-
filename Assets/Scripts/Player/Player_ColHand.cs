@@ -7,6 +7,7 @@ public class Player_ColHand : MonoBehaviour
     Item_Ball ballItemHeld;
     private Player player;
     [Range(-1, 1)] public float lineColliderNormalY;
+    
     private void Start()
     {
         player = GetComponent<Player>();
@@ -24,9 +25,15 @@ public class Player_ColHand : MonoBehaviour
         }
     }
 
+
     public void OnLineTriggerStay(Collider2D col)
     {
-        if(col.CompareTag("LineCollider")) Physics2D.IgnoreCollision(player.coll, col, true);
+        
+        if (col.CompareTag("LineCollider") && !player.mCol.Contains(col))
+        {
+            player.mCol.Add(col);
+            Physics2D.IgnoreCollision(player.coll, col, true);
+        }
 
     }
 
@@ -36,8 +43,9 @@ public class Player_ColHand : MonoBehaviour
         {
             
             if (player.heldItem && player.heldItem.TryGetComponent(out Item_Ball it) && it.lC.lineC == col) { }
-            else
+            else if(player.mCol.Contains(col))
             {
+                player.mCol.Remove(col);
                 Physics2D.IgnoreCollision(player.coll, col, false);
             } 
         }
@@ -48,10 +56,11 @@ public class Player_ColHand : MonoBehaviour
         bool condition1 = col.gameObject.tag == "LineCollider";
         bool condition2 = col.contacts[0].normal.y > lineColliderNormalY;
 
+        
         if (condition1 && !condition2)
         {
-            Physics2D.IgnoreCollision(player.coll, col.collider, true);
-            player.rb.velocity = -col.relativeVelocity;
+            //Physics2D.IgnoreCollision(player.coll, col.collider, true);
+           // player.rb.velocity = -col.relativeVelocity;
         }
         else if (condition1 && !condition2)
         {

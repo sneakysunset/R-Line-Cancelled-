@@ -66,7 +66,7 @@ public class LineCreator : MonoBehaviour
 
     IEnumerator pointCascade()
     {
-        yield return new WaitForEndOfFrame();
+        yield return waitSec;
         if(cascade || cascadeWhenCloseToGround) foreach (Point point in pointList) point.Fond();
         StartCoroutine(pointCascade());
     }
@@ -107,11 +107,10 @@ public class LineCreator : MonoBehaviour
         InstantiateLine();
         StartCoroutine(fixDeMerdeSpawnLigne());
         waitSec = new WaitForSeconds(cascadeRefreshRate);
-        //StartCoroutine(pointCascade());
+        if(cascade || cascadeWhenCloseToGround)StartCoroutine(pointCascade());
     }
     private void Update()
     {
-        if (cascade || cascadeWhenCloseToGround) foreach (Point point in pointList) point.Fond();
         if (Input.GetKeyDown(KeyCode.L))
         {
             Vector2 pPos = new Vector2(transform.position.x, transform.position.y);

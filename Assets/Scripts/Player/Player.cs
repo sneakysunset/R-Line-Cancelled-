@@ -9,16 +9,18 @@ public class Player : MonoBehaviour
     public enum Team { J1, J2, Ball };
     [HideInInspector] public Vector2 moveValue;
     [HideInInspector] public Item heldItem;
-    /*[HideInInspector]*/ public List<Item> holdableItems;
+    [HideInInspector] public List<Item> holdableItems;
     [HideInInspector] public Item closestItem;
     [HideInInspector] public Rigidbody2D rb;
     [HideInInspector] public Color col;
-    [HideInInspector] public bool groundCheck;
+    /*[HideInInspector]*/ public bool groundCheck;
     [HideInInspector] public bool jumpingInput;
-    [HideInInspector] public bool moving;
+    /*[HideInInspector] */public bool moving;
     [HideInInspector] public bool throwing;
     [HideInInspector] public bool wallJumpCheck;
     [HideInInspector] public Collider2D coll;
+    [HideInInspector] public SpriteRenderer rend;
+    [HideInInspector]  public List<Collider2D> mCol;
     //Variables that Show in inspector
     public Team playerType;
     public Color colorJ1, colorJ2;
@@ -30,6 +32,8 @@ public class Player : MonoBehaviour
 
     public virtual void Start()
     {
+        mCol = new List<Collider2D>();
+        rend = transform.Find("Renderer").GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         PlayerTypeChange(); 
         coll = transform.Find("Collider").GetComponent<Collider2D>();
@@ -74,5 +78,10 @@ public class Player : MonoBehaviour
         {
             noCol = false;
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        
     }
 }

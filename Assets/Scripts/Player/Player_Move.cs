@@ -27,20 +27,23 @@ public class Player_Move : MonoBehaviour
         Acceleration();
         ChangeDirection();
         if (player.canMove) Move();
-        LimitVelocity();
+        //LimitVelocity();
     }
 
     private void Move()
     {
-        Vector2 movementVector = Vector2.zero;
-        movementVector.x = player.moveValue.x * moveSpeed * Time.deltaTime;
+        Vector2 movementVector = transform.right * player.moveValue.x * moveSpeed * Time.deltaTime;
+
         var acc = movementVector.x != 0 ? acceleration : deceleration;
 
 
-        playerVelocity = Vector2.Lerp(rb.velocity, movementVector, acc * Time.deltaTime);
-        playerVelocity.y = rb.velocity.y;
+        Vector2 playerVelocityX = Vector2.Lerp(transform.InverseTransformDirection(rb.velocity).x * transform.right, movementVector, acc * Time.deltaTime);
+        Vector2 playerVelocityY = transform.InverseTransformDirection(rb.velocity).y * (Vector2)transform.up;
+        playerVelocity = playerVelocityX + playerVelocityY;
+        
         rb.velocity = playerVelocity;
 
+        Debug.DrawRay(transform.position, playerVelocity, Color.black, Time.deltaTime);
         if (player.moveValue != Vector2.zero && player.groundCheck) player.moving = true;
         else player.moving = false;
     }
@@ -61,9 +64,9 @@ public class Player_Move : MonoBehaviour
 
     private void ChangeDirection()
     {
-        if (player.moveValue.x < 0) transform.rotation = Quaternion.Euler(0, 180, 0);
-        if (player.moveValue.x > 0) transform.rotation = Quaternion.Euler(0, 0, 0);
+        if (player.moveValue.x < 0) player.rend.transform.right = -transform.right;
+        if (player.moveValue.x > 0) player.rend.transform.right = transform.right;
     }
 
-    private void LimitVelocity() => rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -maxXVelocity, maxXVelocity), Mathf.Clamp(rb.velocity.y, -1000, maxYVelocity));
+    //private void LimitVelocity() => rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -maxXVelocity, maxXVelocity), Mathf.Clamp(rb.velocity.y, -1000, maxYVelocity));
 }
