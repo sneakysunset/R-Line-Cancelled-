@@ -73,7 +73,7 @@ public class LineCreator : MonoBehaviour
 
     private void Start()
     {
-        uvRandomArray = new Vector2[]
+/*        uvRandomArray = new Vector2[]
         {
             Vector2.zero,
             Vector2.right / 4,
@@ -91,7 +91,7 @@ public class LineCreator : MonoBehaviour
             Vector2.right * 1 / 4 + Vector2.up * 3 / 4,
             Vector2.right * 2 / 4 + Vector2.up * 3 / 4,
             Vector2.one * 3 / 4
-        };
+        };*/
         lineFolder = GameObject.FindGameObjectWithTag("LineFolder").transform;
         pointArray = Utils_Points.GeneratePointArray(pointArray, lineBeginningX, lineEndX, lineResolution);
         if (GetComponent<CharacterController2D>())

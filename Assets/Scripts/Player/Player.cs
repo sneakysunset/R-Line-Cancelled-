@@ -25,7 +25,8 @@ public class Player : MonoBehaviour
     public bool canJump;
     public bool canMove;
     public bool noCol;
-
+    public int numOfJump = 2;
+    [HideInInspector] public bool jumpChecker;
     #endregion
 
     public virtual void Start()
@@ -52,12 +53,14 @@ public class Player : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started && (groundCheck || wallJumpCheck) && canJump)
+        if (context.started && (groundCheck || numOfJump > 0) && canJump)
         {
             jumpingInput = true;
+            jumpChecker = true;
         }
         else if (context.canceled || context.performed)
         {
+            jumpChecker = false;
             jumpingInput = false;
         }
     }
