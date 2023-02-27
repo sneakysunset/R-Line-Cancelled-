@@ -95,6 +95,15 @@ public class Player : MonoBehaviour
             enume = stunEnd(stunTime);
         }
         StartCoroutine(enume);
+
+        if(heldItem != null) 
+        {
+            heldItem.GrabRelease(this);
+            holdableItems.Add(heldItem);
+            if (closestItem = null) closestItem = heldItem;
+            heldItem = null;
+        }
+
     }
 
     IEnumerator stunEnd(float stunTime)
