@@ -6,10 +6,17 @@ public class ForceField : MonoBehaviour
 {
     [TextArea]
     public string infoForceField = "Le champ de force pousse la balle dans le sens de la flèche. Vous pouvez la faire tourner sur l'axe Z mais aussi scale l'objet etc";
-    private Rigidbody2D ballRB;
+    private List<Rigidbody2D> rbs;
+    public enum targetType {Player, Ball, Everything };
+    public targetType type;
     [Tooltip("Force du champ de Force")]
     public float force = 3f;
     private Vector2 directionForce;
+
+    private void Start()
+    {
+        rbs = new List<Rigidbody2D>();
+    }
 
     private void Update()
     {
@@ -24,20 +31,41 @@ public class ForceField : MonoBehaviour
     //Récupère le script de la balle quand elle rentre dans la zone de champ de force
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Ball"))
+        switch (type)
         {
-            ballRB = collision.GetComponentInParent<Rigidbody2D>();
+            case targetType.Player:
+                if (collision.transform.root.CompareTag("Player"))
+                {
+                    rbs.Add (collision.GetComponentInParent<Rigidbody2D>());
+                }
+                break;
+                case targetType.Ball:
+                if (collision.CompareTag("Ball"))
+                {
+                    rbs.Add(collision.GetComponentInParent<Rigidbody2D>());
+                }
+                break;
+                case targetType.Everything:
+                rbs.Add(collision.GetComponentInParent<Rigidbody2D>());
+                break;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if(rbs.Count > 0)
+        {
+             foreach (var b in rbs)
+             {
+                 b.velocity += directionForce * force;
+             }
         }
     }
 
     //Applique une force à la balle correspondant à la variable "force" dans la direction transform.down du champ de force.
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Ball"))
-        {     
-            ballRB.velocity += directionForce * force;
-        }
-       
+        if(rbs.Contains(collision.attachedRigidbody)) rbs.Remove(collision.attachedRigidbody);
     }
 
 }

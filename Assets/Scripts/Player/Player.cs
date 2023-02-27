@@ -78,4 +78,30 @@ public class Player : MonoBehaviour
             noCol = false;
         }
     }
+
+    private IEnumerator enume = null;
+
+    public void Stunned(float stunTime)
+    {
+        canMove = false;
+        canJump = false;
+        if(enume == null)
+        {
+            enume = stunEnd(stunTime);
+        }
+        else
+        {
+            StopCoroutine(enume);
+            enume = stunEnd(stunTime);
+        }
+        StartCoroutine(enume);
+    }
+
+    IEnumerator stunEnd(float stunTime)
+    {
+        yield return new WaitForSeconds(stunTime);
+        canMove = true;
+        canJump = true;
+        enume = null;
+    }
 }

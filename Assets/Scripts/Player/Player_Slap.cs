@@ -9,6 +9,7 @@ public class Player_Slap : MonoBehaviour
     public float slapStrength;
     private GameObject slapper;
     private WaitForFixedUpdate waiter;
+    public float stunLength;
     private void Start()
     {
         slapper = transform.Find("Slapper").gameObject;
@@ -35,7 +36,12 @@ public class Player_Slap : MonoBehaviour
         print(collision.name);
         if(collision.transform.root.TryGetComponent<Rigidbody2D>(out Rigidbody2D oRb))
         {
-            if(collision.transform.root.TryGetComponent<Item>(out Item item) && item.itemType == Item.ItemType.holdable && item.isHeld == false)
+            if (!collision.transform.root.TryGetComponent<Player>(out Player oPlayer))
+            {
+                oRb.AddForce((collision.transform.position - transform.position).normalized * slapStrength, ForceMode2D.Impulse);
+                oPlayer.Stunned(stunLength);
+            }
+            else if(collision.transform.root.TryGetComponent<Item>(out Item item) && item.itemType == Item.ItemType.holdable && item.isHeld == false)
             {
                 oRb.AddForce((collision.transform.position - transform.position).normalized * slapStrength, ForceMode2D.Impulse);
             }
