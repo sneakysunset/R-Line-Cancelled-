@@ -178,17 +178,26 @@ public class LineCreator : MonoBehaviour
         var list = pointList.OrderBy(v => v.pos.x).ToList();
         pointList = list;
 
-        if (list.Count < 4 || lineC.gameObject.layer == 10) return;
+        if (list.Count < 4 || lineC.gameObject.layer == 10)
+        {
+            
+            return;
+        }
 
-        List<Vector2> vec2 = AddMediumPoints();
+        List<Vector2> vec2 = new List<Vector2>();
+        foreach(Point vec in pointList)
+        {
+            vec2.Add(vec.pos);
+        }
 
         //lineR.positionCount = pointList.Count;
+
         Vector3[] vector3s = new Vector3[vec2.Count];
         for (int i = 0; i < vector3s.Length; i++)
         {
             vector3s[i] = vec2[i];
         }
-
+        
         Mesh m = new Mesh();
         m.name = "trailMesh";
         bool b = false;
