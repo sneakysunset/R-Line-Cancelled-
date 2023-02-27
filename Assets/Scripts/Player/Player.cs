@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool throwing;
     [HideInInspector] public bool wallJumpCheck;
     [HideInInspector] public Collider2D coll;
+    [HideInInspector] public bool jumpChecker;
     //Variables that Show in inspector
     public Team playerType;
     public Color colorJ1, colorJ2;
@@ -26,7 +27,6 @@ public class Player : MonoBehaviour
     public bool canMove;
     public bool noCol;
     public int numOfJump = 2;
-    [HideInInspector] public bool jumpChecker;
     #endregion
 
     public virtual void Start()
