@@ -6,12 +6,12 @@ using System.Linq;
 
 public static class Utils_Mesh 
 {
-    public static Vector2[] UpdateMeshVertices(List<Vector2> pointList, float lineWidth, Mesh m, bool surface, Vector2[] uvList, int texR, bool debugger)
+    public static /*Vector2[]*/void UpdateMeshVertices(List<Vector2> pointList, float lineWidth, Mesh m, bool surface, Vector2[] uvList, int texR, bool debugger)
     {
         int listLength = 4 * pointList.Count - 4;
         //Vector3[] vertices = new Vector3[listLength];
         //Vector2[] uvs = new Vector2[listLength];
-        Vector2 uvCord = Vector2.zero;
+       // Vector2 uvCord = Vector2.zero;
         
         #region square UVs [Old]
         /*vertices[0] = pointList[0] - new Vector2(0, lineWidth / 2);
@@ -47,16 +47,16 @@ public static class Utils_Mesh
 
         #region distance UVs [Current]
         List<Vector3> verticess = new List<Vector3>();
-        List<Vector2> uvss = new List<Vector2>();
-        int n = 0;
-        float distance = 0;
+      //  List<Vector2> uvss = new List<Vector2>();
+       // int n = 0;
+       // float distance = 0;
         verticess.Add(pointList[0] - new Vector2(0, lineWidth / 2));
         verticess.Add(pointList[0] + new Vector2(0, lineWidth / 2));
-        uvss.Add(uvList[0]);
-        uvss.Add(uvList[0] + Vector2.up / texR);
+        //uvss.Add(uvList[0]);
+       // uvss.Add(uvList[0] + Vector2.up / texR);
         for (int i = 1; i < pointList.Count - 1; i++)
         {
-            if (i > 1 && distance + Vector2.Distance(pointList[i], pointList[i - 1]) >= lineWidth)
+/*            if (i > 1 && distance + Vector2.Distance(pointList[i], pointList[i - 1]) >= lineWidth)
             {
                 //Vector2 tempPoint = pointList[i - 1] + (pointList[i - 1] - pointList[i]) * (lineWidth - distance);
                 Vector2 tempPoint = Vector2.Lerp(pointList[i - 1], pointList[i], (lineWidth - distance) / Vector2.Distance(pointList[i], pointList[i - 1]));
@@ -82,33 +82,33 @@ public static class Utils_Mesh
                 uvss.Add(uvCord + Vector2.up / texR);
                 distance = Vector2.Distance(pointList[i], tempPoint);
             }
-            else distance += Vector2.Distance(pointList[i], pointList[i - 1]);
+            else distance += Vector2.Distance(pointList[i], pointList[i - 1]);*/
 
             verticess.Add(Utils_Points.GetParallelePoint(pointList[i], pointList[i - 1], pointList[i + 1], lineWidth / 2, false));
             verticess.Add(Utils_Points.GetParallelePoint(pointList[i], pointList[i - 1], pointList[i + 1], lineWidth / 2, true));
 
-            uvss.Add(uvCord + Vector2.right / texR * distance / lineWidth);
-            uvss.Add(uvCord + Vector2.right / texR * distance / lineWidth + Vector2.up / texR);
+/*            uvss.Add(uvCord + Vector2.right / texR * distance / lineWidth);
+            uvss.Add(uvCord + Vector2.right / texR * distance / lineWidth + Vector2.up / texR);*/
         }
         verticess.Add(pointList[pointList.Count - 1] - new Vector2(0, lineWidth / 2));
         verticess.Add(pointList[pointList.Count - 1] + new Vector2(0, lineWidth / 2));
-        uvss.Add(uvList[uvList.Length - 1] + Vector2.right / texR);
-        uvss.Add(uvList[uvList.Length - 1] + Vector2.one / texR);
+/*        uvss.Add(uvList[uvList.Length - 1] + Vector2.right / texR);
+        uvss.Add(uvList[uvList.Length - 1] + Vector2.one / texR);*/
 
 
         Vector3[] vertices = new Vector3[verticess.Count];
-        Vector2[] uvs = new Vector2[uvss.Count];
-        for (int i = 0; i < uvs.Length; i++)
+/*        Vector2[] uvs = new Vector2[uvss.Count];*/
+        for (int i = 0; i < vertices.Length; i++)
         {
             vertices[i] = verticess[i];
-            uvs[i] = uvss[i];
+            //uvs[i] = uvss[i];
         }
         #endregion
 
-        if (debugger) foreach (Vector2 uv in uvs) Debug.Log(uv);
+       /* if (debugger) foreach (Vector2 uv in uvs) Debug.Log(uv);*/
         m.vertices = vertices;
-        m.uv = uvs;
-        return uvs;
+/*        m.uv = uvs;
+        return uvs;*/
     }   
         #region surface [Unused]
         /*        if (surface)

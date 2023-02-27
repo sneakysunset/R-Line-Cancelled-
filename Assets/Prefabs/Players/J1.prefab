@@ -118,6 +118,7 @@ GameObject:
   - component: {fileID: 1363006960}
   - component: {fileID: 8810157283791512890}
   - component: {fileID: 3079287370841449625}
+  - component: {fileID: 3026880112063427961}
   m_Layer: 8
   m_Name: J1
   m_TagString: Player
@@ -177,6 +178,8 @@ MonoBehaviour:
   canJump: 1
   canMove: 1
   noCol: 0
+  numOfJump: 2
+  jumpChecker: 0
 --- !u!114 &7333970221887948285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,6 +214,7 @@ MonoBehaviour:
   fallMult: 7
   lowJumpMult: 10
   jumpStrength: 15
+  secondJumpStrength: 0
   wallJumpDirection: {x: 1, y: 0.6}
   wallJumpStrength: 2
   yGroundCheck: 0.1
@@ -285,9 +289,9 @@ MonoBehaviour:
   col: {fileID: 0}
   heldPoint: {fileID: 0}
   isHeld: 0
-  throwPreview: 1
+  throwPreview: 0
   Highlight: {fileID: 0}
-  catchable: 1
+  catchable: 0
 --- !u!114 &6278587723273450483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -652,6 +656,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3026880112063427961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775201043333655785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9fa05740848ec6448af68b682ac9866, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slapStrength: 15
 --- !u!1 &1775201044604555541
 GameObject:
   m_ObjectHideFlags: 0

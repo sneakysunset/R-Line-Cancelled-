@@ -50,8 +50,8 @@ public class Player_ColHand : MonoBehaviour
 
         if (condition1 && !condition2)
         {
-            Physics2D.IgnoreCollision(player.coll, col.collider, true);
-            player.rb.velocity = -col.relativeVelocity;
+            //Physics2D.IgnoreCollision(player.coll, col.collider, true);
+            //player.rb.velocity = -col.relativeVelocity;
         }
         else if (condition1 && !condition2)
         {
