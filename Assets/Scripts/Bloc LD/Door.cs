@@ -185,7 +185,11 @@ public class Door_Editor : Editor
 
     private void OnSceneGUI()
     {
-        Draw();
+        if (!Application.isPlaying)
+        {
+            Draw();
+            EditorUtility.SetDirty(door);
+        }
     }
 
     void Draw()

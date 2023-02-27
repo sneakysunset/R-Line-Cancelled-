@@ -46,11 +46,15 @@ public class LineCreator : MonoBehaviour
     [Range(0f, 100f)]public float fallTimer;
     [Range(0.01f, 10)]public float cascade_FallSpeed;
     [Range(0.01f, 10)]public float cascade_FallSpeedAccel;
+    [Range(0.01f, 3)] public float cascadeRefreshRate;
+
+    private WaitForEndOfFrame waitFrame;
+    private WaitForSeconds waitSec;
     #endregion
 
     IEnumerator fixDeMerdeSpawnLigne()
     {
-        yield return new WaitForEndOfFrame();
+        yield return waitFrame;
         if (pointList.Count > 0) 
         pointList.Clear();
         var a = transform.position.x - Mathf.FloorToInt(transform.position.x);
@@ -58,6 +62,13 @@ public class LineCreator : MonoBehaviour
         var posX = Mathf.FloorToInt(transform.position.x) + b + lineResolution;
         pointList.Add(new Point(new Vector2(posX, transform.position.y))) ;
         //lineR.positionCount = 0;
+    }
+
+    IEnumerator pointCascade()
+    {
+        yield return new WaitForEndOfFrame();
+        if(cascade || cascadeWhenCloseToGround) foreach (Point point in pointList) point.Fond();
+        StartCoroutine(pointCascade());
     }
 
     private void Start()
@@ -95,15 +106,12 @@ public class LineCreator : MonoBehaviour
         pointList.Add(new Point(firstPoint));
         InstantiateLine();
         StartCoroutine(fixDeMerdeSpawnLigne());
+        waitSec = new WaitForSeconds(cascadeRefreshRate);
+        //StartCoroutine(pointCascade());
     }
     private void Update()
     {
-
-        foreach (Point point in pointList)
-        {
-            point.Fond();
-        }
-
+        if (cascade || cascadeWhenCloseToGround) foreach (Point point in pointList) point.Fond();
         if (Input.GetKeyDown(KeyCode.L))
         {
             Vector2 pPos = new Vector2(transform.position.x, transform.position.y);

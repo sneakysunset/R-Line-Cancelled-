@@ -10,7 +10,7 @@ public class Item_Ball : Item
     public BallType.BallThrowType ballThrowType;
     protected bool stuckToWall;
     public float direction;
-    private bool flying;
+    public bool flying;
     public float flyingTrajSpeed = 500;
     public float flyingTrajDeviationSpeed = 700;
     public float flyingToPlayerSpeed = 500;
@@ -71,9 +71,13 @@ public class Item_Ball : Item
 
         if ((ballThrowType == BallType.BallThrowType.targetPlayer || ballThrowType == BallType.BallThrowType.controlTarget) && flying)
             StopFlying();
-        else if (ballThrowType == BallType.BallThrowType.straightLine && flying) rb.gravityScale = ogGravity;
+        else if (ballThrowType == BallType.BallThrowType.straightLine && flying && collision.transform != _player.transform)
+        {
+            flying = false;
+            rb.gravityScale = ogGravity;
+        }
 
-        if (ballThrowType == BallType.BallThrowType.straightLine) flying = false;
+        //if (ballThrowType == BallType.BallThrowType.straightLine && collision.transform.tag != "Player") flying = false;
     }
 
     public virtual void OnDestroy()
@@ -181,6 +185,7 @@ public class Item_Ball : Item
         player.holdableItems.Add(this);
         stuckToWall = false;
         flying = true;
+        rb.constraints = RigidbodyConstraints2D.None;
         player.canMove = false;
         player.canJump = false;
         rb.isKinematic = false;
@@ -196,6 +201,7 @@ public class Item_Ball : Item
         player.holdableItems.Add(this);
         stuckToWall = false;
         flying = true;
+        rb.constraints = RigidbodyConstraints2D.None;
         player.canMove = false;
         player.canJump = false;
         rb.isKinematic = false;
@@ -209,7 +215,6 @@ public class Item_Ball : Item
     #region OtherEvents
     private void StopFlying()
     {
-        print(1);
         _player.throwing = false;
         _player.canMove = true;
         _player.canJump = true;

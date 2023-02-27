@@ -22,10 +22,11 @@ public class Item : MonoBehaviour
         Highlight = transform.Find("Highlight").gameObject;
         if (TryGetComponent<Rigidbody2D>(out rb)) { }
         if (TryGetComponent<ThrowPreview>(out tP)) { }
-        col = transform.Find("Collider").GetComponent<Collider2D>();
+        if(itemType == ItemType.holdable) col = transform.Find("Collider").GetComponent<Collider2D>();
         if (transform.Find("lineChecker")) 
             triggerBox = transform.Find("lineChecker").GetComponent<Collider2D>();
         mytag = tag;
+
     }
 
     public virtual void OnEnable()
@@ -61,6 +62,7 @@ public class Item : MonoBehaviour
     public virtual void GrabStarted(Transform holdPoint, Player player)
     {
         isHeld = true;
+        rb.constraints = RigidbodyConstraints2D.FreezePosition;
         setTagsLayers(mytag, mytag, 14);
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Catch");
         Physics2D.IgnoreCollision(player.coll, col, true);
@@ -74,6 +76,7 @@ public class Item : MonoBehaviour
     public virtual void GrabRelease(Player player)
     {
         isHeld = false;
+        rb.constraints = RigidbodyConstraints2D.None;
         rb.isKinematic = false;
         rb.velocity = Vector2.zero;
         rb.angularVelocity = 0;
@@ -89,7 +92,7 @@ public class Item : MonoBehaviour
         {
             tP.pointFolder.gameObject.SetActive(true);
             player.canMove = false;
-            player.canJump = false;
+            //player.canJump = false;
         }
     }
 
@@ -101,7 +104,7 @@ public class Item : MonoBehaviour
     public virtual void ThrowRelease(float throwStrength, Player player)
     {
         setTagsLayers(mytag, mytag, 17);
-
+        rb.constraints = RigidbodyConstraints2D.None;
         tP.pointFolder.gameObject.SetActive(false);
         tP._line.positionCount = 1;
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Throw");

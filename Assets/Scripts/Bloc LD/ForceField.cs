@@ -13,7 +13,7 @@ public class ForceField : MonoBehaviour
 
     private void Update()
     {
-        directionForce = transform.TransformDirection(Vector2.down);
+        directionForce = -transform.up;
     }
 
     private void OnDrawGizmos()
