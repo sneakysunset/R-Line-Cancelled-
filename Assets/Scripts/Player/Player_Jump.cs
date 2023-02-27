@@ -30,14 +30,17 @@ public class Player_Jump : MonoBehaviour
 
     void Jump()
     {
+        print(1);
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Jump");
         player.jumpChecker = false;
-
+        float j = jumpStrength;
+        if (player.numOfJump < 2) j = secondJumpStrength;
         if (player.groundCheck) player.numOfJump = 1;
         else player.numOfJump = 0;
 
+        rb.velocity = rb.velocity.x * transform.right ;
         //if(player.wallJumpCheck) rb.AddForce(wallJumpDirection.normalized * wallJumpStrength, ForceMode2D.Impulse);
-        //else rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
+        rb.AddForce(Vector2.up * j, ForceMode2D.Impulse);
     }
 
     void Falling()
