@@ -12,7 +12,7 @@ public class LineCreator : MonoBehaviour
     private CharacterController2D charC;
     Transform lineFolder;
     //[HideInInspector] public LineRenderer lineR;
-    private EdgeCollider2D edgeC;
+    [HideInInspector] public EdgeCollider2D edgeC;
     private PolygonCollider2D polC;
     [HideInInspector] public Collider2D lineC;
     [HideInInspector] public Transform lineT;

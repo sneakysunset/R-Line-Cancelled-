@@ -16,6 +16,7 @@ public class ReloadScene : MonoBehaviour
     public void SceneReloader()
     {
         print("reloaded");
+        Time.timeScale = 1;
         lineSound.sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         lineSound.sound.release();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

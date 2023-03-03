@@ -30,7 +30,6 @@ public class Player_Jump : MonoBehaviour
 
     void Jump()
     {
-        print(1);
         FMODUnity.RuntimeManager.PlayOneShot("event:/MouvementCharacter/Jump");
         player.jumpChecker = false;
         float j = jumpStrength;
