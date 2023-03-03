@@ -82,7 +82,15 @@ public class Item_Ball : Item
 
     public virtual void OnDestroy()
     {
-        if(isHeld) Physics2D.IgnoreCollision(_player.coll, lC.lineC, true);
+        if(isHeld)
+        {
+            foreach (Collider2D edge in lC.edgeCs)
+            {
+                Physics2D.IgnoreCollision(_player.coll, edge, true);
+            }
+        }
+            
+            
     }
 
     #endregion
@@ -100,7 +108,10 @@ public class Item_Ball : Item
         base.GrabStarted(holdPoint, player);
         flying = false;
         rb.gravityScale = ogGravity;
-        Physics2D.IgnoreCollision(player.coll, lC.lineC, true);
+        foreach (Collider2D edge in lC.edgeCs)
+        {
+            Physics2D.IgnoreCollision(player.coll, edge, true);
+        }
     }
 
     public override void GrabRelease(Player player)
@@ -108,8 +119,11 @@ public class Item_Ball : Item
         base.GrabRelease(player);
         setTagsLayers("Ball", "Ball", 7);
 
-        Physics2D.IgnoreCollision(player.coll, lC.lineC, true);
-        
+        foreach (Collider2D edge in lC.edgeCs)
+        {
+            Physics2D.IgnoreCollision(player.coll, edge, true);
+        }
+
     }
     #endregion
 
@@ -173,7 +187,10 @@ public class Item_Ball : Item
         {
             base.ThrowRelease(throwStrength, player);
             setTagsLayers("Ball", "Ball", 7);
-            Physics2D.IgnoreCollision(player.coll, lC.lineC, true);
+            foreach (Collider2D edge in lC.edgeCs)
+            {
+                Physics2D.IgnoreCollision(player.coll, edge, true);
+            }
         }
 
         if (ballThrowType == BallType.BallThrowType.straightLine) flying = true;

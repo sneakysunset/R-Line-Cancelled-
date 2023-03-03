@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class Postit : MonoBehaviour
 {
-    private Collider2D col;
+    [HideInInspector] public Collider2D col;
     public ContactFilter2D lineContacts, nonLineContacts;
     WaitForFixedUpdate waiter;
     private void Start()
     {
         col = GetComponent<Collider2D>();
-        waiter = new WaitForFixedUpdate();
+       // waiter = new WaitForFixedUpdate();
     }
 
     private void FixedUpdate()
     {
-        AvoidCollisionWithLines();
+       // AvoidCollisionWithLines();
      
     }
 

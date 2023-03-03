@@ -9,12 +9,11 @@ public class LineCreator : MonoBehaviour
     private float[] pointArray;
     public List<Point> pointList = new List<Point>();
     private Color col;
-    private CharacterController2D charC;
     Transform lineFolder;
-    //[HideInInspector] public LineRenderer lineR;
-    [HideInInspector] public EdgeCollider2D edgeC;
+    [HideInInspector] public List<EdgeCollider2D> edgeCs;
+    [HideInInspector] public Postit[] postits;
     private PolygonCollider2D polC;
-    [HideInInspector] public Collider2D lineC;
+    //[HideInInspector] public Collider2D lineC;
     [HideInInspector] public Transform lineT;
     public Vector2[] uvRandomArray;
     private CharacterController2D.Team pType;
@@ -22,7 +21,6 @@ public class LineCreator : MonoBehaviour
     [Space(5)]
     Vector2 ogPos;
     int prevUpdatedIndex;
-   // public GameObject ballPrefab;
     private MeshFilter meshF;
     private bool surfaceLine = false;
     private bool flag;
@@ -48,6 +46,7 @@ public class LineCreator : MonoBehaviour
     [Range(0.01f, 10)]public float cascade_FallSpeedAccel;
     [Range(0.01f, 3)] public float cascadeRefreshRate;
 
+    private WaitForFixedUpdate waitPhysics;
     private WaitForEndOfFrame waitFrame;
     private WaitForSeconds waitSec;
     #endregion
@@ -73,6 +72,7 @@ public class LineCreator : MonoBehaviour
 
     private void Start()
     {
+        postits = FindObjectsOfType<Postit>();
 /*        uvRandomArray = new Vector2[]
         {
             Vector2.zero,
@@ -94,19 +94,14 @@ public class LineCreator : MonoBehaviour
         };*/
         lineFolder = GameObject.FindGameObjectWithTag("LineFolder").transform;
         pointArray = Utils_Points.GeneratePointArray(pointArray, lineBeginningX, lineEndX, lineResolution);
-        if (GetComponent<CharacterController2D>())
-        {
-            charC = GetComponent<CharacterController2D>();
-            col = charC.col;
-            pType = charC.playerType;
-        }
-        else pType = CharacterController2D.Team.Ball;
+
         ogPos = transform.position;
         var firstPoint = new Vector2(Utils_Points.closestPoint(pointArray, transform.position.x), transform.position.y);
         pointList.Add(new Point(firstPoint));
         InstantiateLine();
         StartCoroutine(fixDeMerdeSpawnLigne());
         waitSec = new WaitForSeconds(cascadeRefreshRate);
+        waitPhysics = new WaitForFixedUpdate();
         //StartCoroutine(pointCascade());
     }
     private void Update()
@@ -139,28 +134,19 @@ public class LineCreator : MonoBehaviour
     private void InstantiateLine()
     {
         lineT = Instantiate(linePrefab, lineFolder).transform;
-        //lineR = lineT.GetComponentInChildren<LineRenderer>();
-        if (!surfaceLine)
+
+        edgeCs = new List<EdgeCollider2D>();
+        foreach(EdgeCollider2D edge in lineT.GetComponentsInChildren<EdgeCollider2D>())
         {
-            edgeC = lineT.GetComponentInChildren<EdgeCollider2D>();
-            edgeC.enabled = true;
-            edgeC.edgeRadius = width / 2;
-            edgeC.gameObject.layer = 6;
-            lineC = edgeC;
+            edgeCs.Add(edge);
+            edge.edgeRadius = width / 2;
         }
-        else
-        {
-            polC = lineT.GetComponentInChildren<PolygonCollider2D>();
-            polC.enabled = true;
-            polC.gameObject.layer = 6;
-            lineC = polC;
-        }
+        edgeCs[0].enabled = true;
+        edgeCs[0].gameObject.layer = 6;
+
+
+
         meshF = lineT.GetComponentInChildren<MeshFilter>();
-        //lineR.positionCount = 0;
-        //lineR.material.color = col;
-        //lineT.name = "Mesh " + pType.ToString() + " Off";
-        if (pType != CharacterController2D.Team.Ball)
-            charC.meshObj = lineT.gameObject;
     }
 
     //Ordonne la liste de point puis invoque la fonction qui ajoute et actualise des points.
@@ -178,7 +164,7 @@ public class LineCreator : MonoBehaviour
         var list = pointList.OrderBy(v => v.pos.x).ToList();
         pointList = list;
 
-        if (list.Count < 4 || lineC.gameObject.layer == 10)
+        if (list.Count < 4 || edgeCs[0].gameObject.layer == 10)
         {
             
             return;
@@ -209,11 +195,61 @@ public class LineCreator : MonoBehaviour
         m.RecalculateTangents();
         meshF.mesh = m;
 
-        //lineR.SetPositions(vector3s);
-        if (!surfaceLine)
-            StartCoroutine(afterPhysics(vec2));
-        //else StartCoroutine(afterPhysicsSurface(surfacePList));
+        StartCoroutine(EdgeSplit());
+
+        //StartCoroutine(afterPhysics(vec2));
     }
+
+    
+    private IEnumerator EdgeSplit()
+    {
+        yield return waitPhysics;
+
+        for (int i = 0; i < pointList.Count; i++)
+        {
+            foreach(Postit postit in postits)
+            {
+                if(pointList[i].pos.x > postit.col.bounds.min.x && pointList[i].pos.x < postit.col.bounds.max.x && pointList[i].pos.y > postit.col.bounds.min.y && pointList[i].pos.y < postit.col.bounds.max.y)
+                {
+                    pointList[i].isPostit = true;
+                }
+            }
+        }
+
+        List<List<Vector2>> vecs = new List<List<Vector2>>();
+        vecs.Add(new List<Vector2>());
+        vecs[0] = new List<Vector2>();
+        bool inPostitList = false;
+        int edgeNumber = 0;
+        for (int i = 0; i < pointList.Count; i++)
+        {
+            if (!pointList[i].isPostit && !inPostitList)
+            {
+                vecs[edgeNumber].Add(pointList[i].pos);
+            }
+            else if(!pointList[i].isPostit && inPostitList)
+            {
+                inPostitList = false;
+                edgeNumber++;
+                vecs.Add(new List<Vector2>());
+                vecs[edgeNumber].Add(pointList[i].pos);
+            }
+            else if(pointList[i].isPostit && !inPostitList)
+            {
+                inPostitList = true;
+            }
+            else if(pointList[i].isPostit && inPostitList)
+            {
+
+            }
+        }
+
+        for (int i = 0; i < edgeNumber; i++)
+        {
+            edgeCs[i].SetPoints(vecs[i]);
+        }
+    }
+
 
     //Etape intermédiaire dans laquel on décide si on ajoute un/des point(s) ou actualise un/des point(s) de la liste lors de cette frame physique.
     //Si la balle est en dehors de la liste de points avec une distance d'au moins lineResolution (variable d'espacement des points) alors on ajoute un/des point(s) (condition1).
@@ -352,7 +388,7 @@ public class LineCreator : MonoBehaviour
     IEnumerator afterPhysics(List<Vector2> vec2s)
     {
         yield return new WaitForFixedUpdate();
-        edgeC.SetPoints(vec2s);
+        edgeCs[0].SetPoints(vec2s);
     }
 
     IEnumerator afterPhysicsSurface(Vector2[] vec2s)

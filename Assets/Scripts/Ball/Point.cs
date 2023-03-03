@@ -11,6 +11,7 @@ public class Point
     private float descendSpeedAccel;
     private float f;
     Vector2 hit;
+    public bool isPostit = false;
 
     public Point(Vector2 pos)
     {
