@@ -38,7 +38,7 @@ public class Player_Jump : MonoBehaviour
         if (player.groundCheck) player.numOfJump = 1;
         else player.numOfJump = 0;
 
-        rb.velocity = rb.velocity.x * transform.right ;
+        rb.velocity = rb.velocity.x * Vector2.right ;
         //if(player.wallJumpCheck) rb.AddForce(wallJumpDirection.normalized * wallJumpStrength, ForceMode2D.Impulse);
         rb.AddForce(Vector2.up * j, ForceMode2D.Impulse);
     }

@@ -184,11 +184,7 @@ public class LineCreator : MonoBehaviour
             return;
         }
 
-        List<Vector2> vec2 = new List<Vector2>();
-        foreach(Point vec in pointList)
-        {
-            vec2.Add(vec.pos);
-        }
+        List<Vector2> vec2 = AddMediumPoints();
 
         //lineR.positionCount = pointList.Count;
 
